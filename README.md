@@ -13,6 +13,22 @@ PCRange7800NL.tar.gz (174MB, extracted from above)
 
 * sha1: 6eeeaf360735855eecfbd9677edce2d528945d41
 
+Building
+---------------
+
+¯\\(°_o)/¯
+
+There are Makefiles in there, you could attempt running make...
+
+Testing
+---------------
+
+¯\\(°_o)/¯
+
+Licence
+---------------
+
+Some of the code is GPL. Don't complain to me if you can't get it to build and hence the licence is being violated - blame Billion! I'm just the middle man!
 
 Links
 ---------------
