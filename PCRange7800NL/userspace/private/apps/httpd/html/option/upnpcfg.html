@@ -1,0 +1,73 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+function btnApply() {
+	var loc = 'upnpcfg.cgi?';
+	with ( document.forms[0] ) {
+		if (chkUpnp[0].checked == true)
+			loc += 'enblUpnp=1';
+		else
+			loc += 'enblUpnp=0';
+}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function frmLoad() {
+	with ( document.forms[0] ) {
+		var enblUpnp = '<%ejGet(enblUpnp)%>';	
+		if (enblUpnp == 1)
+			chkUpnp[0].checked = true;
+		else 
+			chkUpnp[1].checked = true;
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_UPNP)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(menu,MENU_UPNP)%></td>
+			<td class="content"><input type='radio' name='chkUpnp'><%WebStr(comm,ENABLE)%>&nbsp;&nbsp;
+			<input type='radio' name='chkUpnp'><%WebStr(comm,DISABLE)%></td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

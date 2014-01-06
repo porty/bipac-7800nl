@@ -1,0 +1,338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd"> 
+<%WebStr("cus.sr","_o")%>
+<%WebStr("menu.sr","_o")%>
+<html>
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">	
+<script type="text/javascript">
+<!--
+var proto="<%ejGetOther(sysInfo, noBrPrtcl)%>";
+var ipExt="<%ejGetOther(sysInfo, pppIpExtension)%>";
+var dhcpen="<%ejGet(enblDhcpSrv)%>";
+var std="<%ejGetOther(sysInfo, adslStd)%>";
+var chipId="<%ejGetOther(sysInfo, chipId)%>";
+var dslbonding="<%ejGetOther(sysInfo, buildDslBonding)%>";
+
+// below are all possible pages
+var orgtreearr=[
+["st","",-1],
+	["stinfo","st",0],["stwan","st",0],
+	["ststs","st",0],
+		["stslan","ststs",0],<%MenuMoca(id)%>
+	["strt","st",0],["starp","st",0],["stdhcp","st",0],
+["cfg","",-1],
+	<%MenuWan(id)%>
+	<%MenuId(buildL2tpAc,cfgvpn,cfg,0)%>
+		<%MenuId(buildL2tpAc,cfgl2tp,cfgvpn,0)%>
+	["cfglan","cfg",0],
+		<%MenuId(enblIPv6,lanipv6,cfglan,0)%>
+	<%MenuId(Moca,cfgmoca,cfg,0)%>
+	["cfgnat","cfg",0],
+		["vrtsrv","cfgnat",0],/*["cfgptrg","cfgnat",0],*/["cfgdmz","cfgnat",0],
+	<%MenuId(SECURITY_1,cfgsec,cfg,0)%>
+		<%MenuId(SECURITY_1,cfgiipflt,cfgsec,0)%>/*<%MenuId(SECURITY_1,secmacflt,cfgsec,0)%>*/
+	<%MenuId(buildToD,cfgtod,cfg,0)%>
+		<%MenuId(buildToD,todtm,cfgtod,0)%><%MenuId(ToD_UrlFlt,urlflt,cfgtod,0)%>
+	["cfgqos","cfg",0],
+		["qosque","cfgqos",0],["qoscls","cfgqos",0],
+	["cfgrt","cfg",0],
+		["rtdef","cfgrt",0],["cfgrtst","cfgrt",0],<%MenuId(buildPR,rtpol,cfgrt,0)%><%MenuId(buildRip,rtrip,cfgrt,0)%>
+	<%MenuDns(id)%>
+	["cfgdsl","cfg",0],["dslbond","cfgdsl",0],
+	<%MenuId(buildUpnp,cfgupnp,cfg,0)%><%MenuId(buildDnsProxy,cfgdnsprxy,cfg,0)%><%MenuId(buildIpp,cfgipp,cfg,0)%>
+	<%MenuId(buildStorageService,cfgstore,cfg,0)%>
+		<%MenuId(buildStorageService,storeinfo,cfgstore,0)%><%MenuId(buildStorageService,storeacnt,cfgstore,0)%>
+	<%MenuId(buildPortmap,cfgvlan,cfg,0)%><%MenuId(buildIPSec,cfgipsec,cfg,0)%>
+	<%MenuId(buildStandby,cfgstdby,cfg,0)%><%MenuId(buildPwrMngt,cfgpwr,cfg,0)%><%MenuId(buildMulticast,cfgmcast,cfg,0)%>
+<%MenuWlan(id)%>
+//["diag","",-1],
+//	["diag1","diag",0],<%MenuId(buildP8021AG,diag8021,diag,0)%>
+["mgmt","",-1],
+	["mgmtcfg","mgmt",0],
+		["cfgbk","mgmtcfg",0],["cfgupd","mgmtcfg",0],["cfgdef","mgmtcfg",0],
+	["mgmtlog","mgmt",0],<%MenuId(sec_log,"mgmtseclog","mgmt",0)%><%MenuId(buildSnmp,"mgmsnmp","mgmt",0)%><%MenuId(buildTr69c,"mgmttr69","mgmt",0)%>
+	["mgmtsntp","mgmt",0],["mgmtpwd","mgmt",0],["mgmtrma","mgmt",0],["mgmtupload","mgmt",0],
+["lang","",-1]
+	<%MenuLang(id,lang)%>
+];
+
+var orgNode=orgtreearr.length;
+var treearr=new Array(orgNode);
+var totNode;
+var imgName=["dot6.gif", "dot6s.gif", "dotm5.gif", "dotm5s.gif"]
+var wImg = new Array(2);
+wImg[0] = new Image();
+wImg[0].src = imgName[0];
+wImg[1] = new Image();
+wImg[1].src = imgName[1];
+var bImg = new Array(2);
+bImg[0] = new Image();
+bImg[0].src = imgName[2];
+bImg[1] = new Image();
+bImg[1].src = imgName[3];
+var oldSpId="";
+function resetURL()
+{
+	var idd=document.getElementById(nowID);
+	idd.href=nowURL;
+}
+function chgURL()
+{
+	var idd=document.getElementById(nowID);
+	idd.href=nowURL;
+	setTimeout ("resetURL();", 500);
+}
+function chgHref(u,ida)
+{
+	nowURL=u;
+	nowID=ida;
+	chgURL();
+}
+function getTreeIdx(idd)
+{
+	for(var i=0;i<totNode;i++) if (treearr[i][0]==idd) return i;
+	return -1;
+}
+function chgTreeImg(nowidx)
+{
+	var idm;
+	var oldidx = getTreeIdx (oldSpId);
+	if (oldidx == nowidx) { // the same item
+		idm = document.getElementById(treearr[oldidx][0]+"img");
+		if (idm != null) {
+			var s=idm.src;
+			for (var i = 0; i < 4; i++) {
+				if (s.indexOf (imgName[i]) > -1) break;
+			}
+			if (i < 4) {
+				idm.src = imgName[parseInt(i/2)*2 + ((i%2)^1)];
+			}
+		}
+	} else {
+		var nofg=0;
+		if (oldidx > -1) {
+			var idx = oldidx;
+			if (treearr[nowidx][1] != treearr[oldidx][0]) {
+				do { // change image
+					if (treearr[idx][0] == treearr[nowidx][0]) nofg=1;
+					idm = document.getElementById(treearr[idx][0]+"img");
+					if (idm != null) {
+						idm.src = (treearr[idx][1] == "") ? wImg[0].src : bImg[0].src;
+					}
+					idx = getTreeIdx(treearr[idx][1]);
+				} while (idx != -1 && treearr[idx][0] != treearr[nowidx][1]);
+				oldSpId = "";
+				
+			}
+		}
+		if (nofg == 0) {
+			idm = document.getElementById(treearr[nowidx][0]+"img");
+			if (idm != null) {
+				idm.src = (treearr[nowidx][1] == "") ? wImg[1].src : bImg[1].src;
+			}
+		}
+		oldSpId = treearr[nowidx][0];
+	}
+}
+function chgTreeNode(idd)
+{
+	var idx = getTreeIdx(idd);
+	if (idx==-1) return;
+	chgTreeImg(idx);
+	for (i=0;i<totNode;i++) {
+		if (treearr[i][1]==idd) {
+			idc=document.getElementById(treearr[i][0]);
+			if(treearr[i][2]==1) {
+				idc.style.display="none";
+			} else {
+				idc.style.display="";
+			}
+			treearr[i][2]^=1;
+		} else if(treearr[i][1]==treearr[idx][1]) {
+			document.getElementById(treearr[i][0]).style.display="";
+			if (treearr[i][2]!=-1) treearr[i][2]=1;
+		} else if(treearr[i][2]!=-1) {
+			document.getElementById(treearr[i][0]).style.display="none";
+			treearr[i][2]=0;
+		}
+	}
+}
+<% DBG("imgfg: has child item, afg: has hyperlink page, idm: item id, ida: hyperlink id, urls: hyperlink, txt: item text") %>
+function Lvl1(imgfg, afg, idm, ida, urls, txt)
+{
+	document.write('<tr id="'+idm+'"><td class="test1">');
+	// imgfg==1, has child items
+	if (imgfg) document.write('<img id="'+idm+'img" src="dot6.gif" width="9" height="9" alt="">');
+	else document.write('<img src="dot6n.gif" width="9" height="9" alt="">');
+	// afg==1, has hyperlink page
+	if (afg == 1) document.write('<a id="'+ida+'" class="menuLink" target="main" href="'+urls+'" onclick="chgTreeNode(\''+idm+'\'); chgHref(\''+urls+'\',\''+ida+'\');">'+txt+'<\/a><\/td><\/tr>');
+	else document.write('<a class="menuLink" href="#" onclick=\'chgTreeNode("'+idm+'");\'>'+txt+'<\/a><\/td><\/tr>');
+}
+function Lvl2(afg, idm, ida, urls, txt)
+{
+	var str='<tr id="'+idm+'" style="display: none"><td class="test2">';
+	if (afg == 1 || afg == 3) {
+		str += '<img '+(afg==3?'id="'+idm+'img" ':'')+' src="'+(afg==1?'dot5n.gif':'dotm5.gif')+'" width="11" height="11">';
+		str += '<a id="'+ida+'" class="submenu" target="main" href="'+urls+'" onclick="chgTreeNode(\''+idm+'\');chgHref(\''+urls+'\',\''+ida+'\');">';
+	} else if (afg == 2)
+		str += '<img src="dot5n.gif" width="11" height="11"><a id="'+ida+'" class="submenu" target="_parent" href="'+urls+'" onclick="chgTreeNode(\''+idm+'\');chgHref(\''+urls+'\',\''+ida+'\');">';
+	else 
+		str += '<img id="'+idm+'img" src="dotm5.gif" width="11" height="11"><a class="submenu" href="#" onclick=\'chgTreeNode("'+idm+'");\'>';
+	str += txt+'<\/a><\/td><\/tr>';
+	document.write(str);
+}
+function Lvl3(idm, ida, urls, txt)
+{
+	document.write('<tr id="'+idm+'" style="display: none"><td class="test3"><img src="dot5n.gif" width="11" height="11">');
+	document.write('<a id="'+ida+'" class="submenu" target="main" href="'+urls+'" onclick="chgHref(\''+urls+'\',\''+ida+'\');">'+txt+'<\/a><\/td><\/tr>');
+}
+function init()
+{
+	var i,j,k=0, m;
+	for(i=0;i<orgNode;i++) treearr[i]=new Array(3);
+	for (i=0;i<orgNode;i++) {
+		if (document.getElementById(orgtreearr[i][0])!=null) { //check item is valid
+			for(j=0;j<3;j++) treearr[k][j]=orgtreearr[i][j];
+			k++;
+		}
+	}
+	totNode=k;
+	for (i=0;i<k;i++) {
+		// show status
+		if (treearr[i][2]==0)  document.getElementById(treearr[i][0]).style.display="none";
+	}
+}
+function getNextOrgTree(idd)
+{
+	for (var i=0; i<orgtreearr.length; i++) {
+		if (orgtreearr[i][0]==idd && i < orgtreearr.length-1) return orgtreearr[i+1][0];
+	}
+	return "";
+}
+-->
+</script>
+</head>
+<body class="navigation" onload="init();">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr><td class="menu1">
+<span class="menutit"></span>
+</td></tr>
+<tr><td class="menu2">
+<script type="text/javascript"><!--
+document.write('<table style="BORDER-COLLAPSE: collapse" cellspacing="0" cellpadding="0" width="100%">');
+
+Lvl1(1, 1, "st","ast","info.html","<%WebStr("menu","MENU_DEVICE_INFO")%>");
+	Lvl2 (1, "stinfo", "astinfo", "info.html", "<%WebStr("menu","MENU_DEVICE_SUMMARY")%>");
+	Lvl2 (1, "stwan", "astwan", "wancfg.cmd?action=view", "<%WebStr("menu","MENU_DEVICE_WAN")%>");
+	Lvl2 (3, "ststs", "aststs", "statsifc.html", "<%WebStr("menu","MENU_STATISTICS")%>");
+		Lvl3 ("stslan", "aststslan", "statsifc.html", "<%WebStr("menu","MENU_ST_LAN")%>");
+		<%MenuMoca(item)%>
+	Lvl2 (1, "strt", "astrt", "rtroutecfg.cmd?action=view", "<%WebStr("menu","MENU_DEVICE_ROUTE")%>");
+	Lvl2 (1, "starp", "astarp", "arpview.cmd", "<%WebStr("menu","MENU_RT_ARP")%>");
+	if (!(proto == 'Bridge' || ipExt == '1') && dhcpen == '1') {
+		Lvl2(1, "stdhcp", "astdhcp", "dhcpinfo.html", "<%WebStr(menu,MENU_DHCPINFO)%>");
+	}
+
+
+// Configure advanced setup/layer 2 interface
+<%MenuWan(item)%>
+
+	<%MenuShow(buildL2tpAc,2,cfgvpn,l2tpacwan.cmd,menu,MENU_VPN,3)%>
+		<%MenuShow(buildL2tpAc,3,cfgl2tp,l2tpacwan.cmd,menu,MENU_VPN_L2TPAC)%>
+	<%MenuIpv6()%>
+	<%MenuShow(Moca,2,cfgmoca,mocacfg.html,menu,MENU_MOCA_CONFIGURATION,1)%>
+
+if ( proto != 'Not Applicable' && ipExt != '1' ) {
+	Lvl2 (3, "cfgnat", "acfgnat", "scvrtsrv.cmd?action=view", "<%WebStr(menu,MENU_SC_NAT)%>");
+		Lvl3 ("vrtsrv", "avrtsrv", "scvrtsrv.cmd?action=view", "<%WebStr(menu,MENU_SC_VIRTUAL_SERVER)%>");
+		//Lvl3 ("cfgptrg", "acfgptrg", "scprttrg.cmd?action=view", "<%WebStr(menu,MENU_SC_PORT_TRIGGER)%>");
+		Lvl3 ("cfgdmz", "acfgdmz", "scdmz.html", "<%WebStr(menu,MENU_SC_DMZ_HOST)%>");
+	<%MenuShow(SECURITY_1,2,cfgsec,scinflt.cmd?action=view,menu,MENU_SC_SECURITY,3)%>
+		<%MenuShow(SECURITY_1,3,cfgiipflt,scinflt.cmd?action=view,menu,MENU_SC_PKTFLT)%>
+		//<%MenuShow(SECURITY_1,3,secmacflt,scmacflt.cmd?action=view,menu,MENU_MAC_FILTER)%>
+	<%MenuShow(buildToD,2,cfgtod,todmngr.tod?action=view,menu,MENU_PARENTAL_CNTL,3)%>
+		<%MenuShow(buildToD,3,todtm,todmngr.tod?action=view,menu,MENU_TOD)%>
+		<%MenuShow(ToD_UrlFlt,3,urlflt,urlfilter.cmd?action=view,menu,MENU_URLFILTER)%>
+}
+
+      // Configure QoS class menu  
+	Lvl2 (3, "cfgqos", "acfgqos", "qosqmgmt.html", "<%WebStr(menu,MENU_QOS)%>");
+		Lvl3 ("qosque", "aqosque", "qosqueue.cmd?action=view", "<%WebStr(menu,MENU_QOS_QUEUE)%>");
+		Lvl3 ("qoscls", "aqoscls", "qoscls.cmd?action=view", "<%WebStr(menu,MENU_QOS_CLASS)%>");
+
+   // Configure routing menu   
+	Lvl2 (3, "cfgrt", "acfgrt", "rtdefaultcfg.html", "<%WebStr(menu,MENU_ROUTING)%>");
+		Lvl3 ("rtdef", "artdef", "rtdefaultcfg.html", "<%WebStr(menu,MENU_RT_DEFAULT_ROUTE)%>");
+		Lvl3 ("cfgrtst", "acfgrtst", "rtroutecfg.cmd?action=viewcfg", "<%WebStr(menu,MENU_RT_STATIC_ROUTE)%>");
+		<%MenuShow(buildPR,3,rtpol,prmngr.cmd?action=view,menu,MENU_POLICY_ROUTING)%>
+if ( (proto == 'PPPoE' && ipExt == '0') || (proto == 'PPPoA' && ipExt == '0') ||
+	(proto == 'MER') || (proto == 'IPoA') ) {
+		<%MenuShow(buildRip,3,rtrip,ripcfg.cmd?action=view,menu,MENU_RT_RIP)%>
+	<%MenuDns(item)%>
+}
+
+if (isDsl == 1) {
+	if ( std == 'annex_c')
+		Lvl2 (1, "cfgdsl", "acfgdsl", "adslcfgc.html", "<%WebStr(menu,MENU_DSL)%>");
+	else if ( chipId != '6368')
+		Lvl2 (1, "cfgdsl", "acfgdsl", "adslcfg.html", "<%WebStr(menu,MENU_DSL)%>");
+	else
+		Lvl2 (1, "cfgdsl", "acfgdsl", "xdslcfg.html", "<%WebStr(menu,MENU_DSL)%>");
+	if (dslbonding == '1')
+		Lvl2 (1, "dslbond", "adslbond", "dslbondingcfg.html", "<%WebStr(menu,MENU_DSL_BONDING)%>");
+}
+
+	<%MenuShow(buildUpnp,2,cfgupnp,upnpcfg.html,menu,MENU_UPNP,1)%>
+	<%MenuShow(buildDnsProxy,2,cfgdnsprxy,dnsproxycfg.html,menu,MENU_DNSPROXY,1)%>
+	<%MenuShow(buildIpp,2,cfgipp,ippcfg.html,menu,MENU_IPP,1)%>
+
+     //Storage Service menu 
+	<%MenuShow(buildStorageService,2,cfgstore,storageservicecfg.cmd?view,menu,MENU_STORAGESERVICE,3)%>
+		<%MenuShow(buildStorageService,3,storeinfo,storageservicecfg.cmd?view,menu,MENU_STORAGE_INFO)%>
+		<%MenuShow(buildStorageService,3,storeacnt,storageuseraccountcfg.cmd?view,menu,MENU_STORAGE_USERACCOUNT)%>
+   // Configure VLAN port mapping menu
+	<%MenuShow(buildPortmap,2,cfgvlan,portmap.cmd,menu,MENU_INTF_GROUPING,1)%>
+	<%MenuShow(buildIPSec,2,cfgipsec,ipsec.cmd?action=view,menu,MENU_SC_IPSEC,1)%>
+	<%MenuShow(buildStandby,2,cfgstdby,standby.html,menu,MENU_STANDBY,1)%>
+	<%MenuShow(buildPwrMngt,2,cfgpwr,pwrmngt.html,menu,MENU_PWRMNGT,1)%>
+	<%MenuShow(buildMulticast,2,cfgmcast,multicast.html,menu,MENU_MULTICAST,1)%>
+
+<%MenuWlan(item)%>
+
+   // Configure diagnostics menu
+//Lvl1(1, 1, "diag","adiag","diag.html","<%WebStr(menu,MENU_DIAGNOSTICS)%>");
+	//Lvl2 (1, "diag1", "adiag1", "diag.html", "<%WebStr(menu,MENU_DIAGNOSTICS)%>");
+	//<%MenuShow(buildP8021AG,2,diag8021,diag8021ag.html,menu,MENU_DIAGP8021AG,1)%>
+
+   // Configure management menu
+Lvl1(1, 1, "mgmt","amgmt","backupsettings.html","<%WebStr("menu","MENU_MANAGEMENT")%>");
+	Lvl2 (3, "mgmtcfg", "amgmtcfg", "backupsettings.html", "<%WebStr("menu","MENU_TL_SETTINGS")%>");  
+		Lvl3 ("cfgbk", "acfgbk", "backupsettings.html", "<%WebStr("menu","MENU_TL_SETTINGS_BACKUP")%>");
+		Lvl3 ("cfgupd", "acfgupd", "updatesettings.html", "<%WebStr("menu","MENU_TL_SETTINGS_UPDATE")%>");
+		Lvl3 ("cfgdef", "acfgdef", "defaultsettings.html", "<%WebStr("menu","MENU_TL_SETTINGS_DEFAULT")%>");
+
+	Lvl2 (1, "mgmtlog", "amgmtlog", "logintro.html", "<%WebStr("menu","MENU_TL_SYSTEM_LOG")%>");
+	<%MenuShow(sec_log,2,mgmtseclog,seclogintro.html,menu,MENU_TL_SECURITY_LOG,1)%>
+	<%MenuShow(buildSnmp,2,mgmsnmp,snmpconfig.html,menu,MENU_TL_SNMP,1)%>
+	<%MenuShow(buildTr69c,2,mgmttr69,tr69cfg.html,menu,MENU_TR69C,1)%>
+	if ( '<%ejGetOther(sysInfo, buildSntp)%>' == '1' && proto != 'Bridge' && !(proto=='PPPoE' && ipExt=='1') && !(proto=='PPPoA' && ipExt=='1') )
+		Lvl2 (1,"mgmtsntp", "amgmtsntp", "sntpcfg.html", "<%WebStr("menu","MENU_SNTP")%>");
+	Lvl2 (1,"mgmtpwd", "amgmtpwd", "password.html", "<%WebStr("menu","MENU_ACC_CNTR")%>");
+	Lvl2 (1,"mgmtrma", "amgmtrma", "remoteAccess.html", "<%WebStr("menu","MENU_REMOTE_ACC")%>");
+	Lvl2 (1,"mgmtupload", "amgmtupload", "upload.html", "<%WebStr("menu","MENU_TL_UPDATE_SOFTWARE")%>");
+<%MenuLang(item,lang)%>
+
+document.write('<\/table>');
+--></script>
+</td></tr>
+</table>
+</body>
+</html>
+<%WebStr("menu.sr","_c")%>
+<%WebStr("cus.sr","_c")%>

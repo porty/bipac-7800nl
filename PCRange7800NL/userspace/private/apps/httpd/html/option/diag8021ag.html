@@ -1,0 +1,131 @@
+<%WebStr(cus.sr_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(diag.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+function btnApply(testname) {
+	var loc = 'diag8021ag.cgi?test8021ag=' + testname;
+	with ( document.forms[0] ) {
+		idx = mdLevel.selectedIndex;
+		val = mdLevel.options[idx].value;
+		loc += '&mdLevel8021ag=' + val;
+		if( testname != 'mdl' ) {
+			if (isValidMacAddress(destMac.value) == false ) {
+				alert("<%WebStr(diag,DEST_MAC)%> : <% WebStr(comm,INVALID); %>")
+				destMac.focus();
+				return;
+			}
+			vlanid = parseInt(vlanId.value);
+			if ( vlanid < 0 || vlanid > 4095 || isNaN(vlanid)) {
+				alert("<%WebStr(diag,VID)%> : <% WebStr(comm,INVALID); %>")
+				vlanId.focus();
+				return;
+			}
+			loc += '&macAddr8021ag=' + destMac.value;
+			loc += '&vlanId8021ag=' + vlanid;
+		}
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function frmLoad() {
+	var mdlvl = <%ejGet(mdLevel8021ag)%>;
+	setSelect(document.forms[0].mdLevel, mdlvl);
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr><td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_DIAGNOSTICS)%></td>
+<td class="titletbl3"></td></tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(diag,TL_FAULTMGMT)%></td></tr>
+<tr><td class="sframe">
+<form>
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+<tr><td colspan=5 class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td colspan=5 class="title"><%WebStr(diag,FAULT_HINT1)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(diag,MD_LEVEL)%></td>
+	<td class="content" colspan=4><select size="1" name="mdLevel">
+				<option value="0"> 0</option>
+				<option value="1"> 1</option>
+				<option value="2" selected> 2</option>
+				<option value="3"> 3</option>
+				<option value="4"> 4</option>
+				<option value="5"> 5</option>
+				<option value="6"> 6</option>
+				<option value="7"> 7</option>
+			</select></td>
+</tr>
+<tr><td class="title"><%WebStr(diag,DEST_MAC)%></td>
+	<td class="content" colspan=4><input type='text' name="destMac" size="20" maxlength="17" value="<%ejGet(macAddr8021ag)%>"></td>
+</tr>
+<tr><td class="title"><%WebStr(diag,VID)%></td>
+	<td class="content" colspan=4><input type="text" size="4" name="vlanId" size="7" maxlength="4" value="<%ejGet(vlanId8021ag)%>"> [0-4095]</td>
+</tr>
+<tr><td class="title"><%WebStr(diag,VDSL_TYPE)%></td>
+	<td class="content" colspan=4><%ejGetOther(trafficType, 0)%></td>
+</tr>
+<tr><td colspan=5 class="title"><%WebStr(diag,MEP)%></td></tr>
+<tr><td class="title"><%WebStr(diag,LBM)%></td>
+	<td class="content" colspan=4></td><%ejGetOther(diag8021ag, lbresult)%>
+</tr>
+<tr><td colspan=5 class="title"><%WebStr(diag,MEPS)%></td></tr>
+<tr><td class="title" rowspan=4><%WebStr(diag,LTM)%></td>
+	<td class="content" width="15%"><%ejGetOther(diag8021ag, ltaddr1)%>&nbsp;</td>
+	<td class="content" width="15%"><%ejGetOther(diag8021ag, ltaddr2)%>&nbsp;</td>
+	<td class="content" width="15%"><%ejGetOther(diag8021ag, ltaddr3)%>&nbsp;</td>
+	<td class="content" width="15%"><%ejGetOther(diag8021ag, ltaddr4)%>&nbsp;</td>
+</tr>
+<tr>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr5)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr6)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr7)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr8)%>&nbsp;</td>
+</tr>
+<tr>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr9)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr10)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr11)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr12)%>&nbsp;</td>
+</tr>
+<tr>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr13)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr14)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr15)%>&nbsp;</td>
+	<td class="content"><%ejGetOther(diag8021ag, ltaddr16)%>&nbsp;</td>
+</tr>
+<tr><td colspan="5" class="btnline">
+<input type='button' name="mdl" onClick='btnApply(this.name)' value='<%WebStr(comm,SET_MD)%>'>&nbsp;
+<input type='button' name="lbm" onClick='btnApply(this.name)' value='<%WebStr(comm,SEND_LOOP)%>'>&nbsp;
+<input type='button' name="ltm" onClick='btnApply(this.name)' value='<%WebStr(comm,SEND_LINK)%>'>&nbsp;
+<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+</table> <!-- cfgframe -->
+</form>
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</body>
+</html>
+<%WebStr(cus,_c)%>
+<%WebStr(menu,_c)%>
+<%WebStr(diag,_c)%>
+<%WebStr(comm,_c)%>

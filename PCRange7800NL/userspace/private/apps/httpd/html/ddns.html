@@ -1,0 +1,218 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+var Entries=[<%DDNSGet()%>];
+var field=["Domain Name","Username","Password","Period"];
+var errMsg=["<% WebStr(comm,INVALID); %>","<% WebStr(comm,ERREMPTYFLD); %>"];
+var elms=["ddnsMode","wild","Hostname","Username","Password","timer","tunit"];
+// Check if a name valid
+function isDomainNameUnsafe(compareChar) {
+	var unsafeString = "\"<>%\\^[]`\+\$\,='#&@:!*() \t";
+		
+	if ( unsafeString.indexOf(compareChar) == -1 && compareChar.charCodeAt(0) > 32
+			&& compareChar.charCodeAt(0) < 123 )
+		return false; // found no unsafe chars, return false
+	else
+		return true;
+}
+function isValidDDomainName(name) {
+	for (var  i = 0; i < name.length; i++ ) {
+		if ( isDomainNameUnsafe(name.charAt(i)) == true )
+			return false;
+	}
+	return true;
+}
+function isUserNameUnsafe(compareChar) {
+	var unsafeString = "\"<>%\\^[]`\+\$\,='#&~:!*() \t";
+	if ( unsafeString.indexOf(compareChar) == -1 && compareChar.charCodeAt(0) > 32
+			&& compareChar.charCodeAt(0) < 123 )
+		return false; // found no unsafe chars, return false
+	else
+		return true;
+}
+function isValidUserName(name) {
+	for (var  i = 0; i < name.length; i++ ) {
+		if ( isUserNameUnsafe(name.charAt(i)) == true )
+			return false;
+	}
+	return true;
+}
+function btnApply(place) {
+	var lst = '';
+	var loc;
+	loc=(Entries.length==0)? 'ddnsmngr.cmd?action=add&service=':'ddnsmngr.cmd?action=edit&service=';
+	if ( place == 'ddnsmngr.cmd' ) {
+		with ( document.forms[0] ) {
+			if(ddns_enable[0].checked==true){
+				if ( Hostname.value=="" || Username.value=="" || Password.value=="" || timer.value=="" ) {
+					alert(errMsg[1]);
+					return;
+				}
+				if ( !isValidDDomainName(Hostname.value)) {
+					alert(field[0]+" : "+errMsg[0]);
+					Hostname.focus();
+					return;
+				}
+				if ( !isValidUserName(Username.value)) {
+					alert(field[1]+" : "+errMsg[0]);
+					Username.focus();
+					return;
+				}				
+				if ( !isSafeStr(Password.value)) {
+					alert(field[2]+" : "+errMsg[0]);
+					Password.focus();
+					return;
+				}
+				if(parseInt(timer.value)<0 || isNaN(timer.value) || isNumberStr(timer.value)==false)
+				{
+					alert(field[3]+" : "+errMsg[0]);
+					timer.focus();
+					return;
+				}
+				loc += ddnsMode.options[ddnsMode.selectedIndex].value;
+				loc += '&hostname=' + encodeUrl(Hostname.value);
+				loc += '&username=' + encodeUrl(Username.value);
+				loc += '&password=' + encodeUrl(Password.value);
+				loc += '&timer=' + timer.value;
+				loc += '&tunit=' + getSelect(tunit);
+				loc += submitCheck(wild);
+				loc += '&enable=1';
+			}else{//ddns_enable[1].checked==true
+				loc += Entries[0];
+				loc += '&username=' + Entries[3];
+				loc += '&password=' + Entries[4];
+				loc += '&hostname=' + Entries[2];
+				loc += '&timer=' + Entries[5];
+				loc += '&tunit=' + Entries[6];
+				if(Entries[1]=="" || Entries[1]=='0')
+					loc += '&wild=0';
+				else
+					loc += '&wild=1';
+				loc += '&enable=0';
+			}
+		}
+		if(Entries.length!=0) loc += '&rmLst=' + Entries[2];
+		loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+		var code = 'location="' + loc + '"';
+		document.forms[0].bApply.disabled=true;
+ 		document.forms[0].bCancel.disabled=true;
+		eval(code);
+	}
+}
+function frmLoad()
+{
+	with ( document.forms[0] ) {
+		if(Entries.length!=0){
+			ddns_enable[1].checked=(Entries[7]=='0')?true:false;
+			setSelect(ddnsMode,Entries[0]); //Dynamic DNS Server
+			wild.checked=(Entries[1]=='1')?true:false;
+			Hostname.value = Entries[2];
+			Username.value = Entries[3];
+			Password.value = Entries[4];
+			timer.value = Entries[5];
+			setSelect(tunit,Entries[6]);
+		}else ddns_enable[1].checked=true;
+		enableDDNS();
+	}
+}
+function enableDDNS()
+{
+	var fg=(document.forms[0].ddns_enable[0].checked)?0:1;
+	showEntriesDisable(elms,fg);
+	with ( document.forms[0] ){
+		if(fg==0){//enable
+			var t = ddnsMode.value;
+			wild.disabled=(t=='dyndns-custom' ||t=='dyndns' ||t=='dyndns-static' ||t=='dhs' ||t=='c3322')?false:true;
+		}
+	}
+}
+function showWild()
+{
+	with ( document.forms[0] ) {
+		var t = ddnsMode.value;
+		wild.checked=false;
+		wild.disabled=(t=='dyndns-custom' ||t=='dyndns' ||t=='dyndns-static' ||t=='dhs' ||t=='c3322')?false:true;
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onload=frmLoad()>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr><td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td></tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_DDNS)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(menu,MENU_DDNS)%></td>
+<td class="content"><input type='radio' name='ddns_enable' value='1' onclick="enableDDNS()" checked><%WebStr(comm,ENABLE)%>&nbsp;&nbsp;
+<input type='radio' name='ddns_enable' value='0' onclick="enableDDNS()"><%WebStr(comm,DISABLE)%></td></tr>
+<tr><td class="title"><%WebStr(lan,DDNS)%></td>
+<td class="content"><select name='ddnsMode' id='ddnsMode' size='1' onchange='showWild();'>
+				<option value='dyndns-custom'>www.dyndns.org(<%WebStr(lan,CUSTOM)%>)</option>
+				<option value='dyndns'>www.dyndns.org(<%WebStr(lan,DYNAMIC)%>)</option>
+				<option value='dyndns-static'>www.dyndns.org(<%WebStr(lan,STATIC)%>)</option>
+				<option value='zoneedit'>dynamic.zoneedit.com</option>
+				<option value='orgdns'>www.orgdns.org</option>
+				<option value='dhs'>www.dhs.org</option>
+				<option value='dyns'>www.dyns.cx</option>
+				<option value='minidns'>www.minidns.net</option>
+				<option value='no-ip'>www.no-ip.com</option>
+				<option value='c3322'>www.3322.org</option>
+				<option value='dyndns-dk'>dyndns.dk</option>
+				<option value='tzo'>www.tzo.com</option>
+				<option value='enom'>www.enom.com</option>
+				<option value='3domain'>www.3domain.hk</option>
+				<option value='dyfi'>www.dy.fi</option>
+				<option value='mweb'>ddns.mweb.net</option>
+			</select></td></tr>
+<tr><td class="title"><%WebStr(lan,WILDCARD)%></td>
+<td class="content"><input type='checkbox' name='wild' id='wild' value=''><%WebStr(comm,ENABLE)%></td></tr>
+<tr><td class="title"><%WebStr(lan,DOMAIN_NAME)%></td>
+<td class="content"><input type='text' name='Hostname' id='Hostname' size=40 maxlength='32'></td></tr>
+<tr><td class="title"><%WebStr(comm,USRNAME)%></td>
+<td class="content"><input type='text' name='Username' id='Username' size='40' maxlength='39'></td></tr>
+<tr><td class="title"><%WebStr(comm,PASSWORD)%></td>
+<td class="content"><input type='password' name='Password' id='Password' size=40 maxlength='23'></td></tr>
+<tr><td class="title"><%WebStr(lan,PERIOD)%></td>
+<td class="content"><input type='text' name='timer' id='timer' size=4 maxlength='2'>
+			<select name='tunit' id='tunit'>
+				<option value='0'><%WebStr(lan,DAYS)%></option>
+				<option value='1' selected><%WebStr(lan,HOURS)%></option>
+				<option value='2'><%WebStr(lan,MINUTES)%></option>
+			</select></td></tr>
+<tr><td colspan="2" class="btnline">
+<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply('ddnsmngr.cmd')">&nbsp;
+<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu,_c)%>
+<%WebStr(lan,_c)%>
+<%WebStr(comm,_c)%>
+<%WebStr(cus,_c)%>

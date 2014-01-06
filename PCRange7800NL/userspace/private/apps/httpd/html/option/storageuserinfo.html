@@ -1,0 +1,88 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(usb.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language='javascript'>
+<!-- hide
+var Entries=[<%StorageUserGet()%>];
+function showList()
+{
+	for(var i=0; i<Entries.length; i++)
+	{
+		document.write("<tr><td class=listrow>"+Entries[i][0]+"</td><td class=listrow>"+Entries[i][1]+"</td>");
+		document.write("<td class=listrow><input type='checkbox' name='rml' value="+Entries[i][0]+"></td></tr>");
+	}
+}
+function addClick() {
+	var code = 'location="' + 'storageusraccadd.html' + '"';
+	eval(code);
+}
+function removeClick(rml) {
+	var lst = '';
+	if (rml.length > 0)
+		for (i = 0; i < rml.length; i++) {
+			if ( rml[i].checked == true )
+				lst += rml[i].value + ', ';
+		}
+	else if ( rml.checked == true )
+		lst = rml.value;
+	var loc = 'storageuseraccountcfg.cmd?action=remove&rmLst=' + lst;
+	
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_STORAGE_USERACCOUNT)%></td></tr>
+<form>
+<tr><td class="sframe">
+	<table class=cfgframe cellspacing=2 cellpadding=0 width=100% align=center>
+	<tr><td class=listhead width=25%><%WebStr(comm,USRNAME)%></td>
+	<td class=listhead width=20%><%WebStr(usb,HOME_DIR)%></td>
+	<td class=listhead width=25%><%WebStr(comm,REMOVE)%></td>
+	</tr>
+<script language="javascript">
+<!-- hide
+showList();
+// done hiding -->
+</script>
+	<tr>
+		<td colspan=3 class="btnline">
+		<input type="button" onClick="addClick()" value="<%WebStr(comm,ADD)%>" name="bAdd">
+		<input type="button" onClick="removeClick(this.form.rml)" value="<%WebStr(comm,REMOVE)%>" name="bRemove">
+		</td>
+	</tr>
+	</table>
+</form>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(usb.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

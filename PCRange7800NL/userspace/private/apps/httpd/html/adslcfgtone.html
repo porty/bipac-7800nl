@@ -1,0 +1,89 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html><head>
+<title></title>
+<meta http-equiv='content-type' content='text/html; charset=<%WebStr(cus,CHARSET)%>'>
+<meta http-equiv='Pragma' content='no-cache'>
+<meta http-equiv='Expires' content='0'>
+<meta http-equiv='Cache-Control' content='no-cache'>
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript">
+<!-- hide
+function frmLoad() {
+	var tones = '<%ejGetTest(adslTestTones)%>';
+
+	if ( tones.length != 256) {
+		for (var i = 0; i < 256; i++ )
+			document.forms[0].tone[i].checked = true;
+		return;
+	}
+	for (var i = 0; i < 256; i++ ) {
+		document.forms[0].tone[i].checked=(tones.charAt(i) == '1')?true:false;
+	}
+}
+function applyClick() {
+	var loc = 'adslcfgtone.cmd?adslTestTones=';
+	var toneList = '';
+	with ( document.forms[0] ) {
+		for (var i = 0; i < 256; i++ ) {
+			if ( tone[i].checked == true )
+				toneList += '1';
+			else
+				toneList += '0';
+		}
+		loc += toneList;
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function clearAllClick() {
+	for (var i = 0; i < 256; i++ )
+		document.forms[0].tone[i].checked = false;
+}
+function checkAllClick() {
+	for (var i = 0; i < 256; i++ )
+		document.forms[0].tone[i].checked = true;
+}
+function closeClick() {
+	window.close();
+}
+function ListTones()
+{
+	var c;
+	for(var a=0; a<16; a++)
+	{
+		document.write("<tr>");
+		for(var b=0; b<16; b++)
+		{
+			c=a*16+b;
+			document.write("<td><input type='checkbox' name='tone'>"+c+"</td>");
+			if(c=="31")
+				document.write("<tr><td class='listhead' colspan=16><%WebStr(lan,DOWN_TONE)%></td></tr>");
+		}
+		document.write("</tr>");
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class=cfgframe cellspacing=2 cellpadding=0 width=100% align=center>
+<tr><td class=statusHeader colspan="16"><%WebStr(lan,TONE_SET)%></td></tr>
+<tr><td class="listhead" colspan="16"><%WebStr(lan,UP_TONE)%></td></tr>
+<script>ListTones();</script>
+<tr><td class=btnline colspan=16><input type=button value="<%WebStr(lan,CHECK_ALL)%>" onclick="checkAllClick()">&nbsp;
+<input type=button value="<%WebStr(lan,CLEAR_ALL)%>" onclick=clearAllClick()>&nbsp;
+<input type='button' onClick='applyClick()' value='<%WebStr(comm,APPLY)%>'>&nbsp;
+<input type='button' onClick='closeClick()' value='<%WebStr(comm,CLOSE)%>'></td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

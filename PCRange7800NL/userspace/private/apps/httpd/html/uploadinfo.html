@@ -1,0 +1,88 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(upg.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<html>
+<head>
+<title></title>
+<meta http-equiv='content-type' content='text/html; charset=<%WebStr(cus,CHARSET,CHARSET)%>'>
+<meta http-equiv='Pragma' content='no-cache'>
+<meta http-equiv='Expires' content='0'>
+<meta http-equiv='Cache-Control' content='no-cache'>
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript">
+<!-- hide
+var msg = new Array();
+msg[0] = "<%WebStr(upg,UPGMSG0)%>";
+msg[1] = "<%WebStr(upg,UPGMSG1)%>";
+msg[2] = "<%WebStr(upg,UPGMSG2)%>";
+msg[3] = "<%WebStr(upg,UPGMSG3)%>";
+msg[4] = "<%WebStr(upg,UPGMSG4)%>";
+var idxStr = '<%ejGetOther(sysInfo, upldSts)%>';
+
+function getMsgIndex() {
+	var idxNum = parseInt(idxStr);
+	if ( isNaN(idxNum) || idxNum < 0 || idxNum > 4 )
+		idxNum = 4;
+	return idxNum;
+}
+function reboot() {
+	var enblPopWin = '<%ejGet(enblPopWin)%>';
+	var loc = 'main.html';
+	var code = 'window.top.location="' + loc + '"';
+	
+	if ( enblPopWin == '1' ) {
+		loc = 'index.html';
+		code = 'location="' + loc + '"';
+	}
+	eval(code);
+}
+function frmLoad() {
+	// only reboot if upload progress is successful
+	if ( getMsgIndex() == 0 )
+		setTimeout('reboot()', 40000);
+}
+function btnBack() {
+	var code = 'location="' + 'upload.html' + '"';
+	if (<%ejGet(glbUploadMode)%> == 2)
+		code = 'location="' + 'updatesettings.cgi' + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_MANAGEMENT)%></td>
+<td class="titletbl3"></td>
+</tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_TL_UPDATE_SOFTWARE)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+	<tr><td class="header">
+	<script language="javascript">
+<!-- hide
+document.write(msg[getMsgIndex()]);
+// done hiding -->
+</script>
+	</td></tr>
+	<tr><td class="btnline"><input type="button" value="<%WebStr(comm,BACK)%>" onClick='btnBack()'></td></tr>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(upg.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

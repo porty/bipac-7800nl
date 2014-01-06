@@ -1,0 +1,191 @@
+<% WebStr(cus.sr,_o); %>
+<% WebStr(upg.sr,_o); %>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr("cus","CHARSET","utf-8")%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<style type="text/css">
+input { font-family:  Arial, Helvetica, sans-serif; font-size: 12px; color:#000000 ; text-decoration: none;}
+td {
+    font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	padding-left: 2px;
+}
+.mframe {
+	background-color: #FFFFFF; border: 1px solid #C0C0C0; BORDER-COLLAPSE: collapse; padding: 3px
+}
+.titletbl {
+	background-color: #FFFFFF; border: 0px; BORDER-COLLAPSE: collapse; padding: 0px;
+}
+td.upgtitletbl1 {
+	background-color: #FFFFFF; border: 0px; BORDER-COLLAPSE: collapse; padding: 0px; width: 14px; height: 30px
+}
+td.upgtitletbl3 {
+	background-color: #FFFFFF; border: 0px; BORDER-COLLAPSE: collapse; padding: 0px; width: 155px; height: 30px
+}
+td.titletbl2 {
+	background-color: #FFFFFF; border: 0px; BORDER-COLLAPSE: collapse; padding: 0px; height: 30px;
+}
+.capstr {
+	font-size: 12px;
+	font-weight: bold;
+	color: #007cc2;
+	font-family: Arial, Helvetica, sans-serif;
+}
+table.sframe {
+	background-color: #FFFFFF; border: 1px solid #B7CEE6; BORDER-COLLAPSE: collapse; margin: 8px 4px 8px 4px
+}
+td.sframe {
+	background-color: #FFFFFF; border: 1px solid #B7CEE6; padding: 0px
+}
+td.sframe_title {
+	background-color: #FFFFFF; border: 1px solid #B7CEE6; height: 18px;
+	padding: 0px
+}
+td.headline {
+	font-family: Arial, Helvetica, sans-serif; 
+	background-color: #e6e6e6;
+	color: #007cc2; 
+	FONT-SIZE: 12px; 
+	FONT-WEIGHT: bolder; 
+	HEIGHT: 20px;
+	TEXT-ALIGN: left; 
+	VERTICAL-ALIGN: middle; 
+	padding-left: 0px
+}
+td.header {
+	background-color: #E6E6E6; 
+	color: #333333;
+	font-family: Arial, Helvetica, sans-serif; 
+	FONT-SIZE: 12px; 
+	FONT-WEIGHT: bolder;
+	HEIGHT: 18px; 
+	TEXT-ALIGN: left; 
+	VERTICAL-ALIGN: middle; 
+	padding-left: 2px
+}
+.cfgframe {
+	background-color: #FFFFFF; margin: 2px auto 2px auto; BORDER-COLLAPSE: separate 
+}
+td.title {
+	background-color:#e6e6e6;
+	vertical-align:middle;
+	height: 25px;
+	padding-left: 2px;
+}
+td.content {
+    font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+    background-color: #EDF5FE;
+    padding-left: 2px;
+}
+td.btnline {
+	background-color: #e6e6e6;
+	font-family: Arial, Helvetica, sans-serif; FONT-SIZE: 12px;
+	HEIGHT: 32px; PADDING-LEFT: 5px; VERTICAL-ALIGN: middle
+}
+td.upgrade {
+border-color:#e6e6e6;background-color:#e6e6e6;border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px; border-left-style: solid; border-left-width: 1px;
+}
+td.upgrade1 {
+border-color:#007cc2;background-color:#007cc2;border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px; border-left-style: solid; border-left-width: 1px;
+}
+</style>
+<script language='javascript'>
+var waitTm = "<%MiscGet(progressTm)%>"; // sec
+waitTm = (waitTm == "") ? 0 : parseInt (waitTm) * 1000;
+var sepTm = waitTm / 4;
+var totWidth=300, unitTm, unitBar, unitPer, per=0;
+var r_width=totWidth;
+var chgfg = 0;
+function AdjustParm(t, totw, totper)
+{
+	if (t < totper * 1000) {
+		totw *= 1000;
+		totper *= 1000;
+		unitTm = 1000;
+		unitBar = parseInt (totw / t);
+		unitPer = parseInt (totper / t);
+	} else {
+		unitTm = parseInt (t / totper);
+		unitBar = (totw < 100) ? 1 : totw / 100;
+		unitPer = 1;
+	}
+}
+
+function progress()
+{
+	document.getElementById("left_bar").className="upgrade1";
+	if (waitTm > 0) {
+		r_width -= unitBar;
+		if (r_width < 0) r_width = 0;
+		per += unitPer;
+		if (per > 100) per = 100;
+	}	
+	document.getElementById("left_bar").style.width=totWidth-r_width;
+	document.getElementById("right_bar").style.width=r_width;
+	document.getElementById("percent").innerHTML= "&nbsp;&nbsp;" + per + "%";
+	if (waitTm <= 0) {
+		var hoststr=parent.parent.location.host;
+		var code='parent.parent.location.href="http://'+hoststr+'/"';
+		eval(code);
+		return;
+	} else {
+		waitTm = waitTm - unitTm;
+		if (waitTm <= 0) {
+			r_width = 0;
+			per = 100;
+		} else if (waitTm < sepTm && chgfg == 0) {
+			AdjustParm (waitTm, r_width, 100 - per);
+			chgfg = 1;
+		}
+		setTimeout('progress()', unitTm);
+	}
+}
+
+function init()
+{
+	AdjustParm (waitTm, totWidth, 100);
+	progress();
+}
+-->
+</script>
+</head>
+<body onload=init();>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="upgtitletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(upg,PROGRESS)%></td>
+	<td class="upgtitletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline">&nbsp;&nbsp;<%WebStr("upg","PROGRESS");%>...</td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td width="100%" class="header"><%WebStr("upg","NOTOFFDEV");%></td></tr>   
+		<tr><td width="100%" class="title">
+			<table border=0 width=400 height=25 cellpadding="0" cellspacing="0" align=left>
+				<td align=center width=60 style="font-size:12px;font-family:  Arial, Helvetica, sans-serif;"><%WebStr("upg","TOTAL");%> : </td>
+				<td id="left_bar" class="upgrade" width=0>&nbsp;</td>
+				<td id="right_bar" class="upgrade" width=300>&nbsp;</td>
+				<td width=30 id=percent style="font-size:12px;font-family:  Arial, Helvetica, sans-serif;"></td>
+			</table>
+		</td></tr>
+		<tr><td width="100%" class="title"><br>&nbsp;</td>
+		</tr>
+	</table>
+</td></t>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+<% WebStr(upg.sr,_c); %>
+<% WebStr(cus.sr,_c); %>

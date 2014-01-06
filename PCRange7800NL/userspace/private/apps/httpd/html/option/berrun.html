@@ -1,0 +1,68 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(layer2.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="refresh" content="2">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript">
+<!-- hide
+
+function frmLoad() {
+   var state = '<%ejGetTest(berState)%>';
+   if ( state == '0' ) {
+      var loc = 'berstop.tst';
+
+      var code = 'location="' + loc + '"';
+      eval(code);
+   }
+}
+
+function btnStop() {
+   var loc = 'berstop.tst?berState=0';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function btnClose() {
+   var loc = 'berstop.tst?berState=0';
+
+   var code = 'location="' + loc + '"';
+   eval(code);
+   window.close();
+}
+
+// done hiding -->
+</script>
+<base target="_self">
+</head>
+
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<form>
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+<tr><td colspan=2 class="header"><%WebStr(layer2,HN_STS_DSL_BER_TST)%> -- <%WebStr(comm,RUNNING)%></td></tr>
+<tr><td colspan=2 class="title"><%WebStr(layer2,HN_STS_DSL_BER_RUN_HINT1)%></td></tr>
+<tr><td class="listhead" width="35%"><%WebStr(layer2,FN_STS_DSL_BER_RUN_CONN_SP)%></td>
+<td class="listrow"><%ejGetOther(lineRate,1,0)%> Kbps</td></tr>
+<tr><td class="listhead"><%WebStr(layer2,FN_STS_DSL_BER_RUN_DUR)%></td>
+<td class="listrow"><%ejGetTest(berTime)%> <%WebStr(comm,SECONDS)%></td></tr>
+
+<tr><td colspan="2" class="btnline">
+<input type="button" name="bApply" value="<%WebStr(comm,STOP)%>" onClick="btnStop()">&nbsp;
+<input type="button" name="bCancel" value="<%WebStr(comm,CLOSE)%>" onclick="btnClose();"></td></tr>
+</table> <!-- cfgframe -->
+</form>
+</td></tr> <!-- mframe -->
+</table> <!-- mframe -->
+</body>
+</html>
+<%WebStr(layer2,_c)%>
+<%WebStr(comm,_c)%>
+<%WebStr(cus,_c)%>

@@ -1,0 +1,217 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+//var enblIP6 = '<%ejGet(enblv6)%>';
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>", "<%WebStr(comm,ERR_OUT_RANGE)%>", "<%WebStr(lan,ERR_QI)%>"];
+var igmps=[["igmpVer","<%WebStr(lan,DFT_VER)%>","1","3"],
+["igmpQI","<%WebStr(lan,QUERY_INTVL)%>","1","999"],
+["igmpQRI","<%WebStr(lan,RESPONS_INTVL)%>","1","999"],
+["igmpLMQI","<%WebStr(lan,LAST_INTVL)%>","1","999"],
+["igmpRV","<%WebStr(lan,ROBUST)%>","2","999"],
+["igmpMaxGroups","<%WebStr(lan,GROUPS)%>","1","999"],
+["igmpMaxSources","<%WebStr(lan,DATASRC_IGMP)%>","1","24"],
+["igmpMaxMembers","<%WebStr(lan,GROUP_MEM)%>","1","999"]];
+var mlds=[["mldVer","<%WebStr(lan,DFT_VER)%>","1","2"], 
+["mldQI","<%WebStr(lan,QUERY_INTVL)%>","1","999"],
+["mldQRI","<%WebStr(lan,RESPONS_INTVL)%>","1","999"],
+["mldLMQI","<%WebStr(lan,LAST_INTVL)%>","1","999"],
+["mldRV","<%WebStr(lan,ROBUST)%>","2","999"],
+["mldMaxGroups","<%WebStr(lan,GROUPS)%>","1","999"],
+["mldMaxSources","<%WebStr(lan,DATASRC_MLD)%>","1","24"],
+["mldMaxMembers","<%WebStr(lan,GROUP_MEM)%>","1","999"]];
+var mld_array=new Array("mld_0","mld_1","mld_2","mld_3","mld_4","mld_5","mld_6","mld_7","mld_8","mld_9","mld_10");
+
+function frmLoad() {
+	 multicast = '<%ejGetOther(multicast)%>';
+	var st=(enblIP6=="1")?1:0;
+	showEntries(mld_array, st);
+	var igmpFastLeaveEnable = '<%ejGet(igmpFastLeaveEnable)%>';
+	var igmpLan2LanMulticastEnable = '<%ejGet(igmpLan2LanMulticastEnable)%>';
+	var mldFastLeaveEnable = '<%ejGet(mldFastLeaveEnable)%>';
+	var mldLan2LanMulticastEnable = '<%ejGet(mldLan2LanMulticastEnable)%>';
+	with ( document.forms[0] ) {
+		igmpFastLeave.checked = (igmpFastLeaveEnable == '1')? true:false;
+		igmpLan2LanMulticast.checked = (igmpLan2LanMulticastEnable == '1')? true:false;
+		mldFastLeave.checked = (mldFastLeaveEnable == '1')? true:false;
+		mldLan2LanMulticast.checked = (mldLan2LanMulticastEnable == '1')? true:false;
+	}
+}
+function chkValue(elm, str, min, max)
+{
+	with ( document.forms[0] ) {
+		var a=parseInt(document.getElementById(elm).value);
+		var b=document.getElementById(elm).value;
+		if(isNaN(a) || isNumberStr(b)==false){
+			alert(str+" : "+errMsg[0]);
+			document.getElementById(elm).focus();
+			return false;
+		}
+		if ( a < min || a > max ) {
+			alert(str+" : "+errMsg[2]);
+			document.getElementById(elm).focus();
+			return false;
+		}
+	}
+}
+function btnApply() {
+var loc = 'multicast.cmd?';
+	with ( document.forms[0] ) {
+		for(var i=0; i<igmps.length; i++)
+		{
+			if( chkValue(igmps[i][0],igmps[i][1],igmps[i][2],igmps[i][3])==false)	return;
+		}
+		if ( enblIP6 == '1' ){
+			for(var i=0; i<mlds.length; i++)
+			{
+				if( chkValue(mlds[i][0],mlds[i][1],mlds[i][2],mlds[i][3])==false)	return;
+			}
+		}
+		if(parseInt(igmpQRI.value) >= parseInt(igmpQI.value))
+		{
+			alert(errMsg[3]);
+			igmpQRI.focus();
+			return;
+		}
+		if(parseInt(mldQRI.value) >= parseInt(mldQI.value))
+		{
+			alert(errMsg[3]);
+			mldQRI.focus();
+			return;
+		}
+		for(var i=0; i<igmps.length; i++){
+			if(i==0)	
+				loc+=igmps[i][0]+"="+document.getElementById(igmps[i][0]).value;
+			else
+				loc+="&"+igmps[i][0]+"="+document.getElementById(igmps[i][0]).value;
+		}
+		if ( igmpFastLeave.checked == true )	loc += '&igmpFastLeaveEnable=1';
+		else	loc += '&igmpFastLeaveEnable=0';
+	
+		if ( igmpLan2LanMulticast.checked == true )	loc += '&igmpLan2LanMulticastEnable=1';
+		else	loc += '&igmpLan2LanMulticastEnable=0';
+	
+		if ( enblIP6 == '1' ){
+			for(var i=0; i<mlds.length; i++)
+				loc+="&"+mlds[i][0]+"="+document.getElementById(mlds[i][0]).value;
+
+				if ( mldFastLeave.checked == true )	loc += '&mldFastLeaveEnable=1';
+				else	loc += '&mldFastLeaveEnable=0';
+	
+				if ( mldLan2LanMulticast.checked == true )		loc += '&mldLan2LanMulticastEnable=1';
+				else	loc += '&mldLan2LanMulticastEnable=0';
+		}
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_ADVANCED_SETUP); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11">IGMP</td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(lan,DFT_VER)%></td>
+			<td class="content"><input type='text' name='igmpVer' id='igmpVer' size="5" maxlength="1" value='<%ejGet(igmpVer)%>'>&nbsp;[1-3] </td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,QUERY_INTVL)%></td>
+			<td class="content"><input type='text' name='igmpQI' id='igmpQI' size="5" maxlength="3" value='<%ejGet(igmpQI)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,RESPONS_INTVL)%></td>
+			<td class="content"><input type='text' name='igmpQRI' id='igmpQRI' size="5" maxlength="3" value='<%ejGet(igmpQRI)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,LAST_INTVL)%></td>
+			<td class="content"><input type='text' name='igmpLMQI' id='igmpLMQI' size="5" maxlength="3" value='<%ejGet(igmpLMQI)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,ROBUST)%></td>
+			<td class="content"><input type='text' name='igmpRV' id='igmpRV' size="5" maxlength="3" value='<%ejGet(igmpRV)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,GROUPS)%></td>
+			<td class="content"><input type='text' name='igmpMaxGroups' id='igmpMaxGroups' size="5" maxlength="3" value='<%ejGet(igmpMaxGroups)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,DATASRC_IGMP)%></td>
+			<td class="content"><input type='text' name='igmpMaxSources' id='igmpMaxSources' size="5" maxlength="3" value='<%ejGet(igmpMaxSources)%>'>&nbsp;[1-24]</td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,GROUP_MEM)%></td>
+			<td class="content"><input type='text' name='igmpMaxMembers' id='igmpMaxMembers' size="5" maxlength="3" value='<%ejGet(igmpMaxMembers)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,FAST_LEAVE)%></td>
+			<td class="content"><input type='checkbox' name='igmpFastLeave'><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,INTRA)%></td>
+			<td class="content"><input type='checkbox' name='igmpLan2LanMulticast' ><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr id="mld_0" style="display:none"><td colspan=2 class="header">MLD</td></tr>
+		<tr id="mld_1" style="display:none"><td class="title" width="35%"><%WebStr(lan,DFT_VER)%></td>
+			<td class="content"><input type='text' name='mldVer' id='mldVer' size="5" maxlength="1" value='<%ejGet(mldVer)%>'>&nbsp;[1-2]</td>
+		</tr>
+		<tr id="mld_2" style="display:none"><td class="title"><%WebStr(lan,QUERY_INTVL)%></td>
+			<td class="content"><input type='text' name='mldQI' id='mldQI' size="5" maxlength="3" value='<%ejGet(mldQI)%>'></td>
+		</tr>
+		<tr id="mld_3" style="display:none"><td class="title"><%WebStr(lan,RESPONS_INTVL)%></td>
+			<td class="content"><input type='text' name='mldQRI' id='mldQRI' size="5" maxlength="3" value='<%ejGet(mldQRI)%>'></td>
+		</tr>
+		<tr id="mld_4" style="display:none"><td class="title"><%WebStr(lan,LAST_INTVL)%></td>
+			<td class="content"><input type='text' name='mldLMQI' id='mldLMQI' size="5" maxlength="3" value='<%ejGet(mldLMQI)%>'></td>
+		</tr>
+		<tr id="mld_5" style="display:none"><td class="title"><%WebStr(lan,ROBUST)%></td>
+			<td class="content"><input type='text' name='mldRV' id='mldRV' size="5" maxlength="3" value='<%ejGet(mldRV)%>'></td>
+		</tr>
+		<tr id="mld_6" style="display:none"><td class="title"><%WebStr(lan,GROUPS)%></td>
+			<td class="content"><input type='text' name='mldMaxGroups' id='mldMaxGroups' size="5" maxlength="3" value='<%ejGet(mldMaxGroups)%>'></td>
+		</tr>
+		<tr id="mld_7" style="display:none"><td class="title"><%WebStr(lan,DATASRC_MLD)%></td>
+			<td class="content"><input type='text' name='mldMaxSources' id='mldMaxSources' size="5" maxlength="3" value='<%ejGet(mldMaxSources)%>'>&nbsp;[1-24]</td>
+		</tr>
+		<tr id="mld_8" style="display:none"><td class="title"><%WebStr(lan,GROUP_MEM)%></td>
+			<td class="content"><input type='text' name='mldMaxMembers' id='mldMaxMembers' size="5" maxlength="3" value='<%ejGet(mldMaxMembers)%>'></td>
+		</tr>
+		<tr id="mld_9" style="display:none"><td class="title"><%WebStr(lan,FAST_LEAVE)%></td>
+			<td class="content"><input type='checkbox' name='mldFastLeave'><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr id="mld_10" style="display:none"><td class="title"><%WebStr(lan,INTRA)%></td>
+			<td class="content"><input type='checkbox' name='mldLan2LanMulticast'><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

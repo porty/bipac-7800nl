@@ -1,0 +1,1295 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(wlan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var nModeArr=["div_nMode_sel","div_nMode1","div_nMode2","div_nMode3","div_nMode4","div_nMode5","div_nMode6","div_nMode7","div_nMode8","div_nMode9","div_nMode10","div_nMode11","div_nMode12","div_nMode13","div_nMode14"];
+var div_nMode=["div_nMode1","div_nMode2","div_nMode3","div_nMode4","div_nMode5","div_nMode6","div_nMode7","div_nMode8","div_nMode9","div_nMode10","div_nMode11","div_nMode12","div_nMode13","div_nMode14"];
+var div_gMode=["div_gMode1","div_gMode2"];
+var div_regMode=["div_regMode1","div_regMode2","div_regMode3"];
+var vecArr=["vec1","vec2"];
+var dataPath=["dataPath1","dataPath2","dataPath3"];
+
+var sel_nmodeInput=["wlNMmcsidx","wlNProtection","wlNReqd","wlNBwCap"];
+
+var fields=["<%WebStr(wlan,FRAG_THRESHOLD)%>","<%WebStr(wlan,RTS_THRESHOLD)%>","<%WebStr(wlan,DTIM_INTERVAL)%>","<%WebStr(wlan,BEACON_INTERVAL)%>","<%WebStr(wlan,GLOBAL_MAXCLIENTS)%>","<%WebStr(wlan,PRENTWK_RADARCHK)%>","<%WebStr(wlan,INNTWK_RADARCHK)%>","<%WebStr(wlan,RTS_THRESHOLD)%>"];
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>", "<%WebStr(comm,ERR_OUT_RANGE)%>", "<%WebStr(wlan,WL_DISABLEERR)%>"];
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var enbl = '<%ejGetWl(wlEnbl_wl0v0)%>';
+var country = '<%ejGetWl(wlCountry)%>';
+var channel = '<%ejGetWl(wlChannel)%>';
+var rate = '<%ejGetWl(wlRate)%>';
+var frg = '<%ejGetWl(wlFrgThrshld)%>';
+var rts = '<%ejGetWl(wlRtsThrshld)%>';
+var dtm = '<%ejGetWl(wlDtmIntvl)%>';
+var bcn = '<%ejGetWl(wlBcnIntvl)%>';
+var phy = '<%ejGetWl(wlPhyType)%>';
+var brate = '<%ejGetWl(wlBasicRate)%>';
+var fburst = '<%ejGetWl(wlFrameBurst)%>';
+var gmode = '<%ejGetWl(wlgMode)%>';
+var pro = '<%ejGetWl(wlProtection)%>';
+var pre = '<%ejGetWl(wlPreambleType)%>';
+var band= '<%ejGetWl(wlBand)%>';
+var mcastrate = '<%ejGetWl(wlMCastRate)%>';
+var hasafterburner = '<%ejGetWl(wlHasAfterburner)%>';
+var afterburneren = '<%ejGetWl(wlAfterBurnerEn)%>';
+var bands = '<%ejGetWl(wlBands)%>';
+var mode = '<%ejGetWl(wlMode)%>';
+var wlRefresh = '<%ejGetWl(wlRefresh)%>';
+var TxPwrPcnt = '<%ejGetWl(wlTxPwrPcnt)%>';
+var reg_mode = '<%ejGetWl(wlRegMode)%>';
+var dfs_preism = '<%ejGetWl(wlDfsPreIsm)%>';
+var dfs_postism = '<%ejGetWl(wlDfsPostIsm)%>';
+var tpcDb = '<%ejGetWl(wlTpcDb)%>';
+var wme = '<%ejGetWl(wlWme)%>';
+var wlCurrentChannel = '<%ejGetWl(wlCurrentChannel)%>';
+var csscantimer = '<%ejGetWl(wlCsScanTimer)%>';
+var nctrlsb = '<%ejGetWl(wlNCtrlsb)%>';
+var corerev = '<%ejGetWl(wlCoreRev)%>';
+var npro = '<%ejGetWl(wlNProtection)%>';
+var nmcsidx = '<%ejGetWl(wlNMcsidx)%>';
+var chanspec = '<%ejGetWl(wlCurrentChSpec)%>';
+var nmode = '<%ejGetWl(wlNmode)%>'; 
+var nreqd = '<%ejGetWl(wlNReqd)%>'; 
+var wmenoack= '<%ejGetWl(wlWmeNoAck)%>';
+var wmeapsd= '<%ejGetWl(wlWmeApsd)%>';
+var nbwcap= '<%ejGetWl(wlNBwCap)%>'; 
+var haswme= '<%ejGetWl(wlHasWme)%>';
+var globalmaxassoc= '<%ejGetWl(wlGlobalMaxAssoc)%>';
+var curr_bw_str = "";
+var hasvec = '<%ejGetWl(wlHasVec)%>';
+var iperf = '<%ejGetWl(wlIperf)%>';
+var vec = '<%ejGetWl(wlVec)%>';
+var wpa = '<%ejGetWl(wlWpa)%>';
+var chanimstate = '<%ejGetWl(wlChanImState)%>';
+var rifsadvert = '<%ejGetWl(wlRifsAdvert)%>';
+var obsscoex = '<%ejGetWl(wlObssCoex)%>';
+var rxchain_pwrsave_enable = '<%ejGetWl(wlRxChainPwrSaveEnable)%>';
+var rxchain_pwrsave_quiet_time = '<%ejGetWl(wlRxChainPwrSaveQuietTime)%>';
+var rxchain_pwrsave_pps = '<%ejGetWl(wlRxChainPwrSavePps)%>';
+var radio_pwrsave_enable = '<%ejGetWl(wlRadioPwrSaveEnable)%>';
+var radio_pwrsave_quiet_time = '<%ejGetWl(wlRadioPwrSaveQuietTime)%>';
+var radio_pwrsave_pps        = '<%ejGetWl(wlRadioPwrSavePps)%>';
+var radio_pwrsave_on_time    = '<%ejGetWl(wlRadioPwrSaveOnTime)%>';
+var txPrio= '<%ejGetWl(wlTxPriority)%>';
+var rxPrio= '<%ejGetWl(wlRxPriority)%>';
+var calPrio= '<%ejGetWl(wlCalPriority)%>';
+var show= '<%ejGetWl(wlshow)%>';
+if ( wlRefresh == '1' ) {
+	var code = 'location="wlcfgadvrefresh.wl?wlRefresh=0"';
+	eval(code);
+}
+function getGmodeIndex(mode) {
+	var ret = 0;
+	switch(mode) {
+		case '0':
+			ret = 3;
+			break;
+		case '4':
+			ret = 1;
+			break;
+		case '5':
+			ret = 2;
+			break;
+		default:
+			ret = 0;
+			break;
+	}
+	return ret;
+}
+function getNmodeIndex(mode) {
+	with ( document.forms[0] ) {
+		for (var i = 0; i < wlNmode.length; i++)
+		{
+			if (wlNmode[i].value == mode)
+			return i;
+		}
+	}
+	return 0;
+}
+function genericChange(OnPageLoad) {
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			wlRate.selectedIndex = getRateIndex(rate);
+			wlMCastRate.selectedIndex = getRateIndex(mcastrate);
+			wlBasicRate.selectedIndex = getBasicRateIndex(brate);
+			wlFrameBurst.selectedIndex = getFrameBurstIndex(fburst);
+			wlRifsAdvert.selectedIndex = rifsadvert;
+			wlObssCoex.value = obsscoex;
+			wlRxChainPwrSaveEnable.value = rxchain_pwrsave_enable;
+			wlRxChainPwrSaveQuietTime.value = rxchain_pwrsave_quiet_time;
+			wlRxChainPwrSavePps.value = rxchain_pwrsave_pps;
+			wlRadioPwrSaveEnable.value = radio_pwrsave_enable;
+      		wlRadioPwrSaveQuietTime.value = radio_pwrsave_quiet_time;
+      		wlRadioPwrSavePps.value = radio_pwrsave_pps;
+	      	wlRadioPwrSaveOnTime.value = radio_pwrsave_on_time;
+			wlFrgThrshld.value = frg;
+			wlRtsThrshld.value = rts;
+			wlDtmIntvl.value = dtm;
+			wlBcnIntvl.value = bcn;
+			wlGlobalMaxAssoc.value = globalmaxassoc;
+			wlCsScanTimer.value = csscantimer;
+			wlTxPower.selectedIndex = ((TxPwrPcnt/20) -1);
+			wlRegMode.selectedIndex = reg_mode;
+			wlDfsPreIsm.value = dfs_preism;
+			wlDfsPostIsm.value = dfs_postism;
+			wlTpcDb.selectedIndex = getTpcDbIndex(tpcDb);
+			/* preamble */
+			wlPreambleType.selectedIndex=( pre == 'short' )?1:0;
+			wlTxPriority.selectedIndex = txPrio;
+			wlRxPriority.selectedIndex = rxPrio;
+			wlCalPriority.selectedIndex = calPrio;
+		}
+	}
+}
+function gModeChange(OnPageLoad) {
+	var sel_band;
+	var sel_gmode;
+	var sel_pro;
+	var sel_pre;
+	var sel_nmode;
+	/* save selected */
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			sel_band = band;
+			sel_gmode = gmode;
+			sel_pro = pro;
+			sel_nmode = nmode;
+		} else {
+			sel_band =wlBand.value;
+			sel_gmode = wlgMode.value;
+			sel_pro = wlProtection.value;
+			sel_nmode = wlNmode.value;
+		}
+		showhide("preambleType", 0);
+		wlProtection.selectedIndex = getGModeProtection(sel_pro);
+		if (phy == "n" && sel_nmode != "off")
+			showEntries(div_gMode,0);
+		else {
+			switch(sel_gmode) {
+			case '0':
+				showhide("preambleType", 1);
+				wlgMode.selectedIndex = 3;
+				break;
+			case '4':
+				wlgMode.selectedIndex = 1;
+				break;
+			case '5':
+				wlgMode.selectedIndex = 2;
+				break;
+			default:
+				wlgMode.selectedIndex = 0;
+				showhide("preambleType", 1);
+				break;
+			}
+			if (sel_band == "2") {
+				var fg=(phy == "b")?0:1;
+				showEntries(div_gMode,fg);
+			}
+			else { //11a
+				showhide("preambleType", 0);
+				showEntries(div_gMode,0);
+			}
+		}
+	}
+}
+function wlLoadCountryList(OnPageLoad)
+{
+	var sel = 0;
+	var idx;
+	/* save selected */
+	with ( document.forms[0] ) {
+		if(OnPageLoad)	sel = country;
+		else	sel = wlCountry.options[wlCountry.selectedIndex].value;
+		/* load list */
+		if (band == "1") { // 5G
+			<%ejGetWl(wlCountryList, a)%>
+		}else{
+			<%ejGetWl(wlCountryList, b)%>
+		}/* mark selected */
+		for (idx=0; idx < wlCountry.options.length; idx++) {
+			if (wlCountry.options[idx].value == sel) {
+				wlCountry.options[idx].selected = true;
+				break;
+			}
+		}
+		/* set to all(the last one) if not found */
+		if( idx == wlCountry.options.length)
+			wlCountry.options[idx-1].selected = true;
+	}
+}
+function loadChannelList(OnPageLoad)
+{
+	var sel_ch;
+	var sel_band;
+	var sel_nbw_cap;
+	var sel_sb;
+	var idx;
+	/* save selected */
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			sel_ch = channel;
+			sel_band = band;
+			sel_nbw_cap = nbwcap;
+			sel_sb = nctrlsb;
+		} else {
+			sel_ch = wlChannel.value;
+			sel_band =wlBand.value;
+			sel_nbw_cap = wlNBwCap.value;
+			sel_sb = wlNCtrlsb.value;
+		}
+		/* load list */
+		wlChannel.length = 0;
+		if ((sel_band == "2") && (phy != "n") ) 
+		{	<%ejGetWl(wlChannelList, b)%>
+		}else  if ((sel_band == "1") && (phy != "n")) 
+		{	<%ejGetWl(wlChannelList, a)%>
+		}else  if ((sel_band == "2") && (phy == "n") ) {
+			if(sel_nbw_cap == "1") {
+				if(sel_sb == 1){ <%ejGetWl(wlChannelList, n, b, 40, "upper")%>
+				}else {
+					<%ejGetWl(wlChannelList, n, b, 40, "lower")%>
+				}
+			} else if(sel_nbw_cap == "0" || sel_nbw_cap == "2")
+				{
+					<%ejGetWl(wlChannelList, n, b, 20 )%>
+				}
+		}else  if ((sel_band == "1") && (phy == "n") ) {
+			if(sel_nbw_cap == "1" || sel_nbw_cap == "2") {
+				if(sel_sb == 1){ <%ejGetWl(wlChannelList, n, a, 40, "upper")%>
+				}else {	<%ejGetWl(wlChannelList, n, a, 40, "lower")%>
+				}
+			} else if (sel_nbw_cap == "0") 
+				{<%ejGetWl(wlChannelList, n, a, 20 )%>
+				}
+		}else 
+			wlChannel[0] = new Option("<%WebStr(wlan,AUTO)%>", "0")
+		/* mark selected */
+		for (idx=0; idx<wlChannel.options.length; idx++) {
+			if (wlChannel.options[idx].value == sel_ch) {
+				wlChannel.options[idx].selected = true;
+				break;
+			}
+		}
+		/* set to first channel none-auto if not found */
+		if (idx == wlChannel.options.length) {
+			wlChannel.options[1].selected = true;
+		}
+		wlCsScanTimer.disabled=( wlChannel.selectedIndex != 0 )?true:false;
+	}
+}
+function loadRateList(OnPageLoad) {
+	var sel_band;
+	var sel_rate;
+	var idx;
+	var sel_nmode;
+	var sel_gmode;
+	/* save selected */
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			sel_band = band;
+			sel_rate = rate;
+			sel_nmode = nmode;
+			sel_gmode = gmode;
+		}else{
+			sel_band = wlBand.value;
+			sel_rate = wlRate.value;
+			sel_nmode = wlNmode.value;
+			sel_gmode = wlgMode.value;
+		}
+		if(phy != "n") sel_nmode = "off";
+		wlRate.length = 0;
+		if (sel_band == "2") 
+		{ // 2.4G
+			if (phy == "b" || (country == "JP" && wlChannel.value == 14) ||(sel_nmode == "off" && sel_gmode == "0"))
+			{
+				wlRate[0] = new Option("<%WebStr(wlan,AUTO)%>", "0");
+				wlRate[1] = new Option("1 Mbps", "1000000");
+				wlRate[2] = new Option("2 Mbps", "2000000");
+				wlRate[3] = new Option("5.5 Mbps", "5500000");
+				wlRate[4] = new Option("11 Mbps", "11000000");
+			}else{
+				wlRate[0] = new Option("<%WebStr(wlan,AUTO)%>", "0");
+				wlRate[1] = new Option("1 Mbps", "1000000");
+				wlRate[2] = new Option("2 Mbps", "2000000");
+				wlRate[3] = new Option("5.5 Mbps", "5500000");
+				wlRate[4] = new Option("6 Mbps", "6000000");
+				wlRate[5] = new Option("9 Mbps", "9000000");
+				wlRate[6] = new Option("11 Mbps", "11000000");
+				wlRate[7] = new Option("12 Mbps", "12000000");
+				wlRate[8] = new Option("18 Mbps", "18000000");
+				wlRate[9] = new Option("24 Mbps", "24000000");
+				wlRate[10] = new Option("36 Mbps", "36000000");
+				wlRate[11] = new Option("48 Mbps", "48000000");
+				wlRate[12] = new Option("54 Mbps", "54000000");
+			}
+		}else if (sel_band == "1") { // 5G
+			wlRate[0] = new Option("Auto", "0");
+			wlRate[1] = new Option("6 Mbps", "6000000");
+			wlRate[2] = new Option("9 Mbps", "9000000");
+			wlRate[3] = new Option("12 Mbps", "12000000");
+			wlRate[4] = new Option("18 Mbps", "18000000");
+			wlRate[5] = new Option("24 Mbps", "24000000");
+			wlRate[6] = new Option("36 Mbps", "36000000");
+			wlRate[7] = new Option("48 Mbps", "48000000");
+			wlRate[8] = new Option("54 Mbps", "54000000");
+		}else	wlRate[0] = new Option("<%WebStr(wlan,AUTO)%>", "0");
+		if(sel_nmode != "off") {
+			/* exclude auto for 802.11a/b/g (Legacy) rates if 11n is enabled */
+			wlRate[0]=null;
+		}
+		/* mark selected */
+		for (idx = 0; idx < wlRate.options.length; idx++) {
+			if (wlRate.options[idx].value == sel_rate) {
+				wlRate.options[idx].selected = true;
+				break;
+			}
+		}
+		/* set to first(Auto) if not found */
+		if( idx == wlRate.options.length)
+			wlRate.options[0].selected = true;
+	}
+}
+function loadMCastRateList(OnPageLoad) {
+	var sel_band;
+	var sel_rate;
+	var idx;
+	var sel_nmode;
+	var sel_gmode;
+	/* save selected */
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			sel_band = band;
+			sel_rate = mcastrate;
+			sel_nmode = nmode;
+			sel_gmode = gmode;
+		}else{
+			sel_band = wlBand.value;
+			sel_rate = wlMCastRate.value;
+			sel_nmode = wlNmode.value;
+			sel_gmode = wlgMode.value;
+		}
+		if(phy != "n") sel_nmode = "off";
+		wlMCastRate.length = 0;
+		if (sel_band == "2") { // 2.4G
+			if (phy == "b" ||(country == "JP" && document.forms[0].wlChannel.value == 14) ||	(sel_nmode == "off" && sel_gmode == "0")) {
+				wlMCastRate[0] = new Option("<%WebStr(wlan,AUTO)%>", "0");
+				wlMCastRate[1] = new Option("1 Mbps", "1000000");
+				wlMCastRate[2] = new Option("2 Mbps", "2000000");
+				wlMCastRate[3] = new Option("5.5 Mbps", "5500000");
+				wlMCastRate[4] = new Option("11 Mbps", "11000000");
+			}else {
+				wlMCastRate[0] = new Option("<%WebStr(wlan,AUTO)%>", "0");
+				wlMCastRate[1] = new Option("1 Mbps", "1000000");
+				wlMCastRate[2] = new Option("2 Mbps", "2000000");
+				wlMCastRate[3] = new Option("5.5 Mbps", "5500000");
+				wlMCastRate[4] = new Option("6 Mbps", "6000000");
+				wlMCastRate[5] = new Option("9 Mbps", "9000000");
+				wlMCastRate[6] = new Option("11 Mbps", "11000000");
+				wlMCastRate[7] = new Option("12 Mbps", "12000000");
+				wlMCastRate[8] = new Option("18 Mbps", "18000000");
+				wlMCastRate[9] = new Option("24 Mbps", "24000000");
+				wlMCastRate[10] = new Option("36 Mbps", "36000000");
+				wlMCastRate[11] = new Option("48 Mbps", "48000000");
+				wlMCastRate[12] = new Option("54 Mbps", "54000000");
+			}
+		}else if (sel_band == "1") { // 5G
+				wlMCastRate[0] = new Option("<%WebStr(wlan,AUTO)%>", "0");
+				wlMCastRate[1] = new Option("6 Mbps", "6000000");
+				wlMCastRate[2] = new Option("9 Mbps", "9000000");
+				wlMCastRate[3] = new Option("12 Mbps", "12000000");
+				wlMCastRate[4] = new Option("18 Mbps", "18000000");
+				wlMCastRate[5] = new Option("24 Mbps", "24000000");
+				wlMCastRate[6] = new Option("36 Mbps", "36000000");
+				wlMCastRate[7] = new Option("48 Mbps", "48000000");
+				wlMCastRate[8] = new Option("54 Mbps", "54000000");
+		}else
+			wlMCastRate[0] = new Option("<%WebStr(wlan,AUTO)%>", "0");
+		/* mark selected */
+		for (idx=0; idx < wlMCastRate.options.length; idx++) {
+			if (wlMCastRate.options[idx].value == sel_rate) {
+				wlMCastRate.options[idx].selected = true;
+				break;
+			}
+		}
+		/* set to first(Auto) if not found */
+		if( idx == wlMCastRate.options.length)
+			wlMCastRate.options[0].selected = true;
+	}
+}
+function loadBasicRateList(OnPageLoad) {
+	var sel_band;
+	var sel_rate;
+	var idx;
+	/* save selected */
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			sel_band = band;
+			sel_rate = brate;
+		}else {
+			sel_band = wlBand.value;
+			sel_rate = wlBasicRate.value;
+		}
+		wlBasicRate.length = 0;
+		if (sel_band == "2") { // 2.4G
+			wlBasicRate[0] = new Option("<%WebStr(wlan,DEFAULT)%>", "default");
+			wlBasicRate[1] = new Option("<%WebStr(wlan,ALL)%>", "all");
+			wlBasicRate[2] = new Option("1 & 2 Mbps", "12");
+			if (phy != "b") 	wlBasicRate[3] = new Option("1 & 2 & 5.5 & 6 & 11 & 12 & 24 Mbps", "wifi2");
+		}else if (sel_band == "1") { // 5G
+			wlBasicRate[0] = new Option("<%WebStr(wlan,DEAFULT)%>", "default");
+			wlBasicRate[1] = new Option("<%WebStr(wlan,ALL)%>", "all");
+			wlBasicRate[2] = new Option("6 & 12 Mbps", "12");
+			wlBasicRate[3] = new Option("6 & 12 & 24 Mbps", "wifi2");
+		}else
+			wlBasicRate[0] = new Option("<%WebStr(wlan,DEAFULT)%>", "0");
+		/* mark selected */
+		for (idx=0; idx < wlBasicRate.options.length; idx++) {
+			if (wlBasicRate.options[idx].value == sel_rate) {
+				wlBasicRate.options[idx].selected = true;
+				break;
+			}
+		}
+		/* set to first(Auto) if not found */
+		if( idx == wlBasicRate.options.length)
+			wlBasicRate.options[0].selected = true;
+	}
+}
+function onBandChange(OnPageLoad) {
+	with ( document.forms[0] ) {
+		var sel_band;
+		/* save selected */
+		if(OnPageLoad) {
+			sel_band = band;
+			wlBand.selectedIndex = getBandIndex(sel_band);
+		}else	sel_band = wlBand.value;
+		loadChannelList(OnPageLoad);
+		loadRateList(OnPageLoad);
+		loadMCastRateList(OnPageLoad);
+		loadBasicRateList(OnPageLoad);
+	}
+}
+function getBasicRateIndex(br) {
+	var ret = 0;
+	if ( br == "12" )	ret = 2;
+	else if ( br == "all" ) 	ret = 1;
+	 else if ( br == "wifi2" ) 	ret = 3;
+	else	ret = 0;
+	return ret;
+}
+function getRateIndex(r) {
+	var rateNum = parseInt(r);
+	var ret = 0;
+	if ( band == '2') {
+		if ( phy == "b" ) { //11b
+			switch ( rateNum ) {
+			case 1000000:
+				ret = 1;
+				break;
+			case 2000000:
+				ret = 2;
+				break;
+			case 5500000:
+				ret = 3;
+				break;
+			case 11000000:
+				ret = 4;
+				break;
+			default:
+				ret = 0;
+				break;
+			}
+		}else {// physical type is 802.11g
+			switch ( rateNum ) {
+			case 1000000:
+				ret = 1;
+				break;
+			case 2000000:
+				ret = 2;
+				break;
+			case 5500000:
+				ret = 3;
+				break;
+			case 6000000:
+				ret = 4;
+				break;
+			case 9000000:
+				ret = 5;
+				break;
+			case 11000000:
+				ret = 6;
+				break;
+			case 12000000:
+				ret = 7;
+				break;
+			case 18000000:
+				ret = 8;
+				break;
+			case 24000000:
+				ret = 9;
+				break;
+			case 36000000:
+				ret = 10;
+				break;
+			case 48000000:
+				ret = 11;
+				break;
+			case 54000000:
+				ret = 12;
+				break;
+			default:
+				ret = 0;
+				break;
+			}
+		}
+	}else if ( band == '1' ) { // 11a // physical type is 802.11a
+		switch ( rateNum ) {
+		case 6000000:
+			ret = 1;
+			break;
+		case 9000000:
+			ret = 2;
+			break;
+		case 12000000:
+			ret = 3;
+			break;
+		case 18000000:
+			ret = 4;
+			break;
+		case 24000000:
+			ret = 5;
+			break;
+		case 36000000:
+			ret = 6;
+			break;
+		case 48000000:
+			ret = 7;
+			break;
+		case 54000000:
+			ret = 8;
+			break;
+		default:
+			ret = 0;
+			break;
+		}
+	}
+	return ret;
+}
+function getFrameBurstIndex(frameburst) {
+	var ret;
+	if ( frameburst == "off" )	ret = 0;
+	else	ret = 1;
+	return ret;
+}
+function getAfterBurnerIndex(afterburner) {
+	var ret=( afterburner == "auto" )?1:0;
+	return ret;
+}
+function getVecIndex(vec) {
+	var ret;
+	if ( vec == "0" )	ret = 0;
+	else if ( vec == "1" )	ret = 1;
+	else if ( vec == "2" )	ret = 2;
+	else if ( vec == "10" )	ret = 3;
+	else if ( vec == "6" )	ret = 4;
+	else if ( vec == "14" )	ret = 5;
+	else	ret = 0;
+	return ret;
+}
+function getIperfIndex(iperf) {
+	var ret=( iperf == "1" )?1:0;
+	return ret;
+}
+function getGModeProtection(pro) {
+	var ret=( pro == "auto" )?1:0;;	
+	return ret;
+}
+function getTpcDbIndex(val) {
+	var ret;
+	if ( val == "0" ) ret = 0;
+	else if ( val == "2" )	ret = 1;
+	else if ( val == "3" )	ret = 2;
+	else if ( val == "4" )	ret = 3;
+	else ret = 0;
+	return ret;
+}
+function phyChange() {
+	var fg=(phy == "n")?1:0;
+	var pg=(phy == "n")?0:1;
+	showEntries(nModeArr,fg);
+	showEntries(div_gMode,pg);
+}
+function RegModeChange(OnPageLoad) {
+	with ( document.forms[0] ) {
+		var sel_band;
+		/* save selected */
+		sel_band=(OnPageLoad)?band:wlBand.value;
+		if( wlRegMode.selectedIndex != 1 )
+			wlDfsPreIsm.disabled=wlDfsPostIsm.disabled=wlTpcDb.disabled=true;
+		else 
+			wlDfsPreIsm.disabled=wlDfsPostIsm.disabled=wlTpcDb.disabled=false;
+		var fg=(sel_band == "2")?0:1;
+		showEntries(div_regMode,fg);
+	}
+}
+function getBandIndex(b) {
+	var ret=( b == '1' )?1:0;
+	return ret;
+}
+function wl_afterburner_options(OnPageLoad)
+ {
+	var hideAB = false;
+	var enableABSel = true; 
+	var hideWarning = true;  
+	with ( document.forms[0] ) {
+		var sel_nmode = wlNmode.options[wlNmode.selectedIndex].value;
+		if(OnPageLoad) {
+			sel_nmode = nmode;
+			wlAfterBurnerEn.selectedIndex = getAfterBurnerIndex(afterburneren);
+		} else	sel_nmode = wlNmode.options[wlNmode.selectedIndex].value;
+		if ( (hasafterburner != 1) )	hideAB = true;
+		if(phy == "n" && sel_nmode == "auto") hideAB = true;
+		if (parseInt(wlFrgThrshld.value) != 2346 ){
+			enableABSel = false;
+			hideWarning = false;
+		}
+		if(getSelect(wlWme)!= 0) 	enableABSel = false; 
+		if (hideAB ||!enableABSel) wlAfterBurnerEn.value ="off";
+		showhide("AFB", !hideAB);
+		wlAfterBurnerEn.disabled =!enableABSel;
+	}
+}
+function wl_vec_options(OnPageLoad) {
+	var hide = false;
+	with ( document.forms[0] ) {
+		if(OnPageLoad) 
+			wlVec.selectedIndex = getVecIndex(vec);
+		if ( hasvec != 1 ){
+			hide = true;
+			wlVec.value ="0";
+		}
+		var fg=(hide)?0:1;
+		showEntries(vecArr,fg);
+	}
+}
+function wl_iperf_options(OnPageLoad) {
+	with ( document.forms[0] ) {
+		if(OnPageLoad) 	wlIperf.selectedIndex = getIperfIndex(iperf);
+		if ( (hasvec != 1) )	wlIperf.value ="0";
+	}
+ }
+function wl_ewc_options(OnPageLoad)
+{
+	var sel_nbw;
+	var sel_nmcsidx;
+	var idx;
+	var sel_ch;
+	var sel_nmode;
+	var sel_nreqd;
+	var sel_nbw_cap;
+	var sel_band;
+	var bw;
+	with ( document.forms[0] ) {
+		if(phy != "n")	return;
+		if(OnPageLoad) {
+			sel_ch = channel;
+			sel_nmode = nmode;
+			sel_nreqd = nreqd; 
+			sel_band = band;
+			sel_nbw_cap = nbwcap;
+			wlNProtection.value = npro;
+			sel_nmcsidx = nmcsidx;
+			if(nctrlsb == 0) {
+				wlNCtrlsb.selectedIndex = 0;
+				wlNCtrlsb.disabled = 1;
+			} else	wlNCtrlsb.value = nctrlsb;   
+			wlNReqd.value = nreqd;
+			if(sel_nmode == "off") 	wlNmode.selectedIndex = 1;
+			wlNBwCap.selectedIndex = sel_nbw_cap;
+		} else {
+			sel_ch = wlChannel.value;   
+			sel_nmcsidx = wlNMmcsidx.value;
+			sel_nmode = wlNmode.value;
+			sel_nreqd = wlNReqd.value;
+			sel_band = wlBand.value;
+			sel_nbw_cap = wlNBwCap.value;
+		}
+		var fg=(sel_nmode == "off")?1:0;
+		showEntriesDisable(sel_nmodeInput,fg);
+		var pg=(sel_nmode == "off")?0:1;
+		showEntries(div_nMode,pg);
+
+		if(sel_nmode == "off") 	bw = "20";
+		 else
+			bw= (((sel_band == "1") && ((sel_nbw_cap == "1") || (sel_nbw_cap == "2"))) || ((sel_band == "2") && (sel_nbw_cap == "1")))?"40":"20";
+		if (wlNMmcsidx != null)	wlNMmcsidx.disabled = 0;
+		/* load n phy rates */
+		if(sel_ch == 0) {
+			wlNCtrlsb.disabled = 1;
+			<%ejGetWl(wlNPhyRates, "0");%>
+		} else if (bw == "40") {
+			/* Control sb is allowed only for 40MHz BW Channels */
+			wlNCtrlsb.disabled = 0;
+			<%ejGetWl(wlNPhyRates, "40");%>
+		} else if (bw == "20") {
+			wlNCtrlsb.selectedIndex = 0;
+			wlNCtrlsb.disabled = 1;
+			<%ejGetWl(wlNPhyRates, "20");%>
+		}
+		/* mark selected */
+		for (idx=0; idx< wlNMmcsidx.options.length; idx++) {
+			if (wlNMmcsidx[idx].value == sel_nmcsidx) {
+				wlNMmcsidx[idx].selected = true;
+				break;
+			}
+		}
+		/* set to first (Auto) if not found */
+		if( idx == wlNMmcsidx.options.length)   
+			wlNMmcsidx.options[0].selected = true;
+		/* mark selected */
+		wlNmode.selectedIndex = getNmodeIndex(sel_nmode);
+	}
+}
+function wl_mcs_onchange(OnPageLoad)
+{
+	var sel_nmcsidx;
+	var sel_nmode;
+	if(phy != "n")	return;
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			sel_nmcsidx = nmcsidx;
+			sel_nmode = nmode;
+		} else {
+			sel_nmcsidx = wlNMmcsidx.value;
+			sel_nmode = wlNmode.value;
+		}
+		/* If using 'legacy rate' then enable */
+		wlRate.disabled =(sel_nmcsidx == "-2" || sel_nmode == "off")?false:true;
+	}
+}
+function wl_recalc(OnPageLoad) {
+	with ( document.forms[0] ) {
+		phyChange();
+		genericChange(OnPageLoad);
+		updateCurChannel(OnPageLoad);
+		onBandChange(OnPageLoad);
+		gModeChange(OnPageLoad);
+		wl_ewc_options(OnPageLoad);
+		RegModeChange(OnPageLoad);
+		wl_mcs_onchange(OnPageLoad);
+		OnRxChainPowerSaveChange(OnPageLoad);
+		OnRadioPowerSaveChange(OnPageLoad);
+		wmeChange(OnPageLoad);
+		wl_afterburner_options(OnPageLoad);
+		wl_vec_options(OnPageLoad);
+		wl_iperf_options(OnPageLoad);
+	}
+	var fg=( show == "0")?0:1;
+	showEntries(dataPath,fg);
+}
+function updateCurChannel(OnPageLoad) {
+	if(OnPageLoad) {
+		var curr_chanspec = parseInt(chanspec);
+		var curr_sb = (curr_chanspec & 0x300 ) >> 8;
+		var curr_bw = (curr_chanspec & 0xc00 ) >> 10;
+		var curr_sb_str = "<%WebStr(wlan,NOT_AVAILABLE)%>";
+		var chanimstate_str = "";
+		chanimstate_str =(chanimstate == "0")?" (<%WebStr(wlan,IFC_ACCEPT)%>)":" (<%WebStr(wlan,IFC_SEVERE)%>)";
+		if(curr_bw == 2)	curr_bw_str = "20";
+		else if (curr_bw == 3)	curr_bw_str = "40";
+		else if (curr_bw == 1)	curr_bw_str = "10";
+
+		if(curr_sb == 1)	curr_sb_str = "<%WebStr(wlan,LOWER)%>";
+		else if (curr_sb == 2)	curr_sb_str = "<%WebStr(wlan,UPPER)%>";
+		else if (curr_sb == 3)	curr_sb_str = "<%WebStr(wlan,NONE)%>";
+		if (band == "2")
+		{
+			if (document.getElementById)  // DOM3 = IE5, NS6
+				document.getElementById("CurChannel").innerHTML = " <%WebStr(wlan,CURRENT)%> " + wlCurrentChannel + chanimstate_str;
+			else {
+				if (document.layers == false) // IE4
+					document.all.CurChannel.innerHTML = " <%WebStr(wlan,CURRENT)%> " + wlCurrentChannel + chanimstate_str;
+			}
+		}else{
+			if (document.getElementById)  // DOM3 = IE5, NS6
+				document.getElementById("CurChannel").innerHTML = " <%WebStr(wlan,CURRENT)%> " + wlCurrentChannel;
+			else {
+				if (document.layers == false) // IE4
+					document.all.CurChannel.innerHTML = " <%WebStr(wlan,CURRENT)%> " + wlCurrentChannel;
+			}
+		}
+		if (document.getElementById)  // DOM3 = IE5, NS6
+			document.getElementById("CurNbw").innerHTML = " <%WebStr(wlan,CURRENT)%> " + curr_bw_str + "MHz";
+		else {
+			if (document.layers == false) // IE4
+				document.all.CurNbw.innerHTML = " <%WebStr(wlan,CURRENT)%>" + curr_bw_str + "MHz";
+		}
+		if (document.getElementById)  // DOM3 = IE5, NS6
+			document.getElementById("CurNCtrlsb").innerHTML = " <%WebStr(wlan,CURRENT)%> " + curr_sb_str;
+		else {
+			if (document.layers == false) // IE4
+			document.all.CurNCtrlsb.innerHTML = " <%WebStr(wlan,CURRENT)%>" + curr_sb_str;
+		}
+	}
+}
+function OnRxChainPowerSaveChange(OnPageLoad) {
+	with ( document.forms[0] ) {
+			setDisable(wlRxChainPwrSaveQuietTime, wlRxChainPwrSaveEnable.value == 0);
+			setDisable(wlRxChainPwrSavePps, wlRxChainPwrSaveEnable.value == 0);
+	}
+}
+function OnRadioPowerSaveChange(OnPageLoad) {
+with ( document.forms[0] ) {
+		var sel_band;
+		
+		setDisable(wlRadioPwrSaveQuietTime, wlRadioPwrSaveEnable.value == 0);
+		setDisable(wlRadioPwrSavePps, wlRadioPwrSaveEnable.value == 0);
+		setDisable(wlRadioPwrSaveOnTime, wlRadioPwrSaveEnable.value == 0);
+		if(OnPageLoad) {
+		sel_band = band;
+		if (sel_band != "2") {
+			if ( (wlRadioPwrSaveEnable.value == 1) && (wlRegMode.selectedIndex != 1) ) {
+				wlRegMode.selectedIndex = 1;
+				alert("<%WebStr(wlan,RADIO_PWRSAVE_ALERT)%>");
+			}
+			}
+		}
+}
+}
+function wmeChange(OnPageLoad) {
+	with ( document.forms[0] ) {
+		if(OnPageLoad) {
+			showhide("WLWMM", haswme);
+			showhide("WLWMMNOACK", haswme);
+			showhide("WLWMMAPSD", haswme);
+			setSelect(wlWme, wme);
+			setSelect(wlWmeNoAck, wmenoack);
+			setSelect(wlWmeApsd, wmeapsd);
+		}
+		setDisable(wlWmeNoAck, getSelect(wlWme) == 0);
+		setDisable(wlWmeApsd, getSelect(wlWme) == 0);
+	}
+}
+function onNmodeChange(OnPageLoad)
+{
+	wl_recalc(OnPageLoad);
+	document.forms[0].wlRate.selectedIndex = 0;
+}
+function frmLoad() {
+	with ( document.forms[0] ) {
+		if (wpa == "tkip")
+		{
+			wlNmode.length = 1;
+			wlNmode[0] = new Option("<%WebStr(comm,DISABLE)%>", "off");
+		}else{
+			wlNmode.length = 2;
+			wlNmode[0] = new Option("<%WebStr(wlan,AUTO)%>", "auto");
+			wlNmode[1] = new Option("<%WebStr(comm,DISABLE)%>", "off");
+		}
+	}
+	wl_recalc(true);
+}
+function btnApply() {
+	var loc = 'wlcfgadv.wl?';
+	var idx, frgNum, rtsNum, dtmNum, bcnNum, frmburstNum, globalMaxAssocNum;
+	if ( enbl == '0' ) {
+		alert(errMsg[3]);
+		return;
+	}
+	wl_recalc(false);
+	with ( document.forms[0] ) {
+		var sel_nmode = wlNmode.options[wlNmode.selectedIndex].value;
+		var sel_nmcsidx = wlNMmcsidx.value;
+		if( wlChannel.selectedIndex==0){
+			var ScanTimer = parseInt(wlCsScanTimer.value);
+			if ( isNaN(ScanTimer) == true || ScanTimer<=0 ) {
+				alert("<%WebStr(wlan,AUTO_CHANNEL_TIMER)%> : "+errMsg[0]);
+				wlCsScanTimer.focus();
+				return;
+			}
+		}
+		if( getSelect(wlRxChainPwrSaveEnable)==1){
+			var rxQT = parseInt(wlRxChainPwrSaveQuietTime.value);
+			if ( isNaN(rxQT) == true || rxQT<=0 ) {
+				alert("<%WebStr(wlan,RX_CHAIN_QTIME)%> : "+errMsg[0]);
+				wlRxChainPwrSaveQuietTime.focus();
+				return;
+			}
+			var pps = parseInt(wlRxChainPwrSavePps.value);
+			if ( isNaN(pps) == true || pps<=0 ) {
+				alert("<%WebStr(wlan,RX_CHAIN_PPS)%> : "+errMsg[0]);
+				wlRxChainPwrSavePps.focus();
+				return;
+			}
+		}
+		if( getSelect(wlRadioPwrSaveEnable)==1){
+			var radioQT = parseInt(wlRadioPwrSaveQuietTime.value);
+			if ( isNaN(radioQT) == true || radioQT<=0 ) {
+				alert("<%WebStr(wlan,RADIO_PWRSAVE_QT)%> : "+errMsg[0]);
+				wlRadioPwrSaveQuietTime.focus();
+				return;
+			}
+			var rpps = parseInt(wlRadioPwrSavePps.value);
+			if ( isNaN(rpps) == true || rpps<=0 ) {
+				alert("<%WebStr(wlan,RADIO_PWRSAVE_PPS)%> : "+errMsg[0]);
+				wlRadioPwrSavePps.focus();
+				return;
+			}
+			var rppsot = parseInt(wlRadioPwrSaveOnTime.value);
+			if ( isNaN(rppsot) == true || rppsot<=0 ) {
+				alert("<%WebStr(wlan,RADIO_PWRSAVE_OT)%> : "+errMsg[0]);
+				wlRadioPwrSaveOnTime.focus();
+				return;
+			}
+		}
+		frgNum = parseInt(wlFrgThrshld.value);
+		if ( isNaN(frgNum) == true || frgNum < 256 || frgNum > 2346 ) {
+			alert(fields[0]+" : "+errMsg[0]);
+			wlFrgThrshld.focus();
+			return;
+		}
+		rtsNum = parseInt(wlRtsThrshld.value);
+		if ( isNaN(rtsNum) == true || rtsNum < 0 || rtsNum > 2347 ) {
+			alert(fields[1]+" : "+errMsg[0]);
+			wlRtsThrshld.focus();
+			return;
+		}
+		dtmNum = parseInt(wlDtmIntvl.value);
+		if ( isNaN(dtmNum) == true || dtmNum < 1 || dtmNum > 255 ) {
+			alert(fields[2]+" : "+errMsg[0]);
+			wlDtmIntvl.focus();
+			return;
+		}
+		bcnNum = parseInt(wlBcnIntvl.value);
+		if ( isNaN(bcnNum) == true || bcnNum < 1 || bcnNum > 65535 ) {
+			alert(fields[3]+" : "+errMsg[0]);
+			wlBcnIntvl.focus();
+			return;
+		}
+		globalMaxAssocNum = parseInt(wlGlobalMaxAssoc.value);
+		if ( isNaN(globalMaxAssocNum) == true || globalMaxAssocNum < 1 || globalMaxAssocNum > 129 ) {//?
+			alert(fields[4]+" : "+errMsg[0]);
+			wlGlobalMaxAssoc.focus();
+			return;
+		}
+		loc += 'wlChannel=' + wlChannel.options[wlChannel.selectedIndex].value;
+		loc += '&wlNmode=' + sel_nmode;
+		loc += '&wlNReqd=' + wlNReqd.value;
+		loc += '&wlBasicRate=' + wlBasicRate.options[wlBasicRate.selectedIndex].value;
+		loc += '&wlFrgThrshld=' + wlFrgThrshld.value;
+		loc += '&wlRtsThrshld=' + wlRtsThrshld.value;
+		loc += '&wlDtmIntvl=' + wlDtmIntvl.value;
+		loc += '&wlBcnIntvl=' + wlBcnIntvl.value;
+		loc += '&wlGlobalMaxAssoc=' + wlGlobalMaxAssoc.value;
+		loc += '&wlCsScanTimer=' + wlCsScanTimer.value;
+		loc += '&wlFrameBurst=' + wlFrameBurst.value;
+		loc += '&wlRifsAdvert=' + wlRifsAdvert.value;
+		loc += '&wlObssCoex=' + wlObssCoex.value;
+		loc += '&wlRxChainPwrSaveEnable=' + wlRxChainPwrSaveEnable.value;
+		loc += '&wlRxChainPwrSaveQuietTime=' + wlRxChainPwrSaveQuietTime.value;
+		loc += '&wlRxChainPwrSavePps=' + wlRxChainPwrSavePps.value;
+		loc += '&wlRadioPwrSaveEnable=' + wlRadioPwrSaveEnable.value;
+	 	loc += '&wlRadioPwrSaveQuietTime=' + wlRadioPwrSaveQuietTime.value;
+		loc += '&wlRadioPwrSavePps=' + wlRadioPwrSavePps.value;
+		loc += '&wlRadioPwrSaveOnTime=' + wlRadioPwrSaveOnTime.value;
+		loc += '&wlTxPriority=' + wlTxPriority.value;
+		loc += '&wlRxPriority=' + wlRxPriority.value;
+		loc += '&wlCalPriority=' + wlCalPriority.value;
+		loc += '&wlBand=' + wlBand.value;
+		loc += '&wlMCastRate=' + wlMCastRate.options[wlMCastRate.selectedIndex].value;
+		if (hasafterburner == '1')
+			loc += '&wlAfterBurnerEn=' + wlAfterBurnerEn.value;
+		else
+			loc += '&wlAfterBurnerEn=off';
+		/* rate */
+		if ( phy != "n" || (phy == "n" && (sel_nmode == "off" || sel_nmcsidx == -2)))
+			loc += '&wlRate=' + wlRate.options[wlRate.selectedIndex].value;
+		/* b/g mode */
+		if ( band == '2') { // 2.4G
+			if (phy == "b")  // 802.11b
+				loc += '&wlPreambleType=' + wlPreambleType.options[wlPreambleType.selectedIndex].value;
+			else if ((phy == "n" && sel_nmode == "off") || phy == "g" || phy == "a")
+			 { // 802.11g
+				loc += '&wlgMode=' + wlgMode.options[wlgMode.selectedIndex].value;
+				loc += '&wlProtection=' + wlProtection.options[wlProtection.selectedIndex].value;
+				if (wlgMode.selectedIndex == 0 || wlgMode.selectedIndex == 3) {
+					loc += '&wlPreambleType=' + wlPreambleType.options[wlPreambleType.selectedIndex].value;
+				}
+			}
+		}
+		loc += '&wlTxPwrPcnt=' + wlTxPower.options[wlTxPower.selectedIndex].value;
+		loc += '&wlRegMode=' + wlRegMode.options[wlRegMode.selectedIndex].value;
+		if(phy == "n") {
+			loc += '&wlNBwCap=' + wlNBwCap.options[wlNBwCap.selectedIndex].value;
+			if((wlBand.value=="1" && wlNBwCap.options[wlNBwCap.selectedIndex].value == "0") ||
+				(wlBand.value=="2" && ((wlNBwCap.options[wlNBwCap.selectedIndex].value == "0") ||
+										(wlNBwCap.options[wlNBwCap.selectedIndex].value == "2"))))
+				loc += '&wlNCtrlsb=' + 0;
+			else   
+				loc += '&wlNCtrlsb=' + wlNCtrlsb.options[wlNCtrlsb.selectedIndex].value;
+			loc += '&wlNProtection=' + wlNProtection.options[wlNProtection.selectedIndex].value;
+			loc += '&wlNMcsidx=' + wlNMmcsidx.options[wlNMmcsidx.selectedIndex].value;
+		}
+		if(wlRegMode.selectedIndex == 1) {
+			DfsPreIsmNum = parseInt(wlDfsPreIsm.value);
+			if ( isNaN(DfsPreIsmNum) == true || DfsPreIsmNum < 0 || DfsPreIsmNum > 99 ) {
+				alert(fields[4]+" : "+errMsg[0]);
+				wlDfsPreIsm.focus();
+				return;
+			}
+			DfsPostNum = parseInt(wlDfsPostIsm.value);
+			if ( isNaN(DfsPostNum) == true || DfsPostNum < 10 || DfsPostNum > 99 ) {
+				alert(fields[5]+" : "+errMsg[0]);
+				wlDfsPostIsm.focus();
+				return;
+			}
+			loc += '&wlDfsPreIsm=' + wlDfsPreIsm.value;
+			loc += '&wlDfsPostIsm=' + wlDfsPostIsm.value;
+			loc += '&wlTpcDb=' + wlTpcDb.options[wlTpcDb.selectedIndex].value;
+		}
+		loc += '&wlWme=' + parseInt(wlWme.value);
+		loc += '&wlWmeNoAck=' + parseInt(wlWmeNoAck.value);
+		loc += '&wlWmeApsd=' + parseInt(wlWmeApsd.value);
+		if (hasvec == '1') {
+			loc += '&wlVec=' + parseInt(wlVec.value);
+			loc += '&wlIperf=' + parseInt(wlIperf.value);
+		}
+	}
+	loc += '&wlSyncNvram=1';
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_WIRELESS_SETTINGS)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_WL_ADVANCED)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=3 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(wlan,BAND)%></td>
+			<td class="content" colspan="2"><select name="wlBand" size="1" onChange="wl_recalc(false);">
+<script language="javascript">
+<!-- hide
+if ( bands == '3' ) { // dual band
+		document.writeln('<option value=2>2.4GHz');
+		document.writeln('<option value=1>5GHz</option>');
+}else if (bands == '1') document.writeln('<option value=1>5GHz</option>');
+else	document.writeln('<option value=2>2.4GHz</option>');
+// done hiding -->
+</script></select></td></tr>
+		<tr><td class="title"><%WebStr(wlan,CHANNEL)%></td>
+			<td class="content"><select name='wlChannel' size="1" onChange="wl_recalc(false)"></select></td>
+			<td  id="CurChannel" class="content"><%WebStr(wlan,CURRENT_CHANNEL)%></td></tr>
+		<tr><td class="title"><%WebStr(wlan,AUTO_CHANNEL_TIMER)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlCsScanTimer' size='10'></td></tr>
+		<tr id="div_nMode_sel"><td class="title"><%WebStr(wlan,80211N_EWC)%></td>
+			<td class="content" colspan="2"><select name='wlNmode' size="1" onChange="onNmodeChange(false)"></select></td></tr>
+		<tr id="div_nMode1" style="display:none"><td class="title"><%WebStr(wlan,BANDWIDTH)%></td>
+			<td class="content"><select name='wlNBwCap' id='wlNBwCap' size="1" onChange="wl_recalc(false)">
+					<option value="0"><%WebStr(wlan,20_BOTH)%></option>
+					<option value="1"><%WebStr(wlan,40_BOTH)%></option>
+					<option value="2"><%WebStr(wlan,BAND_EACH)%></option>
+					</select></td>
+			<td id="CurNbw" class="content"><%WebStr(wlan,CURRENT_BANDWIDTH)%></td></tr>
+		<tr id="div_nMode2" style="display:none"><td class="title"><%WebStr(wlan,CONTROL_SIDEBAND)%></td>
+			<td class="content"><select name='wlNCtrlsb' size="1" onChange="wl_recalc(false)">
+					<option value="-1"><%WebStr(wlan,LOWER)%></option>
+					<option value="1"><%WebStr(wlan,UPPER)%></option>
+					</select></td>
+			<td  id="CurNCtrlsb" class="content"><%WebStr(wlan,CURRCONTROL_SIDEBAND)%></td></tr>
+		<tr id="div_nMode3" style="display:none"><td class="title"><%WebStr(wlan,80211N_RATE)%></td>
+			<td class="content" colspan="2"><select name='wlNMmcsidx' id='wlNMmcsidx' size="1"  onChange="wl_mcs_onchange()";></select></td></tr>
+		<tr id="div_nMode4" style="display:none"><td class="title"><%WebStr(wlan,80211N_PROTECTION)%></td>
+			<td class="content" colspan="2"><select name="wlNProtection" id="wlNProtection" size="1">
+						<option value="off"><%WebStr(wlan,OFF)%></option>
+						<option value="auto"><%WebStr(wlan,AUTO)%></option>
+					</select></td></tr>
+		<tr id="div_nMode5" style="display:none"><td class="title"><%WebStr(wlan,SUPPORT_NCLIENT_ONLY)%></td>
+			<td class="content" colspan="2"><select name="wlNReqd" id="wlNReqd" size="1">
+						<option value="0"><%WebStr(wlan,OFF)%></option>
+						<option value="1"><%WebStr(wlan,ON)%></option>
+						</select></td></tr>
+		<tr id="div_nMode6" style="display:none"><td class="title"><%WebStr(wlan,RIFS_ADV)%></td>
+			<td class="content" colspan="2"><select name="wlRifsAdvert" size="1">
+						<option value="0"><%WebStr(wlan,OFF)%></option>
+						<option value="1"><%WebStr(wlan,AUTO)%></option>
+						</select></td></tr>
+		<tr id="div_nMode7" style="display:none"><td class="title"><%WebStr(wlan,OBSS)%></td>
+			<td class="content" colspan="2"><select name="wlObssCoex" size="1">
+						<option value="0"><%WebStr(comm,DISABLE)%></option>
+						<option value="1"><%WebStr(comm,ENABLE)%></option>
+						</select></td></tr>
+		<tr id="div_nMode8" style="display:none"><td class="title"><%WebStr(wlan,RX_CHAIN_PSAVE)%></td>
+			<td class="content" colspan="2"><select name="wlRxChainPwrSaveEnable" size="1" onchange="OnRxChainPowerSaveChange(false)">
+						<option value="0"><%WebStr(comm,DISABLE)%></option>
+						<option value="1"><%WebStr(comm,ENABLE)%></option>
+						</select></td></tr>
+		<tr id="div_nMode9" style="display:none"><td class="title"><%WebStr(wlan,RX_CHAIN_QTIME)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlRxChainPwrSaveQuietTime' size='10'></td></tr>
+		<tr id="div_nMode10" style="display:none"><td class="title"><%WebStr(wlan,RX_CHAIN_PPS)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlRxChainPwrSavePps' size='10'></td></tr>
+
+		<tr id="div_nMode11" style="display:none"><td class="title"><%WebStr(wlan,RADIO_PWRSAVE)%></td>
+			<td class="content" colspan="2"><select name="wlRadioPwrSaveEnable" size="1" onchange="OnRadioPowerSaveChange(false)">
+                        <option value="0"><%WebStr(comm,DISABLE)%></option>
+                        <option value="1"><%WebStr(comm,ENABLE)%></option>
+                        </select></td></tr>
+		<tr id="div_nMode12" style="display:none"><td class="title"><%WebStr(wlan,RADIO_PWRSAVE_QT)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlRadioPwrSaveQuietTime' size='10'></td></tr>
+		<tr id="div_nMode13" style="display:none"><td class="title"><%WebStr(wlan,RADIO_PWRSAVE_PPS)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlRadioPwrSavePps' size='10'></td></tr>
+		<tr id="div_nMode14" style="display:none"><td class="title"><%WebStr(wlan,RADIO_PWRSAVE_OT)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlRadioPwrSaveOnTime' size='10'></td></tr>
+		
+		<tr><td class="title"><%WebStr(wlan,54G_RATE)%></td>
+			<td class="content" colspan="2"><select name='wlRate' size="1"></select></td></tr>
+		<tr><td class="title"><%WebStr(wlan,MULTICAST_RATE)%></td>
+			<td class="content" colspan="2"><select name='wlMCastRate' size="1"></select></td></tr>
+		<tr><td class="title"><%WebStr(wlan,BASIC_RATE)%></td>
+			<td class="content" colspan="2"><select name='wlBasicRate' size="1"></select></td></tr>
+		<tr><td class="title"><%WebStr(wlan,FRAG_THRESHOLD)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlFrgThrshld' size='10' maxlength='4'>&nbsp;[256-2346]</td></tr>
+		<tr><td class="title"><%WebStr(wlan,RTS_THRESHOLD)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlRtsThrshld' size='10' maxlength='4'>&nbsp;[0-2347]</td></tr>
+		<tr><td class="title"><%WebStr(wlan,DTIM_INTERVAL)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlDtmIntvl' size='10' maxlength='3'>&nbsp;[1-255]</td></tr>
+		<tr><td class="title"><%WebStr(wlan,BEACON_INTERVAL)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlBcnIntvl' size='10' maxlength='5'>&nbsp;[1-65535]</td></tr>
+		<tr><td class="title"><%WebStr(wlan,GLOBAL_MAXCLIENTS)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlGlobalMaxAssoc' size='10' maxlength='3'>&nbsp;[1-128]</td></tr>
+		<tr><td class="title"><%WebStr(wlan,XPRESS_TECH)%></td>
+			<td class="content" colspan="2"><select name='wlFrameBurst' size="1">
+					<option value="off"><%WebStr(comm,DISABLE)%></option>
+					<option value="on"><%WebStr(comm,ENABLE)%></option>
+					</select></td></tr>
+		<tr id="div_gMode1" style="display:none"><td class="title"><%WebStr(wlan,54G_MODE)%></td>
+			<td class="content" colspan="2"><select name="wlgMode" size="1" onChange="wl_recalc(false)">
+						<option value="1"><%WebStr(wlan,54G_AUTO)%></option>
+						<option value="4"><%WebStr(wlan,54G_PERFORMANCE)%></option>
+						<option value="5"><%WebStr(wlan,54G_LRS)%></option>
+						<option value="0"><%WebStr(wlan,B_ONLY)%></option>
+					</select></td></tr>
+		<tr id="div_gMode2" style="display:none"><td class="title"><%WebStr(wlan,54G_PROTECTION)%></td>
+			<td class="content" colspan="2"><select name="wlProtection" size="1">
+						<option value="off"><%WebStr(wlan,OFF)%></option>
+						<option value="auto"><%WebStr(wlan,AUTO)%></option>
+					</select></td></tr>
+		<tr><td class="title"><%WebStr(wlan,REGULATORY_MODE)%></td>
+			<td class="content" colspan="2"><select name="wlRegMode" size="1" onChange='RegModeChange(false)'>
+						<option value="0"><%WebStr(comm,DISABLE)%></option>
+						<option value="1">802.11h</option>
+						<option value="2">802.11d</option>
+					</select></td></tr>
+		<tr id="div_regMode1" style="display:none"><td class="title"><%WebStr(wlan,PRENTWK_RADARCHK)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlDfsPreIsm' size='2' maxlength='2'>[ 0 - 99 ]</td></tr>
+		<tr id="div_regMode2" style="display:none"><td class="title"><%WebStr(wlan,INNTWK_RADARCHK)%></td>
+			<td class="content" colspan="2"><input type='text' name='wlDfsPostIsm' size='2' maxlength='2'>[ 10 - 99 ]</td></tr>
+		<tr id="div_regMode3" style="display:none"><td class="title"><%WebStr(wlan,TPC_MITIGATION)%></td>
+			<td class="content" colspan="2"><select name="wlTpcDb" size="1">
+						<option value="0">0(<%WebStr(wlan,OFF)%>)</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					</select></td></tr>
+		<tr id="AFB" style="display:none"><td class="title"><%WebStr(wlan,AFTERBURNER_TECH)%></td>
+			<td class="content" colspan="2"><select name='wlAfterBurnerEn' size="1" onChange='wl_afterburner_options(false)'>
+							<option value="off"><%WebStr(comm,DISABLE)%></option>
+							<option value="auto"><%WebStr(comm,ENABLE)%></option>
+							</select><%WebStr(wlan,DISABLE_WMM)%></td></tr>
+		<tr id="preambleType" style="display:none"><td class="title"><%WebStr(wlan,PREAMBLE_TYPE)%></td>
+			<td class="content" colspan="2"><select name="wlPreambleType" size="1">
+						<option value="long"><%WebStr(wlan,LONG)%></option>
+						<option value="short"><%WebStr(wlan,SHORT)%></option>
+					</select></td></tr>
+		<tr><td class="title"><%WebStr(wlan,TRANSMITT_POWER)%></td>
+			<td class="content" colspan="2"><select name="wlTxPower" size="1">
+						<option value="20">20%</option>
+						<option value="40">40%</option>
+						<option value="60">60%</option>
+						<option value="80">80%</option>
+						<option value="100">100%</option>
+					</select></td></tr>
+		<tr id="WLWMM" style="display:none"><td class="title"><%WebStr(wlan,WMM)%></td>
+			<td class="content" colspan="2"><select name='wlWme' size="1" onchange="wmeChange(false)">
+						<option value="-1"><%WebStr(wlan,AUTO)%></option>
+						<option value="0"><%WebStr(comm,DISABLE)%></option>
+						<option value="1"><%WebStr(comm,ENABLE)%></option>
+						</select></td></tr>
+		<tr id="WLWMMNOACK" style="display:none"><td class="title"><%WebStr(wlan,WMM_NOACK)%></td>
+			<td class="content" colspan="2"><select name='wlWmeNoAck' size="1">
+					<option value="0"><%WebStr(comm,DISABLE)%></option>
+					<option value="1"><%WebStr(comm,ENABLE)%></option>
+					</select></td></tr>
+		<tr id="WLWMMAPSD" style="display:none"><td class="title"><%WebStr(wlan,WMM_APSD)%></td>
+			<td class="content" colspan="2"><select name='wlWmeApsd' size="1">
+					<option value="0"><%WebStr(comm,DISABLE)%></option>
+					<option value="1"><%WebStr(comm,ENABLE)%></option>
+					</select></td></tr>
+		<tr id="vec1" style="display:none"><td class="title"><%WebStr(wlan,IPERF_SUPPORT)%></td>
+			<td class="content" colspan="2"><select name='wlIperf' size="1" onChange='wl_iperf_options(false)'>
+								<option value="0"><%WebStr(comm,DISABLE)%></option>
+								<option value="1"><%WebStr(comm,ENABLE)%></option>
+							</select></td></tr>
+		<tr id="vec2" style="display:none"><td class="title"><%WebStr(wlan,VEC)%></td>
+			<td class="content" colspan="2"><select name='wlVec' size="1" onChange='wl_vec_options(false)'>
+								<option value="0"><%WebStr(wlan,RXENABLE_DECODE)%></option>
+								<option value="1"><%WebStr(wlan,RXDISABLE_DECODE)%></option>
+								<option value="2"><%WebStr(wlan,TXENABLE_SEQ)%></option>
+								<option value="10"><%WebStr(wlan,TXENABLE_SEQIPTV)%></option>
+								<option value="6"><%WebStr(wlan,TXENABLE_ENCODE)%></option>
+								<option value="14"><%WebStr(wlan,TXENABLE_ENCODEIPTV)%></option>
+							</select></td></tr>
+		<tr id="dataPath1" style="display:none"><td class="title"><%WebStr(wlan,TXDATA_PATHPRIO)%></td>
+			<td class="content" colspan="2"><select name='wlTxPriority' size="1">
+					<option value="0"><%WebStr(comm,NORMAL)%></option>
+					<option value="1"><%WebStr(wlan,LOW)%></option>
+					</select></td></tr>
+		<tr id="dataPath2" style="display:none"><td class="title"><%WebStr(wlan,RXDATA_PATHPRIO)%></td>
+			<td class="content" colspan="2"><select name='wlRxPriority' size="1">
+					<option value="0"><%WebStr(comm,NORMAL)%></option>
+					<option value="1"><%WebStr(wlan,LOW)%></option>
+					</select></td></tr>
+		<tr id="dataPath3" style="display:none"><td class="title"><%WebStr(wlan,CALIBRATION_PRIO)%></td>
+			<td class="content" colspan="2"><select name='wlCalPriority' size="1">
+					<option value="0"><%WebStr(comm,NORMAL)%></option>
+					<option value="1"><%WebStr(wlan,LOW)%></option>
+					</select></td></tr>
+		<tr><td colspan="3" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(wlan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

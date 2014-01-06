@@ -1,0 +1,109 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(layer2.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript" src="portName.js"></script>
+<script type="text/javascript">
+<!-- hide
+
+var sessionKey="<%ejGetOther(sessionKey)%>";
+var buildvlm =  '<%ejGetOther(sysInfo, buildWanVlanMux)%>';
+var brdId = '<%ejGet(boardID)%>';
+var interfaceInfo = '<%ejGetOther(ethL2AvaIntf, 0)%>';
+var interfaces = interfaceInfo.split('|');
+var defEwanName="<%WebStr(_def,MDMVS_ETHERNET)%>";
+
+function frmLoad() {
+	with ( document.forms[0] ) {
+		showhide('divBuildVlanMux', buildvlm);
+		var idx = "<%ejGet(connMode)%>";
+		idx = (idx != "") ? parseInt (idx) : 0;
+		connMode.selectedIndex = idx;
+	}
+	var idd=document.getElementById("idwan");
+	if (idd != null) {
+		for (var i=0; i<idd.length; i++) {
+			if (idd.options[i].value == defEwanName) {
+				idd.selectedIndex = i;
+				break;
+			}
+		}
+	}
+}
+
+function btnSave() {
+	var loc = 'ethwan.cmd?action=set';
+	
+	with ( document.forms[0] ) {
+		var ifc = "<%WebStr(_def,EWAN_IFC)%>";
+		loc += '&ifname=' + ifc;
+	
+		loc += '&connMode='+connMode.options[connMode.selectedIndex].value;
+	}
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function disableBtns()
+{
+	with(document.forms[0]) {
+		bApply.disabled = true;
+		bSave.disabled = true;
+	}
+}
+<%Layer2Get(selwanjs)%>
+// done hiding -->
+</script>
+</head>
+<body onload="frmLoad()">
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr><td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td></tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,ISP)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+<tr><td colspan=2 class="header"><%WebStr(layer2,TN_ISP_CONN)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(layer2,FN_ISP_MODE)%></td>
+<td class="content"><%Layer2Get(selwanbox)%></td></tr>
+<tr><td colspan="2" class="btnline">
+<input type="button" value="<%WebStr(comm,CHANGE)%>" name="bApply" onclick="btnApply();">
+</td></tr>
+<tr><td colspan=2 class="header"><%WebStr(menu,MENU_ETH_INTERFACE)%></td></tr>
+<tr id="divBuildVlanMux">
+	<td class="title" width="35%"><%WebStr(layer2,FN_ATM_CONN_MODE)%></td>
+	<td class="content"><select name="connMode">
+		<option value="0" selected><%WebStr(layer2,ATM_CONN_MODE_DEF)%></option>
+		<option value="1"><%WebStr(layer2,ATM_CONN_MODE_VLMAX)%></option>
+	</select></td>
+</tr>
+<tr><td colspan="2" class="btnline">
+<input type="button" value="<%WebStr(comm,APPLY)%>" name="bSave" onClick="btnSave()">
+</td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(layer2.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

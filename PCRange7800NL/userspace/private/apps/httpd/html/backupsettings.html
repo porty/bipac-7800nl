@@ -1,0 +1,50 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(upg.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language='javascript'>
+<!-- hide
+function backupClick() {
+	var loc = 'backupsettings.conf';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_MANAGEMENT)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="/dot5s.gif" width="11" height="11"><%WebStr(upg,BACKUPSET)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td class="header"><%WebStr(upg,BKHINT)%></td></tr>
+		<tr><td class="btnline"><input type="button" value="<%WebStr(upg,BACKUPSET)%>" onClick="backupClick()" name="bApply"></td></tr>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(upg.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

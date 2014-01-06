@@ -1,0 +1,183 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(info.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<META HTTP-EQUIV="Refresh" CONTENT="59;URL=info.html">
+<script>
+<!--
+var buildAtm = '<%ejGetOther(sysInfo, buildAtm)%>';
+var buildPtm = '<%ejGetOther(sysInfo, buildPtm)%>';
+function init()
+{
+	var idtbls = ["tbldev", "tblwan"];
+	for (var i = 0; i < idtbls.length; i++) 
+		changeRowCr (idtbls[i]);
+}
+function changeRowCr(idtbl)
+{
+	var idd = document.getElementById(idtbl);
+	if (idd == null) return;
+	var cnt = idd.rows.length;
+	var n = 0;
+	for (var i = 0; i < cnt; i++) {
+		if (idd.rows[i].style.display != "none") {
+			for (var j = 0; j < idd.rows[i].cells.length; j++) {
+				idd.rows[i].cells[j].style.backgroundColor = ((n % 2) == 1) ? "#<%WebStr(cus,ROWCR2)%>" : "#<%WebStr(cus,ROWCR1)%>";
+			}
+			n++;
+		}
+	}
+}
+//-->
+</script>
+</head>
+<body class="main" bgcolor="#ffffff" link="#3300cc" alink="#ff0000" vlink="#990066" onunload="status=''" onLoad="init()">
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr>
+  <td class="mframe">
+	<table class="titletbl" cellpadding="3" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_DEVICE_INFO)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+  </td>
+</tr>
+<tr>
+	<td class="mframe">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td class="cfgframe" width="50%" style="vertical-align: top" valign="top">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr><td class="cfgframe">
+<!-- Begin Device Info -->
+ <table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+	<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(info,DEVICE_INFO)%></td></tr>
+	<tr><td class="sframe">
+		<table class="cfgframe" id="tbldev" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td width="35%"><%WebStr(info,MODEL_NAME)%></td>
+			<td><%ejGet(modelName)%></td>
+		</tr>	
+		<!--tr><td><%WebStr(info,BUILDSTAMP)%></td>
+			<td><nobr><%ejGet(cmsBuildTimestamp)%></nobr></td>
+		</tr-->
+		<tr><td><%WebStr(info,SW_VERSION)%></td>
+			<td><%ejGet(sysVersion)%></td>
+		</tr>
+		<!--tr><td><%WebStr(info,BOOT_VERSION)%></td>
+			<td><nobr><%ejGet(cfeVersion)%></nobr></td>
+		</tr-->
+<script language="javascript">
+<!-- hide
+if ( buildAtm == '1' || buildPtm == '1' ) {
+	document.write("<tr><td><%WebStr(info,PHY_VERSION)%></td>");
+	document.write("<td><%ejGet(dslPhyDrvVersion)%></td></tr>");
+}
+if ('<%ejGetWl(wlInterface)%>' == '1') {
+	document.writeln("<tr><td><%WebStr(info,WL_VERSION)%></td>");
+	document.writeln("<td><%ejGetWl(wlVersion)%></td></tr>");
+}
+var buildMoca = '<%ejGetOther(sysInfo, buildSupportMoca)%>';
+if ( buildMoca == '1' ) {
+	document.writeln("<tr><td><%WebStr(info,MOCA_VERSION)%></td>");
+	document.writeln("<td><%ejGet(mocaVersion)%></td></tr>");
+}
+var voice = '<%ejGetVoice(voiceProtocol)%>';
+if ( voice == 'SIP' || voice == 'MGCP' ) {
+	document.writeln("<tr><td><%WebStr(info,VOICE_VERSION)%></td>");
+	document.writeln("<td><%ejGet(voiceServiceVersion)%></td></tr>");
+}
+// done hiding -->
+</script>
+		</table>
+	</td>
+	</tr>
+ </table>
+<!-- End Device Info -->
+</td></tr>
+<tr><td class="cfgframe">
+<!-- Begin WAN Info -->
+ <table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+	<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(info,WAN)%></td></tr>
+	<tr><td class="sframe">
+		<table class="cfgframe" id="tblwan" cellspacing="2" cellpadding="0" width="100%" align="center">
+<script language="javascript">
+<!-- hide
+var VdslIncluded = '<%ejGetOther(isVdsl)%>'; 
+var DslBondingEnabled = '<%ejGetOther(isDslBondingEnabled)%>';
+if ( DslBondingEnabled == '1' ) {
+	document.write("<tr><td width=35%><%WebStr(info,TRAFFIC_TYPE)%></td>");
+	document.write("<td><%ejGetOther(trafficType, 0)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,AGG_RATE_UP)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 0, 0)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,AGG_RATE_DOWN)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 1, 0)%></td></tr>");
+}
+else if ( VdslIncluded == '1' ) {
+	document.write("<tr><td width=35%><%WebStr(info,B0_TRAFFIC_TYPE)%></td>");
+	document.write("<td><%ejGetOther(trafficType, 0)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,B0_RATE_UP)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 0, 0)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,B0_RATE_DOWN)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 1, 0)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,B1_TRAFFIC_TYPE)%></td>");
+	document.write("<td><%ejGetOther(trafficType, 1)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,B1_RATE_UP)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 0, 1)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,B1_RATE_DOWN)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 1, 1)%></td></tr>");
+}
+else if ( buildAtm == '1' || buildPtm == '1' ) {
+	document.write("<tr><td width=35%><%WebStr(info,RATE_UP)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 0, 0)%></td></tr>");
+	document.write("<tr><td><%WebStr(info,RATE_DOWN)%></td>");
+	document.write("<td><%ejGetOther(lineRate, 1, 0)%></td></tr>");
+}
+// done hiding -->
+</script>
+		<tr><td width="35%"><%WebStr(info,LANIP_V4)%></td>
+			<td><%ejGetOther(sysInfo, lanAddr)%></td>
+		</tr>
+		<tr><td><%WebStr(info,DEFAULT_GW_V4)%></td>
+			<td><nobr><%ejGetOther(sysInfo, dfltGwIfc)%></nobr></td>
+		</tr>
+		<tr><td><%WebStr(info,PRI_DNS)%></td>
+			<td><%ejGetOther(sysInfo, dns1)%></td>
+		</tr>	
+		<tr><td><%WebStr(info,SEC_DNS)%></td>
+			<td><nobr><%ejGetOther(sysInfo, dns2)%></nobr></td>
+		</tr>
+<script language="javascript">
+<!-- hide
+if ('<%ejGetOther(sysInfo, enblIPv6)%>' == '1') {
+	document.writeln("<tr><td><%WebStr(info,LANIP_V6)%></td>");
+	document.writeln("<td><%ejGetOther(sysInfo, lanAddr6)%></td></tr>");
+	document.writeln("<tr><td><%WebStr(info,DEFAULT_GW_V6)%></td>");
+	document.writeln("<td><%ejGetOther(sysInfo, dfltGw6)%> <%ejGetOther(sysInfo, dfltGw6Ifc)%></td></tr>");
+}
+var buildSntp = '<%ejGetOther(sysInfo, buildSntp)%>';
+var enblSntp = '<%ejGet(ntp_enabled)%>';
+var proto = '<%ejGetOther(sysInfo, noBrPrtcl)%>';
+if ( buildSntp == '1' && enblSntp == '1' && proto != 'Bridge' ) {
+	document.writeln("<tr><td><%WebStr(info,DATE_TIME)%></td>");
+	document.writeln("<td><%ejGetOther(sysInfo, dateTime)%></td></tr>");
+}
+// done hiding -->
+</script>
+		</table>
+	</td>
+	</tr>
+ </table>
+<!-- End WAN Info -->
+</td></tr>
+</table>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(info.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

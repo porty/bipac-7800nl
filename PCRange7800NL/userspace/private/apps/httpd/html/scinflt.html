@@ -1,0 +1,291 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(sec.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET,utf-8)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+var ifCount = 0;
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+
+var strInvalid="<%WebStr(comm,INVALID)%>";
+var strStart="<%WebStr(sec,FN_VS_START)%>", strEnd="<%WebStr(sec,FN_VS_END)%>";
+function chkIp (ver, ips, ipe, tit)
+{
+	var i, s=[ips, ipe];
+	if (ver == '4') {
+		for (i=0; i<2; i++) {
+			if (s[i].value != "" && isCommonIp4(s[i].value) == false) {
+				alert(tit+"("+(i==0?strStart:strEnd)+"): "+strInvalid);
+				s[i].focus();
+				return 1;
+			}
+		}
+		if (ips.value != "" && ipe.value != "" && cmpIpv4 (ips.value, ipe.value) != 0) {
+			alert(tit+": <%WebStr(sec,ERR_ENDSMALL)%>");
+			ips.focus();
+			return 1;
+		}
+	}
+	else {
+		for (i=0; i<2; i++) {
+			if (s[i].value != "" && isCommonIp6(s[i].value) == false ) {
+				alert(tit+"("+(i==0?strStart:strEnd)+"): "+strInvalid);
+				s[i].focus();
+				return 1;
+			}
+		}
+		if (ips.value != "" && ipe.value != "" && cmpIpv6 (ips.value, ipe.value) != 0) {
+			alert(tit+": <%WebStr(sec,ERR_ENDSMALL)%>");
+			ips.focus();
+			return 1;
+		}
+	}
+	return 0;
+}
+function chkPort(pos, poe, tit)
+{
+	var i, n=[0,0], flds=[pos, poe];
+	for (i=0; i<2; i++) {
+		if (flds[i].value != "") {
+			if (isNaN(flds[i].value) || flds[i].value == "0") {
+				alert(tit+"("+(i==0?strStart:strEnd)+"): "+strInvalid);
+				flds[i].focus();
+				return 1;
+			}
+			n[i]=parseInt(flds[i].value);
+		}
+	}
+	for (i=0; i<2; i++) {
+		if (n[i] < 0 || n[i] > 65535) {
+			alert(tit+"("+(i==0?strStart:strEnd)+"): <%WebStr(sec,ERR_PORT_NUM)%>");
+			return 1;
+		}
+	}
+	if (n[0] != 0 && n[1] != 0 && n[0] > n[1]) {
+		alert(tit+": <%WebStr(sec,ERR_ENDSMALL)%>");
+		flds[0].focus();
+		return 1;
+	}
+	return 0;
+}
+function btnApply() {
+	var loc = 'scinflt.cmd?action=add';
+	var po;
+	var strName="<%WebStr(sec,FN_PF_NAME)%>";
+	
+	with ( document.forms[0] ) {
+		if (txtfltname.value == "") {
+			alert (strName+": <%WebStr(comm,ERR_EMPTY)%>");
+			txtfltname.focus();
+			return;
+		}
+		if ( isValidNameL1(txtfltname.value) == false ) {
+			alert(strName+": <%WebStr(comm,ERRSTR)%> (\" | \\)");
+			txtfltname.focus();
+			return;
+		}
+		var v=ipver.options[ipver.selectedIndex].value;
+		if (chkIp(v, intips, intipe, "<%WebStr(sec,FN_PF_IIP)%>")) return;
+		if (chkPort(intpos, intpoe, "<%WebStr(sec,FN_PF_IPO)%>")) return;
+		if (chkIp(v, extips, extipe, "<%WebStr(sec,FN_PF_EIP)%>")) return;
+		if (chkPort(extpos, extpoe, "<%WebStr(sec,FN_PF_EPO)%>")) return;
+		if (intips.value != "" && intipe.value == "") intipe.value=intips.value;
+		if (intipe.value != "" && intips.value == "") intips.value=intipe.value;
+		if (extips.value != "" && extipe.value == "") extipe.value=extips.value;
+		if (extipe.value != "" && extips.value == "") extips.value=extipe.value;
+		if (intpos.value != "" && intpoe.value == "") intpoe.value=intpos.value;
+		if (intpoe.value != "" && intpos.value == "") intpos.value=intpoe.value;
+		if (extpos.value != "" && extpoe.value == "") extpoe.value=extpos.value;
+		if (extpoe.value != "" && extpos.value == "") extpos.value=extpoe.value;
+		// incoming IP filter name
+		loc += '&fltName=' + encodeUrl(txtfltname.value);
+	
+		// ip version
+		loc += '&ipver=' + ipver.options[ipver.selectedIndex].value;
+	
+		// protocol
+		loc += '&protocol=' + protocol.options[protocol.selectedIndex].value;
+			
+		// source address
+		if ( intips.value != "" )
+			loc += '&srcAddr=' + intips.value;
+		if (intipe.value != "")
+			loc += '&intIpE=' + intipe.value;
+	
+		// source port
+		if (protocol.selectedIndex < 3 && intpos.value != "" ) {
+			po = intpos.value;
+			if (intpoe.value != "") po += ":"+intpoe.value;
+			loc += '&srcPort=' + po;
+		}
+	
+		// destination address
+		if ( extips.value != "" )
+			loc += '&dstAddr=' + extips.value;
+		if (extipe.value != "")
+			loc += '&extIpE=' + extipe.value;
+	
+		// destination port
+		if (protocol.selectedIndex < 3 && extpos.value != "" ) {
+			po = extpos.value;
+			if (extpoe.value != "") po += ":"+extpoe.value;
+			loc += '&dstPort=' + po;
+		}
+		//act
+		loc += '&act='+act.options[act.selectedIndex].value;
+		// direction
+		loc += '&dir='+direction.options[direction.selectedIndex].value;
+	}
+	
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function chgProt(idx)
+{
+	with (document.forms[0]) {
+		var fg = (idx < 3) ? false : true;
+		intpos.disabled = fg;
+		intpoe.disabled = fg;
+		extpos.disabled = fg;
+		extpoe.disabled = fg;
+	}
+}
+function appSelect(sName) {
+	var info=[['FTP', 21, 1], ['SSH',22, 1], ['Telnet', 23, 1], ['SMTP', 25, 1],
+		['HTTP', 80, 1], ['POP3', 110, 1], ['SNMP', 161, 2], ['HTTPS' , 443, 1],
+		['IKE', 500, 2], ['syslog', 514, 2], ['T120', 1503, 1], ['L2TP', 1701, 2],
+		['H323', 1720, 1], ['PPTP', 1723, 1], ['Radius', 1812, 2], ['Radacct', 1813, 2],
+		['pcAnywhere', 5631, 1], ['VNC', 5900, 1], ['CuSeeMe', 7648, 1]];
+	with (document.forms[0]) {
+		if (sName == "FIRST_APP") {
+			txtfltname.value = '';
+			extpos.value='';
+			extpoe.value='';
+			protocol.selectedIndex = 0;
+			return;
+		}
+		for(i = 0; i < info.length; i++) {
+			if (sName == info[i][0]) {
+				txtfltname.value = sName;
+				extpos.value=info[i][1];
+				extpoe.value=info[i][1];
+				protocol.selectedIndex = info[i][2];
+				return;
+			}
+		}
+	}
+}
+function frmLoad()
+{
+	document.forms[0].srvName.selectedIndex = 0;
+	appSelect(0);
+}
+// done hiding -->
+</script>
+</head>
+<body onload="frmLoad();">
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+
+<td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td>
+</tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_SC_PKTFLT)%> -- <%WebStr(comm,ADD)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<tr><td colspan="2" class="header"><%WebStr(sec,TN_PF_CONF)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(sec,FN_PF_NAME)%></td>
+<td class="content"><input type='text' size="20" name="txtfltname" maxlength="15">
+	<select name='srvName' onChange='appSelect(this.value)'>
+    <option value='FIRST_APP'>--<%WebStr(sec,SELECT);%>--</option>
+	<option value='FTP'>FTP(TCP 21)</option>
+	<option value='SSH'>SSH(TCP 22)</option>
+	<option value='Telnet'>Telnet(TCP 23)</option>
+	<option value='SMTP'>SMTP(TCP 25)</option>
+	<option value='HTTP'>HTTP(TCP 80)</option>
+	<option value='POP3'>POP3(TCP 110)</option>
+	<option value='SNMP'>SNMP(UDP 161)</option>
+	<option value='HTTPS'>HTTPS(TCP 443)</option>
+	<option value='IKE'>IKE(UDP 500)</option>
+	<option value='syslog'>syslog(UDP 514)</option>
+	<option value='T120'>T.120(TCP 1503)</option>
+	<option value='L2TP'>L2TP(UDP 1701)</option>
+	<option value='H323'>H323(TCP 1720)</option>
+	<option value='PPTP'>PPTP(TCP 1723)</option>
+	<option value='Radius'>Radius(UDP 1812)</option>
+	<option value='Radacct'>Radacct(UDP 1813)</option>
+	<option value='pcAnywhere'>pcAnywhere(TCP 5631)</option>
+	<option value='VNC'>VNC(TCP 5900)</option>
+	<option value='CuSeeMe'>CuSeeMe(TCP 7648)</option>
+    </select>(<%WebStr(sec,SELLISTHINT);%>)
+</td></tr>
+<tr><td class="title"><%WebStr(sec,FN_PF_IPV)%></td>
+<td class="content"><script type="text/javascript">
+<!--
+	document.write("<select name='ipver'>");
+	document.write("<option value='4'>IPv4</option>");
+	if (enblIP6 == '1') document.write("<option value='6'>IPv6</option>");
+	document.write("</select>");
+-->
+</script></td></tr>
+<tr><td class="title"><%WebStr(comm,PROTOCOL)%></td>
+<td class="content"><select name='protocol' onchange="chgProt(this.selectedIndex);">
+	<option value='0'>TCP/UDP</option>
+	<option value='1'>TCP</option>
+	<option value='2'>UDP</option>
+	<option value='3'>ICMP</option>
+</select></td></tr>
+<tr><td class="title"><%WebStr(sec,FN_PF_IIP)%></td>
+<td class="content"><input type='text' size="20" name="intips" maxlength="39"> ~ 
+<input type='text' size="20" name="intipe" maxlength="39"></td></tr>
+<tr><td class="title"><%WebStr(sec,FN_PF_IPO)%></td>
+<td class="content"><input type='text' size="10" name="intpos" maxlength="5"> ~ 
+<input type='text' size="10" name="intpoe" maxlength="5"></td></tr>
+<tr><td class="title"><%WebStr(sec,FN_PF_EIP)%></td>
+<td class="content"><input type='text' size="20" name="extips" maxlength="39"> ~ 
+<input type='text' size="20" name="extipe" maxlength="39"></td></tr>
+<tr><td class="title"><%WebStr(sec,FN_PF_EPO)%></td>
+<td class="content"><input type='text' size="10" name="extpos" maxlength="5"> ~ 
+<input type="text" size="10" name="extpoe" maxlength="5"></td></tr>
+<tr><td class="title"><%WebStr(sec,FN_PF_ACT)%></td>
+<td class="content"><select name="act">
+	<option value='0'><%WebStr(sec,PF_FORWARD)%></option>
+	<option value='1'><%WebStr(sec,PF_DROP)%></option>
+</select></td></tr>
+<tr><td class="title"><%WebStr(sec,FN_PF_DIR)%></td>
+<td class="content"><select name="direction">
+	<option value='0'><%WebStr(sec,INCOMING)%></option>
+	<option value='1'><%WebStr(sec,OUTGOING)%></option>
+</select></td></tr>
+<tr><td class="btnline" colspan="2"><input type="button" onClick="btnApply()" value="<%WebStr(comm,APPLY)%>">&nbsp;
+<input type="button" value="<%WebStr(comm,CANCEL)%>" onClick="reset();frmLoad();">
+</td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(sec.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

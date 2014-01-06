@@ -1,0 +1,197 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(mgmt.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var chipId = <%ejGetOther(sysInfo, chipId)%>
+
+function frmLoad() {
+	var loc;
+	if (loc) {
+		var code = 'location="' + loc + '"';
+		eval(code);
+	} else {
+		with ( document.forms[0] ) {
+			var pwrmngt = '';
+			pwrmngt = '<%ejGetOther(pwrmngt)%>';
+		}
+	}
+}
+function btnApply() {
+	var loc = 'pwrmngt.cmd?';
+	with ( document.forms[0] ) {
+		if ( radPmCPUSpeed[0].checked == true )
+			loc += 'PmCPUSpeed=256';
+		else if ( radPmCPUSpeed[1].checked == true )
+			loc += 'PmCPUSpeed=8';
+		else if ( radPmCPUSpeed[2].checked == true )
+			loc += 'PmCPUSpeed=4';
+		else if ( radPmCPUSpeed[3].checked == true )
+			loc += 'PmCPUSpeed=2';
+		else if ( radPmCPUSpeed[4].checked == true )
+			loc += 'PmCPUSpeed=1';
+		else if ( radPmCPUSpeed[5].checked == true ) 
+			loc += 'PmCPUSpeed=0';
+		else
+			loc += 'PmCPUSpeed=256';
+
+		if ( chkPmCPUr4Kwait.checked == true )
+			loc += '&PmCPUr4kWaitEn=1';
+		else
+			loc += '&PmCPUr4kWaitEn=0';
+		if ( chkPmDRAMSelfRefresh.checked == true )
+			loc += '&PmDRAMSelfRefreshEn=1';
+		else
+			loc += '&PmDRAMSelfRefreshEn=0';
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_ADVANCED_SETUP); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(menu,MENU_PWRMNGT) %></td></tr>
+<form>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><% WebStr(mgmt,MPIS_CLOCK); %></td>
+			<td class="content"><input type='radio' name='radPmCPUSpeed' value=256><%WebStr(mgmt,AUTO)%>&nbsp;&nbsp;
+				<input type='radio' name='radPmCPUSpeed' value=8><%WebStr(mgmt,ONE_EIGHT_FULL_ASYNC)%>&nbsp;&nbsp;
+				<input type='radio' name='radPmCPUSpeed' value=4><%WebStr(mgmt,ONE_FOURTH_FULL_ASYNC)%>&nbsp;&nbsp;
+				<input type='radio' name='radPmCPUSpeed' value=2><%WebStr(mgmt,ONE_HALF_FULL_ASYNC)%></br>
+				<input type='radio' name='radPmCPUSpeed' value=1><%WebStr(mgmt,FULL_ASYNC)%>&nbsp;&nbsp;
+				<input type='radio' name='radPmCPUSpeed' value=0><%WebStr(mgmt,FULL_SYNC)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(comm,STATUS)%></td>
+			<td class="content"><script language="javascript">
+<!-- hide 
+				{   with ( document.forms[0] ) {
+						pmCPUSpeed   = '<%ejGet(pmCPUSpeed)%>';
+						if(pmCPUSpeed == "256") {
+							radPmCPUSpeed[0].checked = true;
+							pmCPUr4Kwait = '<%ejGet(pmCPUr4kWaitEn)%>';
+						if(pmCPUr4Kwait == 1)
+							document.writeln("<font color='green'><%WebStr(mgmt,AUTO)%></font>");
+						else
+							document.writeln("<font color='red'><%WebStr(mgmt,AUTO)%> (<%WebStr(mgmt,WAIT_DISABLED)%>)</font>");
+						}else if(pmCPUSpeed == "8") {
+							radPmCPUSpeed[1].checked = true;
+							document.writeln("<font color='red'><%WebStr(mgmt,ONE_EIGHT_FULL_ASYNC)%></font>");
+						}else if(pmCPUSpeed == "4") {
+							radPmCPUSpeed[2].checked = true;
+							document.writeln("<font color='red'><%WebStr(mgmt,ONE_FOURTH_FULL_ASYNC)%></font>");
+						}else if(pmCPUSpeed == "2") {
+							radPmCPUSpeed[3].checked = true;
+							document.writeln("<font color='red'><%WebStr(mgmt,ONE_HALF_FULL_ASYNC)%></font>");
+						}else if(pmCPUSpeed == "1") {
+							radPmCPUSpeed[4].checked = true;
+							document.writeln("<font color='green'>%WebStr(mgmt,FULL_ASYNC)%></font>");
+						}else if(pmCPUSpeed == "0") {
+							radPmCPUSpeed[5].checked = true;
+							document.writeln("<font color='green'>%WebStr(mgmt,FULL_SYNC)%></font>");
+						}
+						else
+							document.writeln("<font color='red'>"+ pmCPUSpeed +" </font>");
+					}
+				}
+// done hiding --></script></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,WAIT_IDLE)%></td>
+			<td class="content"><input type='checkbox' name='chkPmCPUr4Kwait'>&nbsp;<%WebStr(comm,ENABLE)%>&nbsp;
+(<%WebStr(mgmt,CURRENTLY)%> : 
+<script language="javascript">
+<!-- hide 
+{
+					with ( document.forms[0] ) {
+						pmCPUr4Kwait = '<%ejGet(pmCPUr4kWaitEn)%>';
+						if(pmCPUr4Kwait == 1) {
+							document.writeln("<font color='green'><%WebStr(comm,ENABLE)%></font>");
+							chkPmCPUr4Kwait.checked = true;
+						}else {
+							document.writeln("<font color='red'><%WebStr(comm,DISABLE)%></font>");
+							chkPmCPUr4Kwait.checked = false;
+						}
+					}
+}
+// done hiding --></script>)</td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,DRAM_SELF_REFRESH)%></td>
+			<td class="content"><input type='checkbox' name='chkPmDRAMSelfRefresh'>&nbsp;<%WebStr(comm,ENABLE)%>&nbsp;
+(<%WebStr(mgmt,CURRENTLY)%> : 
+<script language="javascript">
+				<!-- hide 
+					{
+						with ( document.forms[0] ) {
+							pmDRAMSelfRefresh = '<%ejGet(pmDRAMSelfRefreshEn)%>';
+							if(pmDRAMSelfRefresh == 1) {
+								document.writeln("<font color='green'><%WebStr(comm,ENABLE)%></font>");
+								chkPmDRAMSelfRefresh.checked = true;
+							}else {
+								document.writeln("<font color='red'><%WebStr(comm,DISABLE)%></font>");
+								chkPmDRAMSelfRefresh.checked = false;
+							}
+						}
+					}
+				// done hiding -->
+				</script>)</td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,80211_WIRELESS)%></td>
+			<td class="content"><input type='checkbox' name='chkPmWifiEn' >&nbsp;<%WebStr(comm,ENABLE)%>&nbsp;
+(<%WebStr(mgmt,CURRENTLY)%> : 
+<script language="javascript">
+				<!-- hide 
+					{
+						with ( document.forms[0] ) {
+							pmWifi       = '<%ejGet(pmWifiEn)%>';
+							if(pmWifi == 1) {
+								document.writeln("<font color='green'><%WebStr(comm,ENABLE)%></font>");
+								chkPmWifiEn.checked = true;
+							}else {
+								document.writeln("<font color='red'><%WebStr(comm,DISABLE)%></font>");
+								chkPmWifiEn.checked = false;
+							}
+						}
+					}
+				// done hiding -->
+				</script>	)</td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</form>
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(mgmt.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

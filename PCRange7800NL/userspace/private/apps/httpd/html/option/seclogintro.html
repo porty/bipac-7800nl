@@ -1,0 +1,72 @@
+<%WebStr(mgmt.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language='javascript'>
+<!-- hide
+var state = '<%ejGet(seclogRefresh)%>';
+if ( state == '1' ) {
+	var code = 'location="seclogintro.cgi?seclogRefresh=0&sessionKey=<%ejGetOther(sessionKey)%>"';
+	eval(code);
+}
+function btnView() {
+	var options;
+	options = 'menubar=yes,resizable=yes,scrollbars=yes,titlebar=yes,toolbar=no,width=640,height=600';
+	window.open('seclogview.cmd', 'BCM963xxSecLog', options);
+}
+function btnReset() {
+	var options;
+	options = 'menubar=yes,resizable=yes,scrollbars=yes,titlebar=yes,toolbar=no,width=320,height=200';
+	window.open('seclogreset.cmd', 'BCM963xxSecLog', options);
+}
+/*function btnSave() {
+	var loc = 'security_log.txt';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}*/
+// done hiding -->
+</script>
+</head>
+<body>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu, MENU_MANAGEMENT)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu, MENU_TL_SECURITY_LOG)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td colspan=2 class="header"><%WebStr(mgmt,SECLOGHINT)%></td></tr>
+		<tr>
+			<td colspan=2 class="btnline"><input type="button" value="<%WebStr(mgmt, VIEW_SECLOG)%>" onClick="btnView()" name="bView">
+			<!--input type="button" value="<%WebStr(mgmt, SAVE_SECLOG)%>" onClick="btnSave()" name="bSave"-->
+			<input type="button" value="<%WebStr(comm, RESET)%>" onClick="btnReset()" name="bConfig">
+			</td>
+		</tr>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(mgmt.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

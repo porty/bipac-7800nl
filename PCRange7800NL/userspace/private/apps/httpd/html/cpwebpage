@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# copy webpage files
+cp -f *.html $INSTALL_DIR/webs
+cp -f *.js $INSTALL_DIR/webs
+cp -f *.gif $INSTALL_DIR/webs
+cp -f *.css $INSTALL_DIR/webs
+if [ -d option ]; then
+	cd option
+	./cpfile
+	cd ..
+fi
+
+# copy Customer specifing for all products
+if [ -d $CUSTOMER ]; then
+	cd $CUSTOMER
+	./cpfile
+	cd ..
+fi
+
+#copy product specfing for all customer
+if [ -d $PROFILE ]; then
+	cd $PROFILE
+	./cpfile
+# copy customer specifing for this product
+	if [ -d $CUSTOMER ]; then
+		cd $CUSTOMER
+		./cpfile
+		cd ..
+	fi
+	cd ..
+fi

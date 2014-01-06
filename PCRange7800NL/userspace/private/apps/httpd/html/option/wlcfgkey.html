@@ -1,0 +1,144 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(wlan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var fields=["<%WebStr(wlan,NTWK_KEY)%>"];
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>"];
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var enbl = '<%ejGetWl(wlEnbl)%>';
+var bit = '<%ejGetWl(wlKeyBit)%>';
+var keyIdx = '<%ejGetWl(wlKeyIndex)%>';
+var keys = new Array( "<%ejGetWl(wlKey1)%>", "<%ejGetWl(wlKey2)%>","<%ejGetWl(wlKey3)%>", "<%ejGetWl(wlKey4)%>" );
+var mode = '<%ejGetWl(wlAuthMode)%>';
+var wep = '<%ejGetWl(wlWep)%>';
+var auth = '<%ejGetWl(wlAuth)%>';
+function frmLoad() {
+	with ( document.forms[0] ) {
+		for ( i = 0; i < 4; i++ ) {
+			wlKeys[i].value = keys[i];
+		}
+		if (mode != "open" && mode != "shared") {
+			wlKeys[0].disabled = 1;
+			wlKeys[3].disabled = 1;
+			wlKeyIndex[0] = new Option("2", "2");
+			wlKeyIndex[1] = new Option("3", "3");
+			if (keyIdx != "2" && keyIdx != "3")
+				wlKeyIndex.selectedIndex = 0;
+			else
+				wlKeyIndex.selectedIndex = parseInt(keyIdx) - 2;
+		}
+		else {
+			wlKeyIndex[0] = new Option("1", "1");
+			wlKeyIndex[1] = new Option("2", "2");
+			wlKeyIndex[2] = new Option("3", "3");
+			wlKeyIndex[3] = new Option("4", "4");
+			wlKeyIndex.selectedIndex = parseInt(keyIdx) - 1;
+		}
+	}
+}
+function btnApply() {
+	if ( enbl == '0' ) {
+		alert('<%WebStr(wlan,WL_DISABLEERR)%>');
+		return;
+	}
+	with ( document.forms[0] ) {
+		var idx = wlKeyIndex.selectedIndex;
+		var keyIndex = wlKeyIndex.options[idx].value;
+		var num = parseInt(keyIndex-1);
+		if ( wlKeys[num].value == '' ) {
+			if (!((wep == 'enabled') && (mode == 'radius'))) {
+				alert(fields[0]+" "+keyIndex+" : "+errMsg[1]);
+				wlKeys[num].focus();
+				return;
+			}
+		}
+		var i, val;
+		for ( i = 0; i < 4; i++ ) {
+			val = wlKeys[i].value;
+			if ( val != '' ) {
+				if ( bit == '0' ) {
+					if ( isValidKey(val, 13) == false ) {
+						//alert('Key "' + val + '" is not a valid 128-bit encryption key.');
+						alert(fields[0]+" : "+errMsg[0]);
+						wlKeys[i].focus();
+						return;
+					}
+				} else {
+					if ( isValidKey(val, 5) == false ) {
+						//alert('Key "' + val + '" is not a valid 64-bit encryption key.');
+						alert(fields[0]+" : "+errMsg[0]);
+						wlKeys[i].focus();
+						return;
+					}
+				}
+			}
+		}
+		var loc = 'wlsecurity.wl?';
+		loc += 'wlKeyIndex=' + keyIndex;
+		loc += '&wlKey1=' + encodeUrl(wlKeys[0].value);
+		loc += '&wlKey2=' + encodeUrl(wlKeys[1].value);
+		loc += '&wlKey3=' + encodeUrl(wlKeys[2].value);
+		loc += '&wlKey4=' + encodeUrl(wlKeys[3].value);
+		loc += '&wlSyncNvram=1';
+		loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+		var code = 'location="' + loc + '"';
+		eval(code);
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_WIRELESS_SETTINGS)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(wlan,WL_ENCRYPTYKEY)%></td></tr>
+<form onSubmit='return false'>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="title"><%WebStr(wlan,WLKEY_HINT1)%>
+			<%WebStr(wlan,WLKEY_HINT2)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(wlan,NTWK_KEY)%> 1</td>
+			<td class="content"><input type='text' name='wlKeys' size='30'></td></tr>
+		<tr><td class="title"><%WebStr(wlan,NTWK_KEY)%> 2</td>
+			<td class="content"><input type='text' name='wlKeys' size='30'></td></tr>
+		<tr><td class="title"><%WebStr(wlan,NTWK_KEY)%> 3</td>
+			<td class="content"><input type='text' name='wlKeys' size='30'></td></tr>
+		<tr><td class="title"><%WebStr(wlan,NTWK_KEY)%> 4</td>
+			<td class="content"><input type='text' name='wlKeys' size='30'></td></tr>
+		<tr><td class="title"><%WebStr(wlan,CURNTWK_KEY)%></td>
+			<td class="content"><select name='wlKeyIndex' size='1'></td></tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="btnCancel();"></td></tr>
+	</table><!-- cfgframe -->
+</form>
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(wlan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

@@ -1,0 +1,486 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(layer2.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET,utf-8)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+
+var chipId = '<%ejGetOther(sysInfo, chipId)%>';
+var upRate = parseInt('<%ejGetOther(lineRate, 0, 0)%>');
+var pcrMax=0;
+// var pcrMax = 1887;   // 1887 * 53 * 8 = 800000
+var serviceCat = '<%ejGet(atmServiceCategory)%>';
+var numQueue = parseInt('<%ejGetOther(memInfo, queueNum)%>');
+var numQueueMax = 8;
+var numPrioLevels = '<%ejGet(glbQosPrioLevel)%>';
+var buildvlm =  '<%ejGetOther(sysInfo, buildWanVlanMux)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+
+if ( isNaN(upRate) == false )
+	pcrMax = Math.ceil((upRate * 1000) / (49 * 8));  // SASHA new value for VDSL
+if (pcrMax == 0) pcrMax = 255000;   // Assuming nitro: 255000 * 49 * 8 = 100Mbps  // SASHA: VDSL
+
+var numPvcMax = 8;
+var numPvc = parseInt('<%ejGet(numPvc)%>');
+
+function hideInfo(hide) {
+	if (hide == 3) {      // hide all 3
+		showhide('first1', 0);
+		//showhide('2and3', 0);
+		showhide('sec2', 0);
+		showhide('thir3', 0);
+	}
+	else if (hide == 2) { // hide 2 and 3
+		showhide('first1', 1);
+		//showhide('2and3', 0);
+		showhide('sec2', 0);
+		showhide('thir3', 0);
+	}
+	else if (hide == 0) { // hide none
+		showhide('first1', 1);
+		//showhide('2and3', 1);
+		showhide('sec2', 1);
+		showhide('thir3', 1);
+	}
+}
+
+function encClick() {
+	with ( document.forms[0] ) {
+		var idx=linkType.selectedIndex;
+		if (idx == 1) { // PPPoA
+			encSel.options[0].text = "VC/MUX";
+			encSel.options[1].text = "LLC/ENCAPSULATION";
+			showhide('divBuildVlanMux', 0);
+		} else if (idx == 2) { // IPoA
+			encSel.options[0].text = "LLC/SNAP-ROUTING";
+			encSel.options[1].text = "VC/MUX";
+			showhide('divBuildVlanMux', 0);
+		} else { // EoA
+			encSel.options[0].text = "LLC/SNAP-BRIDGING";
+			encSel.options[1].text = "VC/MUX";
+			showhide('divBuildVlanMux', buildvlm);
+		}
+	}
+}
+
+function showhideAlgSub (sh)
+{
+	var idarr=["trqos1","trqos2","trqos3"];
+	var len=idarr.length, i;
+	if (sh == 1) {
+		if (document.forms[0].alg[0].checked == true) {
+			showhide (idarr[0], 1);
+			for (i = 1; i < len; i++) showhide (idarr[i], 0);
+		} else {
+			showhide (idarr[0], 0);
+			for (i = 1; i < len; i++) showhide (idarr[i], 1);
+		}
+	} else {
+		for (i=0; i<len; i++) showhide (idarr[i], 0);
+	}
+}
+
+function showhideAlg(sh)
+{
+	showhide ("algorithm", sh);
+	showhideAlgSub(sh);
+}
+
+function cbClick(obj) {
+	with ( document.forms[0] ) {
+		var idx = obj.selectedIndex;
+		var val = obj.options[idx].value;
+		if ( val == "UBR" )
+			hideInfo(3);
+		else if (val == "UBRWPCR" || val == "CBR")
+			hideInfo(2);
+		else
+			hideInfo(0);
+
+		if (val == 'UBRWPCR' || val == 'CBR' || val == 'VBR-rt' || val == 'VBR-nrt') {
+			enblQos.checked = false;
+			showhide("qosInfo", 0);
+			//showhide("algorithm", 0);
+			showhideAlg (0);
+		}
+		else {
+			if ( chipId == '6368' || chipId == '6362' || chipId == '6328' ) {
+				enblQos.checked = true;
+				showhide("qosInfo", 0);
+				//showhide("algorithm", 1);
+				showhideAlg (1);
+			}
+			else {
+				showhide("qosInfo", 1);
+				//showhide("algorithm", 0);
+				showhideAlg (0);
+			}
+		}
+	}
+}
+
+function frmLoad() {
+	with ( document.forms[0] ) {
+		atmVpi.value = '<%ejGet(atmVpi)%>';
+		atmVci.value = '<%ejGet(atmVci)%>';
+		document.getElementById("trlat").style.display = ( chipId == '6368' || chipId == '6362' || chipId == '6328' ) ? "" : "none";
+
+		linkType.selectedIndex = 0;
+		showhide('divBuildVlanMux', buildvlm);
+	
+		if (serviceCat == 'UBR') {
+			serviceCategory[0].selected = true;
+			hideInfo(3);
+		}
+		else if (serviceCat == 'UBRWPCR') {
+			serviceCategory[1].selected = true;
+			hideInfo(2);
+		}
+		else if (serviceCat == 'CBR') {
+			serviceCategory[2].selected = true;
+			hideInfo(2);
+		}
+		else if (serviceCat == 'VBR-nrt') {
+			serviceCategory[3].selected = true;
+			hideInfo(0);
+		}
+		else if (serviceCat == 'VBR-rt') {
+			serviceCategory[4].selected = true;
+			hideInfo(0);
+		}
+		else {
+			serviceCategory[0].selected = true;
+			hideInfo(3);
+		}
+
+		if ( chipId == '6358' ) {
+			// if PVC is available but queue is not then only allow to add UBR PVC
+			if ( numPvc < numPvcMax && numQueue >= numQueueMax ) {
+				for ( i = 4; i > 0; i-- )
+				serviceCategory.options[i] = null;
+				hideInfo(3);
+			}
+		}
+
+		if ( chipId == '6368' || chipId == '6362' || chipId == '6328' ) {
+			if (serviceCategory[0].selected == true) {
+				enblQos.checked = true;
+				//showhide("algorithm", 1);
+				showhideAlg (1);
+			}
+			else {
+				enblQos.checked = false;
+				//showhide("algorithm", 0);
+				showhideAlg (0);
+			}
+			showhide('qosInfo', 0);   //for 6368, 6362 and 6328, never show qosInfo.
+		}
+		else {
+			enblQos.checked = false;  //for 6358, always init to false.
+			showhide('qosInfo', 1);   //for 6358, always show qosInfo to allow enable or disable qos.
+			//showhide("algorithm", 0); //for 6358, never show algorithm
+			showhideAlg (0);
+		}
+		wght.value = '1';
+	}
+}
+
+function btnBack() {
+	//var code = 'location="dslatm.cmd"';
+	var code = 'location="wanport.cmd?action=atm&sessionKey=' + sessionKey+'"';
+	eval(code);
+}
+
+function btnSave() {
+	var loc = 'dslatm.cmd?action=add';
+	var portId;
+	var strInvalid="<%WebStr(comm,INVALID)%>", strPCR="<%WebStr(layer2,FN_ATM_PCR)%>", strSCR="<%WebStr(layer2,FN_ATM_SCR)%>";
+	var strOutRange="<%WebStr(comm,ERR_OUT_RANGE)%>",strMBS="<%WebStr(layer2,FN_ATM_MBS)%>";
+	var strWght="<%WebStr(layer2,FN_ATM_QOS_WEIGHT_DEFQUE)%>";
+	
+	with ( document.forms[0] ) {
+		if (isNumberStr(atmVpi.value) == false) {
+			alert ("VPI: "+strInvalid);
+			atmVpi.focus();
+			return;
+		}
+		if ( isNumberStr(atmVci.value) == false ) {
+			alert ("VCI: "+strInvalid);
+			atmVci.focus();
+			return;
+		}
+		vpi = parseInt(atmVpi.value);
+		if ( vpi < 0 || vpi > 255 ) {
+			//alert('VPI "' + atmVpi.value + '" is out of range [0-255].');
+			alert ("VPI: "+strOutRange);
+			atmVpi.focus();
+			return;
+		}
+		vci = parseInt(atmVci.value);
+		if ( vci < 32 || vci > 65535 ) {
+			//alert('VCI "' + atmVci.value + '" is out of range [32-65535].');
+			alert ("VCI: "+strOutRange);
+			atmVci.focus();
+			return;
+		}
+		loc += '&atmVpi=' + atmVpi.value;
+		loc += '&atmVci=' + atmVci.value;
+	
+		if ( chipId == '6368' || chipId == '6362' || chipId == '6328' ) {
+			if (path0.checked == true && path1.checked == true) {
+				portId = '4';
+			}
+			else if (path0.checked == true) {
+				portId = '0';
+			}
+			else if (path1.checked == true) {
+				portId = '1';
+			}
+			else {
+				alert("<%WebStr(layer2,FN_ATM_DSL_LATENCY)%>: <%WebStr(layer2,ERR_DSL_LATNCY)%>");
+				path0.focus();
+				return;
+			}
+		}
+		else {
+//         if (latency[0].checked == true) {
+				portId = '0';
+//         }
+//         else {
+//               portId = '1';
+//         }
+		}	  	
+		loc += '&portId=' + portId;
+
+		loc += '&connMode='+connMode.options[connMode.selectedIndex].value;
+		
+		loc += '&linkType='+linkType.options[linkType.selectedIndex].value;
+		
+		loc += '&encapMode=' + encSel.options[encSel.selectedIndex].value;
+		
+		loc += '&atmServiceCategory=' + serviceCategory.value;
+		if (serviceCategory.value != 'UBR') {
+			if ( isNumberStr(peakCell.value) == false) {
+				alert(strPCR+": "+strInvalid);
+				peakCell.focus();
+				return;
+			}
+			peak = parseInt(peakCell.value);
+			if ( peak <= 0 || peak > pcrMax ) {
+				alert(strPCR+": "+strOutRange);
+				peakCell.focus();
+				return;
+			}
+			loc += '&atmPeakCellRate=' + peakCell.value;
+		} else
+			loc += '&atmPeakCellRate=0';
+		
+		if (serviceCategory.value == 'VBR-nrt' || serviceCategory.value == 'VBR-rt') {
+			if ( isNumberStr(sustainableCell.value) == false) {
+				alert(strSCR+": "+strInvalid);
+				sustainableCell.focus();
+				return;
+			}
+			sustainable = parseInt(sustainableCell.value);
+			if ( sustainable <= 0 || sustainable > pcrMax ) {
+				alert(strSCR+": "+strOutRange);
+				sustainableCell.focus();
+				return;
+			}
+			if ( sustainable >= peak) {
+				alert("<%WebStr(layer2,ERR_SCR_SMALL_THAN_PCR)%>");
+				sustainableCell.focus();
+				return;
+			}
+			if ( isNumberStr(maximumBurst.value) == false) {
+				alert(strMBS+": "+strInvalid);
+				maximumBurst.focus();
+				return;
+			}
+			maximum = parseInt(maximumBurst.value);
+			if ( maximum <= 0 || maximum > 1000000 ) {
+				//alert('Maximum Burst Size "' + maximumBurst.value + '" is out of range [1-1000000].');
+				alert(strMBS+": "+strOutRange);
+				maximumBurst.focus();
+				return;
+			}
+			loc += '&atmSustainedCellRate=' + sustainableCell.value;
+			loc += '&atmMaxBurstSize=' + maximumBurst.value;
+		} else {
+			loc += '&atmSustainedCellRate=0';
+			loc += '&atmMaxBurstSize=0';
+		}
+		if ( enblQos.checked == true ) {
+			loc += '&enblQos=1';
+			if ( chipId == '6368' || chipId == '6362' || chipId == '6328' ) {
+				if (alg[0].checked == true)
+				loc += '&alg=SP';
+				else {
+				if ( isNumberStr(wght.value) == false ) {
+					alert(strWght+": "+strInvalid);
+					wght.focus();
+					return;
+				}
+				wghtval = parseInt(wght.value);
+				if ( wghtval < 1 || wghtval > 63 ) {
+					alert(strWght+": "+strOutRange);
+					wght.focus();
+					return;
+				}
+				loc += '&alg=WFQ&wght=' + wght.value;
+				loc += '&prec=' + prec.value;
+				}
+			}
+		}
+		else
+			loc += '&enblQos=0';
+	}
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+
+// done hiding -->
+</script>
+</head>
+<body onload="frmLoad()">
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr><td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td></tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_DSL_ATM_INTERFACE)%> -- <%WebStr(layer2,HN_ATM_PVCCFG)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td colspan=2 class="title"><%WebStr(layer2,HINT_PVCCFG)%></td></tr>
+<tr>
+	<td class="title" width="35%">VPI / VCI</td>
+	<td class="content"><input type="text" size="6" name="atmVpi" maxlength="3">&nbsp;[0-255]&nbsp;&nbsp;/&nbsp;
+	<input type="text" size="6" name="atmVci" maxlength="5">&nbsp;[32-65535]</td>
+</tr>
+<tr id="trlat" style="display:none">
+	<td class="title"><%WebStr(layer2,FN_ATM_DSL_LATENCY)%></td>
+	<td class="content"><input type="checkbox" name="path0" checked>&nbsp;Path0
+	&nbsp;&nbsp;&nbsp;<input type="checkbox" name="path1">&nbsp;Path1</td>
+</tr>
+<tr><td class="title"><%WebStr(layer2,FN_ATM_LNKTYPE)%></td>
+<td class="content"><select name="linkType" onChange="encClick()">
+	<option value="EoA">EoA</option>
+	<option value="PPPoA">PPPoA</option>
+	<option value="IPoA">IPoA</option>
+</select>&nbsp;(<%WebStr(layer2,HINT_LINKTYPE)%>)</td></tr>
+<tr id="divBuildVlanMux" style="display:none">
+	<td class="title"><%WebStr(layer2,FN_ATM_CONN_MODE)%></td>
+	<td class="content"><select name="connMode">
+		<option value="0" selected><%WebStr(layer2,ATM_CONN_MODE_DEF)%></option>
+		<option value="1"><%WebStr(layer2,ATM_CONN_MODE_VLMAX)%></option>
+	</select></td>
+</tr>
+<tr>
+	<td class="title"><%WebStr(layer2,FN_ATM_ENCAP)%></td>
+	<td class="content"><select name="encSel" id="encSel">
+		<option value="0">LLC/SNAP-BRIDGING</option>
+		<option value="1">VC/MUX</option>
+	</select></td>
+</tr>
+<tr>
+	<td class="title"><%WebStr(layer2,FN_ATM_SERV_CATE)%></td>
+	<td class="content"><select name="serviceCategory" size="1" onClick="cbClick(this)">
+		<option value="UBR">UBR Without PCR
+		<option value="UBRWPCR">UBR With PCR
+		<option value="CBR">CBR
+		<option value="VBR-nrt">Non Realtime VBR
+		<option value="VBR-rt">Realtime VBR</option>
+	</select></td>
+</tr>
+<tr id="first1" style="display: none">
+	<td class="titsub1"><%WebStr(layer2,FN_ATM_PCR)%></td>
+	<td class="content"><input type="text" size="20" name="peakCell" maxlength="10">&nbsp;cells/s&nbsp;
+	<script language="javascript">
+	<!-- hide
+	document.write("[1-"+pcrMax+"]");
+	// done hiding -->
+	</script>
+	</td>
+</tr>
+<tr id="sec2" style="display: none">
+	<td class="titsub1"><%WebStr(layer2,FN_ATM_SCR)%></td>
+	<td class="content"><input id="Text5" type="text" size="20" name="sustainableCell" maxlength="10">&nbsp;cells/s&nbsp;c
+	<script language="javascript">
+	<!-- hide
+	document.write("[1-"+pcrMax+"]");
+	// done hiding -->
+	</script>
+	</td>
+</tr>
+<tr id="thir3" style="display: none">
+	<td class="titsub1"><%WebStr(layer2,FN_ATM_MBS)%></td>
+	<td class="content"><input type="text" size="20" name="maximumBurst" maxlength="7">&nbsp;cells&nbsp;[1-1000000]</td>
+</tr>
+
+<tr id="qosInfo" style="display: none">
+	<td class="title">IP QoS</td>
+	<td class="content"><input type="checkbox" name="enblQos">Enable</td>
+</tr>
+
+<tr id="algorithm" style="display: none">
+	<td class="title"><%WebStr(layer2,FN_ATM_QOS_SCHDALG)%></td>
+	<td class="content"><input type="radio" name="alg" onClick="showhideAlgSub(1)"  checked><%WebStr(layer2,ATM_STRICT_PRIOR)%>&nbsp;&nbsp;
+	<input type="radio" name="alg" onClick="showhideAlgSub(1)" ><%WebStr(layer2,ATM_WEIGHT_FAIR_QUE)%>
+	</td>
+</tr>
+<tr id="trqos1" style="display: none">
+	<td class="titsub1"><%WebStr(layer2,FN_ATM_PREC_DEFQUE)%></td>
+	<td class="content"><%ejGet(glbQosPrioLevel)%>&nbsp;(<%WebStr(layer2,ATM_QOS_LOWEST)%>)</td>
+</tr>
+<tr id="trqos2" style="display: none">
+	<td class="titsub1"><%WebStr(layer2,FN_ATM_QOS_WEIGHT_DEFQUE)%></td>
+	<td class="content"><input type="text" size="20" name="wght" maxlength="2">&nbsp;[1-63]</td>
+</tr>
+<tr id="trqos3" style="display: none">
+	<td class="titsub1"><%WebStr(layer2,FN_ATM_QOS_MPAAL)%></td>
+	<td class="content"><select name="prec">
+	<script language="javascript">
+	<!-- hide
+		for ( var i = 1; i < numPrioLevels; i++ ) {
+			document.write("<option value='" + i + "'>");
+			document.write(i+"</option>");
+		}
+		document.write("<option value='" + i + "'selected>");
+		document.write(i+"</option>");
+	// done hiding -->
+	</script>
+	</td>
+</tr>
+<tr><td colspan="2" class="btnline">
+<input type="button" value="<%WebStr(comm,BACK)%>" onclick="btnBack();">&nbsp;
+<input type="button" value="<%WebStr(comm,APPLY)%>" onClick="btnSave()">
+</td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(layer2.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

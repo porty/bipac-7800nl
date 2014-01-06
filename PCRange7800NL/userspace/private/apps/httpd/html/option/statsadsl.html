@@ -1,0 +1,83 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(layer2.sr,_o)%>
+<%WebStr(info.sr,_o)%>
+<html>
+<head>
+<title></title>
+<meta http-equiv='content-type' content='text/html; charset=<%WebStr(cus,CHARSET,CHARSET)%>'>
+<meta http-equiv='Pragma' content='no-cache'>
+<meta http-equiv='Expires' content='0'>
+<meta http-equiv='Cache-Control' content='no-cache'>
+<meta http-equiv="refresh" content="15">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript">
+<!-- hide
+var DslBondingEnabled='<%ejGetOther(isDslBondingEnabled)%>';
+var currLineNum='<%ejGet(bondingLineNum)%>';
+function frmLoad() {
+	var errMsg = '<%ejGetOther(memInfo, errMsg)%>';
+	with (document.forms[0]) {
+		if (typeof (lineNum) != "undefined")
+			lineNum.selected = (currLineNum == 0) ? 0 : 1;
+	}
+	if ( errMsg != '&nbsp' )
+		//eval('location="statsadslerr.html"');
+		eval('location="error.cmd?action=statsadsl&sessionKey=<%ejGetOther(sessionKey)%>"');
+}
+function btnBerTest() {
+	var options;
+	options = 'menubar=no,resizable=no,scrollbars=yes,titlebar=yes,toolbar=no,width=400,height=300';
+	window.open('berstart.tst?berState=1', 'vendor_xxx_BerTest', options);
+}
+function btnReset() {
+	var loc = 'statsadslreset.html';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function changeLineNum() {
+	var loc = 'statsadsl.cgi?';   
+	with ( document.forms[0] ) { 
+		loc += 'bondingLineNum=' + lineNum.value;
+	}
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function btnClose() {
+	window.close();
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_DEVICE_INFO)%></td>
+<td class="titletbl3"></td>
+</tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_ST_ADSL)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<%DslGet(sts)%>
+</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(info,_c)%>
+<%WebStr(layer2,_c)%>
+<%WebStr(comm,_c)%>
+<%WebStr(menu,_c)%>
+<%WebStr(cus,_c)%>

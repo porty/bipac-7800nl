@@ -1,0 +1,170 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(mgmt.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var port = '<%ejGet(logPort)%>';
+var errMsg=["<%WebStr(comm,INVALID)%>"];
+var allinputs=["levelLog", "levelDisplay", "logMode", "logAddr", "logPort"];
+var srv_array=["srv1", "srv2"];
+function getLogPort() {
+	var portNum = parseInt(port);
+	if ( isNaN(portNum) || portNum == 0 )
+	portNum = 514; // default system log server port is 514
+	return portNum;
+}
+function frmLoad() {
+	with ( document.forms[0] ) {
+		if('<%ejGet(logStatus)%>'==0)
+			status[1].checked = true;
+		else
+			status[0].checked = true;
+		levelLog.selectedIndex = <%ejGet(logLevel)%>;
+		levelDisplay.selectedIndex = <%ejGet(logDisplay)%>;
+		logMode.selectedIndex = <%ejGet(logMode)%> - 1;
+		logPort.value = getLogPort();
+		showLog();
+	}
+}
+function btnApply() {
+	var loc = 'logconfig.cgi?';
+	var idx, log, display, mode;
+	with ( document.forms[0] ) {
+		if ( status[1].checked) {
+			var msg = "<%WebStr(mgmt, LOG_DISALERT1)%>";
+			if ( confirm(msg) == false ) 	return;
+		}
+		if(getSelect(logMode) != 1){
+			if ( !isValidHostIp(logAddr.value) ) {
+				alert("<%WebStr(mgmt, SRV_IP)%> : " + errMsg[0]);
+				logAddr.focus();
+				return;
+			}
+			if ( !isValidPort(logPort.value) ) {
+				alert("<%WebStr(mgmt, SRV_PORT)%> : " + errMsg[0]);
+				logPort.focus();
+				return;
+			}
+		}
+		if ( status[0].checked){
+			loc += 'logStatus=1';
+			loc += '&logLevel=' + getSelect(levelLog);
+			loc += '&logDisplay=' + getSelect(levelDisplay);
+			loc += '&logMode=' + getSelect(logMode);
+			loc += '&logIpAddress=' + logAddr.value;
+			loc += '&logPort=' + logPort.value;
+		}else
+			loc += 'logStatus=0';
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function cbClick(k)
+{
+	with ( document.forms[0] ) {
+		var fg=(document.forms[0].logMode.selectedIndex==0)?0:1;
+		showEntries(srv_array,fg);
+	}
+}
+function showLog()
+{
+	with(document.forms[0]){	
+		var fg=(status[0].checked)?false:true;
+		for(i=0;i<allinputs.length;i++)
+			document.getElementById(allinputs[i]).disabled=fg;
+		cbClick(logMode.selectedIndex);
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu, MENU_MANAGEMENT)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu, MENU_TL_SYSTEM_LOG)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm, PARM)%></td></tr>
+		<tr>
+			<td class="title" width="35%"><%WebStr(mgmt, LOG)%></td>
+			<td class="content"><input name='status' type='radio' onclick=showLog()><%WebStr(comm, ENABLE)%>&nbsp;&nbsp;
+									<input name='status' type='radio' onclick=showLog()><%WebStr(comm, DISABLE)%> </td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt, LOG_LEVEL)%></td>
+			 <td class="content"><select name='levelLog' id='levelLog' size="1">
+					<option value="0"><%WebStr(mgmt, LOG_EMER)%></option>
+					<option value="1"><%WebStr(mgmt, LOG_ALRT)%></option>
+					<option value="2"><%WebStr(mgmt, LOG_CRT)%></option>
+					<option value="3"><%WebStr(mgmt, LOG_ERR)%></option>
+					<option value="4"><%WebStr(mgmt, LOG_WARN)%></option>
+					<option value="5"><%WebStr(mgmt, LOG_NOT)%></option>
+					<option value="6"><% WebStr(mgmt, LOG_INFO)%></option>
+					<option value="7"><%WebStr(mgmt, LOG_DBG)%></option>
+				</select></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt, DIS_LEVEL)%></td>
+			<td class="content"><select name='levelDisplay' id='levelDisplay' size="1">
+					<option value="0"><%WebStr(mgmt, LOG_EMER)%></option>
+					<option value="1"><%WebStr(mgmt, LOG_ALRT)%></option>
+					<option value="2"><%WebStr(mgmt, LOG_CRT)%></option>
+					<option value="3"><%WebStr(mgmt, LOG_ERR)%></option>
+					<option value="4"><%WebStr(mgmt, LOG_WARN)%></option>
+					<option value="5"><%WebStr(mgmt, LOG_NOT)%></option>
+					<option value="6"><%WebStr(mgmt, LOG_INFO)%></option>
+					<option value="7"><%WebStr(mgmt, LOG_DBG)%></option>
+					</select></td>
+			</tr>
+	<tr>
+			<td class="title"><%WebStr(mgmt, MODE)%></td>
+			<td class="content"><select name='logMode' id='logMode' size="1" onClick='cbClick(this.selectedIndex)'>
+					<option value="1"><%WebStr(mgmt, LOCAL)%></option>
+					<option value="2"><%WebStr(mgmt, REMOTE)%></option>
+					<option value="3"><%WebStr(mgmt, BOTH)%></option>
+					</select></td>
+		</tr>
+		<tr id="srv1" style="display:none">
+			<td class="title"><%WebStr(mgmt, SRV_IP)%></td>
+			<td class="content"><input type='text' name='logAddr' id='logAddr' maxlength=15 size=17 value="<%ejGet(logIpAddress)%>"></td>
+		</tr>
+		<tr id="srv2" style="display:none">
+			<td class="title"><%WebStr(mgmt, SRV_PORT)%></td>
+			<td class="content"><input type='text' name='logPort' id='logPort' maxlength=5 size=7></td>
+		</tr>		
+		<tr>
+			<td colspan=2 class="btnline"><input type='button' onClick='btnApply()' value="<%WebStr(comm, APPLY)%>" name="bApply">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td>
+		</tr>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(mgmt.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

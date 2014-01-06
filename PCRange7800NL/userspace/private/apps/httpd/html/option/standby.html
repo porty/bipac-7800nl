@@ -1,0 +1,112 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(mgmt.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var timeArr=["selectStandbyHour","selectStandbyMinutes","selectWakeupHour","selectWakeupMinutes"];
+function showInfo() {
+	var fg=( document.forms[0].chkStandbyEnable[0].checked )?false:true;
+	for(var i=0; i<timeArr.length; i++)
+		document.getElementById(timeArr[i]).disabled=fg;
+}
+function frmLoad() {
+	var standby = '<%ejGetOther(standby)%>';
+	var enable = parseInt("<%ejGet(pmStandbyEnable)%>");
+	with ( document.forms[0] ){
+		chkStandbyEnable[0].checked=(enable == 1)?true:false;
+		selectStandbyHour.selectedIndex = parseInt('<%ejGet(pmStandbyHour)%>');
+		selectStandbyMinutes.selectedIndex = parseInt('<%ejGet(pmStandbyMinutes)%>');
+		selectWakeupHour.selectedIndex = parseInt('<%ejGet(pmWakeupHour)%>');
+		selectWakeupMinutes.selectedIndex = parseInt('<%ejGet(pmWakeupMinutes)%>');
+	}
+	showInfo();
+}
+function btnApply() {
+	var loc = 'standby.cmd?';
+	with ( document.forms[0] ) {
+		if ( chkStandbyEnable.checked == true )
+			loc += '&PmStandbyEnable=1';
+		else
+			loc += '&PmStandbyEnable=0';
+	
+		loc += '&PmStandbyHour='    + selectStandbyHour.selectedIndex;
+		loc += '&PmStandbyMinutes=' + selectStandbyMinutes.selectedIndex;
+		loc += '&PmWakeupHour='     + selectWakeupHour.selectedIndex;
+		loc += '&PmWakeupMinutes='  + selectWakeupMinutes.selectedIndex;
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function btnDemo() {
+	var loc = 'demostby.cmd?';
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function get_time(val)
+{
+		var top, str;
+		top=(val=="hr")?24:60;
+		for(var i=0;i<top;i++)
+		{
+				str=(i<10&&val=="mn")?("0"+i):i;
+				document.write('<option value='+i+'>'+str+'<\/option>');
+		}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_ADVANCED_SETUP); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(menu,MENU_STANDBY) %></td></tr>
+<form>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><% WebStr(menu,MENU_STANDBY); %></td>
+			<td class="content"><input type='radio' name='chkStandbyEnable' onClick='showInfo()'><%WebStr(comm,ENABLE)%>&nbsp;&nbsp;
+			<input type='radio' name='chkStandbyEnable' onClick='showInfo()' checked><%WebStr(comm,DISABLE)%>&nbsp;(<%WebStr(mgmt,CURRENTLY)%> : <%ejGet(pmStandbyStatusString)%>)</td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,STANDBY_TIME)%></td>
+			<td class="content"><select  name='selectStandbyHour' id='selectStandbyHour'><script>get_time('hr');</script></select> : <select name='selectStandbyMinutes' id='selectStandbyMinutes'><script>get_time('mn');</script></select></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,WAKEUP_TIME)%></td>
+			<td class="content"><select name='selectWakeupHour' id='selectWakeupHour'><script>get_time('hr');</script></select> : <select name='selectWakeupMinutes' id='selectWakeupMinutes'><script>get_time('mn');</script></select></td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(mgmt,THIRTYSECS_DEMO)%>" onclick="btnDemo()"></td></tr>
+	</table><!-- cfgframe -->
+</form>
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(mgmt.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

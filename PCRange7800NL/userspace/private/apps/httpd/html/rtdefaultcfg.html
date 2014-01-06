@@ -1,0 +1,338 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<%WebStr(wan.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var wanPorts=<%Layer2Get(possible_wan)%>;
+var currPort="<%Layer2Get(curr_wan)%>";
+//var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, route)%>';
+var interfaceInfo = <%ejGetOther(wanInterfaceInfo, wan_route)%>;
+var interfaces = new Array (interfaceInfo.length);
+for (var i=0; i<interfaceInfo.length; i++) {
+	interfaces[i] = interfaceInfo[i].split('|');
+}
+var gtwyIfcs = '<%ejGetOther(sysInfo, gtwyIfcs)%>'; if (gtwyIfcs == '&nbsp') gtwyIfcs = '';
+var gwGroup;
+var curgwList=<%ejGetOther(sysInfo,gtwyIfcs,all)%>; // sarah add
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+var intfInfo6 = '<%ejGetOther(wanInterfaceInfo, route6)%>';
+var intf6 = intfInfo6.split('|');
+var gtwy6Ifc = '<%ejGetOther(sysInfo, dfltGw6Ifc)%>'; if (gtwy6Ifc == '&nbsp') gtwy6Ifc = '';
+var oldGwIdx=-1; // sarah add
+
+// sarah add
+function mergeDefGw(idx, tempList)
+{
+	if (gtwyIfcs == '') return tempList;
+	var orgGw = gtwyIfcs.split(',');
+	var newGw = tempList.split(',');
+	var i, mergeGw='';
+	if (gwGroup[0] != idx) {
+		mergeGw = orgGw[0];
+		for (i = 1; i < orgGw.length; i++) {
+			if (gwGroup[i] != idx) mergeGw += ','+orgGw[i];
+		}
+		for (i = 0; i < newGw.length; i++) {
+			mergeGw += ','+newGw[i];
+		}
+	} else {
+		mergeGw = newGw[0];
+		for (i = 1; i < newGw.length; i++) {
+			mergeGw += ','+newGw[i];
+		}
+		for (i = 0; i < orgGw.length; i++) {
+			if (gwGroup[i] != idx) mergeGw += ','+orgGw[i];
+		}
+	}
+	return mergeGw;
+}
+// sarah modify
+function btnApply() {
+	var loc = 'rtdefaultcfg.cgi?';
+	var idx=0, idd;
+	if ((idd=document.getElementById("idwan")) != null) {
+		idx = idd.selectedIndex;
+	}
+	var loc;
+	var tempList = '';
+	idd = document.getElementById("selGtwyIfcs"+idx);
+
+	for (var i = 0; i < idd.length; i++) {
+		if (i > 0)
+			tempList += ',';
+		tempList += idd.options[i].value;
+	}
+	var availcnt = document.getElementById("availIfcs"+idx).length;
+	if (tempList == '' && availcnt > 0) {
+		alert("	<%WebStr(lan,ERR_ATLEAST_ONE_IF)%>");
+		return;
+	}
+	var gwList = mergeDefGw (idx, tempList);
+	loc += 'defaultGatewayList=' + gwList;
+
+	with(document.forms[0]) {
+		if (enblIP6 == '1') {
+			var idx6 = wanIf6.selectedIndex;
+			var ifc6 = wanIf6.options[idx6].value;
+			loc += '&dfltGw6Ifc=' + ifc6;
+		}
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function frmLoad() 
+{
+	if (gtwyIfcs != '') {
+		var tmp=gtwyIfcs.split(',');
+		var curtmp;
+
+		if (curgwList != '') {
+			curtmp = new Array (curgwList.length);
+			for (var i = 0; i < curgwList.length; i++) {
+				curtmp[i] = curgwList[i].split(',');
+			}
+		} else curtmp = '';
+
+		gwGroup = new Array (tmp.length);
+		for (var i = 0; i < gwGroup.length; i++) {
+			if (curtmp == '') gwGroup[i] = -1;
+			else {
+				gwGroup[i] = -1;
+				for (var wan = 0; wan < curtmp.length; wan++) {
+					for (j = 0; j < curtmp[wan].length; j++) {
+						if (tmp[i] == curtmp[wan][j]) {
+							gwGroup[i] = wan;
+							break;
+						}
+					}
+					if (j < curtmp[wan].length) break;
+				}
+			}
+		}
+	} else gwGroup = '';
+
+	var idx=0;
+	var idd=document.getElementById("idwan");
+	if (idd != null) {
+		for (var i = 0; i < idd.length; i++) {
+			if (currPort == idd.options[i].value) {
+				idx = i;
+			}
+		}
+		idd.selectedIndex = idx;
+		document.getElementById("trwan").style.display="";
+	}
+	oldGwIdx = -1;
+	displayGw (idx);
+	document.getElementById("gw6Info1").style.display=(enblIP6 == '1')?"":"none";
+	document.getElementById("gw6Info2").style.display=(enblIP6 == '1')?"":"none";
+}
+function getName(ifc)
+{
+	var names;
+	if (interfaceInfo == '') return "";
+	for (var i = 0; i < interfaces.length; i++) {
+		for (var j = 0; j < interfaces[i].length; j++) {
+			names = interfaces[i][j].split('/');
+			if (names[1] == ifc) {
+				return names[0];
+			}
+		}
+	}
+	return "";
+}
+function btnRemove(idx) {
+	var idd=document.getElementById("selGtwyIfcs"+idx);
+	var idd2=document.getElementById("availIfcs"+idx);
+	var arrSelected = new Array();
+	var count = 0;
+	for ( var i = 0; i < idd.options.length; i++ ) {
+		if ( idd.options[i].selected == true )
+			arrSelected[count] = idd.options[i].value;
+		count++;
+	}
+	for (var i = 0; i < idd.options.length; i++) {
+		for (var x = 0; x < arrSelected.length; x++) {
+			if (idd.options[i].value == arrSelected[x]) {
+				varOpt = new Option(idd.options[i].text, idd.options[i].value);
+				idd2.options[idd2.length] = varOpt;
+				idd.options[i] = null;
+			}
+		}
+	}
+}
+function btnAdd(idx) {
+	var idd=document.getElementById("availIfcs"+idx);
+	var idd2=document.getElementById("selGtwyIfcs"+idx);
+	var arrSelected = new Array();
+	var count = 0;
+	for (var i = 0; i < idd.options.length; i++ ) {
+		if ( idd.options[i].selected == true )
+			arrSelected[count] = idd.options[i].value;
+		count++;
+	}
+	for (var i = 0; i < idd.options.length; i++) {
+		for (var x = 0; x < arrSelected.length; x++) {
+			if (idd.options[i].value == arrSelected[x]) {
+				varOpt = new Option(idd.options[i].text, idd.options[i].value);
+				idd2.options[idd2.length] = varOpt;
+				idd.options[i] = null;
+			}
+		}
+	}
+}
+function showGwSel(idx)
+{
+	document.write('<select multiple id="selGtwyIfcs'+idx+'" size="10" style="width: 200">');
+	var i = 0, desc;
+	var gtwyIfcsList;
+	if (curgwList != "" && idx < curgwList.length && curgwList[idx] != "") {
+		gtwyIfcsList = curgwList[idx].split(',');
+		// default gw box
+		for (i = 0; i < gtwyIfcsList.length; i++) {
+			desc = getName(gtwyIfcsList[i]);
+			document.writeln("<option value='" +gtwyIfcsList[i] + "'>"+ desc+"/"+gtwyIfcsList[i]+"</option>");
+		}
+	}
+	document.write("</select></td>");
+	// left or right button
+	document.write("<td class=\"content\"><input type=\"button\" value=\"->\" onClick=\"btnRemove("+idx+")\" style=\"width: 30; height: 30\"><br>");
+	document.write("<input type=\"button\" value=\"<-\" onClick=\"btnAdd("+idx+")\" style=\"width: 30; height: 30\"></td>");
+	// interface box
+	document.write('<td class="content"><select multiple id="availIfcs'+idx+'" size="10" style="width: 200">');
+	if (interfaceInfo != "" && idx < interfaces.length && interfaces[idx][0] != "") {
+		for (i = 0; i < interfaces[idx].length; i++) {
+			if (interfaces[idx][i] != "") {
+				var names = interfaces[idx][i].split('/');
+				if (gtwyIfcs.search(names[1]) == -1)
+					document.writeln("<option value='" + names[1] + "'>" + names[0]+"/"+names[1]+"</option>");
+			}
+		}
+	}
+	document.write("</select>");
+}
+function showGw()
+{
+	var len=interfaces.length;
+	for (var i = 0; i < len; i++) {
+		showGwSel (i);
+		document.write("</td></tr>");
+		if (i < len - 1) document.write("<tr id='trgw"+(i+1)+"' style='display: none'><td class='content' align=center>");
+	}
+}
+function displayGw(idx)
+{
+	var idd;
+	if (idx == oldGwIdx) return;
+	if (oldGwIdx > -1) {
+		idd = document.getElementById("trgw"+oldGwIdx);
+		if (idd != null) idd.style.display="none";
+	}
+	idd = document.getElementById("trgw"+idx);
+	if (idd != null) idd.style.display="";
+	oldGwIdx = idx;
+}
+function showWanPort()
+{
+	if (wanPorts == "") return;
+	document.write("<select id=\"idwan\" onchange=\"displayGw(this.selectedIndex);\">");
+	var idx = 0;
+	for (var i = 0; i < wanPorts.length; i++) {
+		document.write("<option value=\""+wanPorts[i]+"\">"+wanPorts[i]+"</option>");
+		if (currPort == wanPorts[i]) idx = i;
+	}
+	document.write("</select>");
+}
+// done hiding -->
+</script>
+</head>
+<body onload="frmLoad();">
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_RT_DEFAULT_ROUTE)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=3 class="header"><%WebStr(lan,HN_DEF_GW_LIST)%></td></tr>
+		<tr><td colspan=3 class="title"><%WebStr(lan,DEFGW_HINT1)%></td></tr>
+		<!-- wan port -->
+		<tr id="trwan" style="display: none">
+		<td class="title" width="%35"><%WebStr(wan,FN_WAN_PORT)%></td>
+		<td class="content" colspan="2"><script language="javascript">
+		<!-- hide
+			showWanPort();
+		// done hiding -->
+		</script>
+		</td></tr>
+		<tr><td class="title" width="35%"><%WebStr(lan,SELECTED_GW)%></td>
+			<td class="title" width="10%"></td>
+			<td class="title"><%WebStr(lan,AVAILABLE_ROUTEWAN)%></td>
+		</tr>
+		<tr id="trgw0" style="display: none"><td class="content" align=center>
+<script language="javascript">
+<!-- hide
+	showGw();
+// done hiding -->
+</script></td></tr>
+		<tr id="gw6Info1" style="display:none"><td class="header" colspan="3"><%WebStr(lan,HN_IPV6GW)%></td></tr>
+		<tr id="gw6Info2" style="display:none"><td class="title"><%WebStr(lan,SELECT_WAN6)%></td>
+			<td class="content" colspan="2"><select name='wanIf6'>
+<script language="javascript">
+<!-- hide
+{
+	var names ;
+	if (intfInfo6 == '') {
+		document.write("  <option value='&nbsp' selected><%WebStr(lan,NO_IF)%></option>");
+	//TODO: IPV6     alert('No configured IPv6 WAN interface existed for system default IPv6 gateway.');
+	}
+	else {
+		for ( var i = 0; i < intf6.length; i++ ) {
+			names = intf6[i].split('/');
+			if ( names[1] == gtwy6Ifc )
+				document.write("  <option value='" + names[1] + "' selected>");
+			else
+				document.write("  <option value='" + names[1] + "'>");
+			document.writeln(intf6[i]+"</option>");
+		}
+	}
+}
+// done hiding -->
+</script></select></td>
+		</tr>
+		<tr><td colspan="3" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onClick="document.location.reload();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(wan.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

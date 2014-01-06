@@ -1,0 +1,111 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(qos.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var enblQos = '<%ejGetOther(qosMgmtDefEnbl, all)%>';
+var defMark = '<%ejGetOther(qosMgmtDefMark, all)%>';
+function btnApply() {
+	var loc = 'qosmgmt.cmd?action=savapply';
+	with ( document.forms[0] ) {
+		if (enableQos.checked == true) {
+			loc += '&enblQos=1';
+			loc += '&defaultQueue=' + '-1';
+			loc += '&defaultDscpMark=' + dscpMark.value;
+		} else {
+			loc += '&enblQos=0';
+			loc += '&defaultQueue=' + '-1';
+			loc += '&defaultDscpMark=' + '-1';
+		}
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function showQoSInfo()
+{
+	var fg=(document.forms[0].enableQos.checked)?1:0;
+	showhide("qosinfo",fg);
+}
+function frmLoad() {
+	with ( document.forms[0] ) {
+		enableQos.checked=(enblQos == '1')?true:false;
+		setSelect(dscpMark,defMark);
+		showQoSInfo();
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(qos,QMGMT_CONFIG)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td colspan=2 class="title"><%WebStr(qos,QUEUE_HINT1)%><br><%WebStr(qos,QUEUE_HINT2)%><br><%WebStr(qos,QUEUE_HINT3)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(menu,MENU_QOS)%></td>
+			<td class="content"><input type='checkbox' name='enableQos' onclick='showQoSInfo()'><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr id="qosinfo" style="display:none"><td class="title"><%WebStr(qos,DEFAULT_DSCP)%></td>
+		<td class="content"> <select size="1" name="dscpMark">
+							<option value="-1" selected>No Change</option>
+							<option value="-2" >Auto Marking</option>
+							<option value="0"> default(000000)</option>
+							<option value="56"> AF13(001110)</option>
+							<option value="48"> AF12(001100)</option>
+							<option value="40"> AF11(001010)</option>
+							<option value="32"> CS1(001000)</option>
+							<option value="88"> AF23(010110)</option>
+							<option value="80"> AF22(010100)</option>
+							<option value="72"> AF21(010010)</option>
+							<option value="64"> CS2(010000)</option>
+							<option value="120"> AF33(011110)</option>
+							<option value="112"> AF32(011100)</option>
+							<option value="104"> AF31(011010)</option>
+							<option value="96">  CS3(011000)</option>
+							<option value="152"> AF43(100110)</option>
+							<option value="144"> AF42(100100)</option>
+							<option value="136"> AF41(100010)</option>
+							<option value="128"> CS4(100000)</option>
+							<option value="184"> EF(101110)</option>
+							<option value="160"> CS5(101000)</option>
+							<option value="192"> CS6(110000)</option>
+							<option value="224"> CS7(111000)</option>
+						</select></td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(qos.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

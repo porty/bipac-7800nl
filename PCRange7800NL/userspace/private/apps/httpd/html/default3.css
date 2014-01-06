@@ -1,0 +1,63 @@
+/* index page CSS */
+body.base {
+        background-color: #FFFFFF;
+        margin-top: 0px; padding: 4px;
+        text-align: center
+}
+table.basetbl {
+        border: #CCCCCC solid 1px;
+        position: relative; margin-left: auto; margin-right: auto; margin-top: 0px;
+        /*height: 100%;*/
+}
+td.logoleft {
+        width: 318px; height: 69px
+}
+img.logo1 {
+        width: 318px; height: 69px; border-width: 0px; vertical-align: top
+}
+td.pdname {
+        font-family: Arial, Helvetica, sans-serif; font-style: italic; font-weight: bold; font-size: 16px;
+        color:  #000000;
+        text-align: center;
+        height: 69px;
+        background-color:#FFFFFF;
+}
+td.logoright {
+        width: 297px; height: 69px
+}
+img.logo2 {
+        width: 297px; height: 69px; border-width: 0px; vertical-align: top
+}
+td.menu {
+        width: 190px; text-align: center
+}
+td.tbliconline {
+        height: 26px
+}
+table.tblicon {
+        margin-left: auto; margin-right: 0px; border-width: 0px
+}
+td.baseicon {
+        font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold;
+        vertical-align: middle; text-align: right
+}
+img.savecfg {
+        vertical-align: middle; width: 20px; height: 20px
+}
+img.restart {
+        vertical-align: middle; width: 20px; height: 20px
+}
+img.logout {
+        vertical-align: middle; width: 20px; height: 20px
+}
+td.Inc {
+        font-family: Arial, Helvetica, sans-serif; font-size: 12px;
+        background-color: #007CC2; color: #FFFFFF;
+        text-align: center;
+        height: 25px
+}
+a.btmicon:link {text-decoration: none; color: #000000}
+a.btmicon:visited {text-decoration: none; color:#000000}
+a.btmicon:hover {text-decoration: underline; color: #007CC2}
+a.btmicon:active {text-decoration: none; color: #007CC2}
+

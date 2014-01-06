@@ -1,0 +1,134 @@
+#!/bin/bash
+
+
+if [ "$BN_BUILD_CUSTOMER" != "" ]; then
+	source $PRODUCT_DIR/features
+else
+	source $TARGETS_DIR/$PROFILE/$PROFILE
+fi
+
+# sarah add
+if [ "$BUILD_DSL" != "" ]; then
+	cp -f statsxtmreset.html $INSTALL_DIR/webs
+	cp -f statsadsl.html $INSTALL_DIR/webs
+	cp -f statsadslreset.html $INSTALL_DIR/webs
+	cp -f berstart.html $INSTALL_DIR/webs
+	cp -f berrun.html $INSTALL_DIR/webs
+	cp -f berstop.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_PHY_VDSL" != "" ] || [ "$BUILD_PHY_MULTIMODE" != "" ]; then
+	cp -f statsvdsl.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_ATMWAN" != "" ]; then
+	cp -f cfgatm.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_PTMWAN" != "" ]; then
+	cp -f cfgptm.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_ETHWAN" != "" ]; then
+	cp -f cfgeth.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_L2TPAC" != "" ]; then
+	cp -f cfgl2tpac.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_IPV6" != "" ]; then
+	cp -f ipv6lancfg.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_MOCAWAN" != "" ]; then
+	cp -f cfgmoca.html $INSTALL_DIR/webs
+	cp -f mocacfg.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_TOD" != "" ]; then
+	cp -f todadd.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_URLFILTER" != "" ]; then
+	cp -f url_add.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_DDNSD" != "" ]; then
+	cp -f ddnsadd.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_UPNP" != "" ]; then
+	cp -f upnpcfg.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_DPROXY" != "" ] || [ "$BUILD_DPROXYWITHPROBE" != "" ]; then
+	cp -f dnsproxycfg.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_IPPD" != "" ]; then
+	cp -f ippcfg.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_STORAGESERVICE" != "" ]; then
+	cp -f storageusraccadd.html $INSTALL_DIR/webs
+	cp -f storageinfo.html $INSTALL_DIR/webs	#Tammy
+	cp -f storageuserinfo.html $INSTALL_DIR/webs    #Tammy
+fi
+
+if [ "$BRCM_STANDBY" != "" ]; then
+	cp -f standby.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_PWRCTL" != "" ]; then
+	cp -f pwrmngt.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_IGMP" != "" ]; then
+	cp -f multicast.html $INSTALL_DIR/webs
+fi
+
+if [ "$BRCM_DRIVER_P8021AG" != "" ]; then
+	cp -f diag8021ag.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_SNMP" != "" ]; then
+	cp -f snmpconfig.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_TR69C" != "" ] || [ "$BUILD_TR69C" != "" ] || [ "$BUILD_TR69C_BCM_SSL" != "" ]; then
+	cp -f tr69cfg.html $INSTALL_DIR/webs
+fi
+
+if [ "$CMS_SECURITY_LOG" != "" ]; then
+	cp -f seclogintro.html $INSTALL_DIR/webs
+fi
+
+# broadcom
+# be careful the prefix words, wl*, voice*, ips*, cert*, port*
+# copy option webpage files
+if [ "$BUILD_HTTPD_SSL" != "" ]; then
+	mkdir -p $INSTALL_DIR/webs/CA
+	cp -f -r CA/* $INSTALL_DIR/webs/CA
+fi
+
+if [ "$BRCM_DRIVER_WIRELESS" != "" ]; then
+	cp -f wl*.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_VODSL" != "" ]; then
+	cp -f voice*.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_IPSEC_TOOLS" != "" ]; then
+	cp -f ips*.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_CERT" != "" ]; then
+	cp -f cert*.html $INSTALL_DIR/webs
+fi
+
+if [ "$BUILD_VCONFIG" != "" ]; then
+	cp -f port*.html $INSTALL_DIR/webs
+fi
+

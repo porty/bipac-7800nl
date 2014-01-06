@@ -1,0 +1,63 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(diag.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="portName.js"></script>
+</head>
+<body class="main" bgcolor="#ffffff" link="#3300cc" alink="#ff0000" vlink="#990066">
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr>
+<td class="mframe">
+		<table class="titletbl" cellpadding="3" cellspacing="0" width="100%">
+		<tr>
+		<td class="titletbl1"></td>
+		<td class="titletbl2 capstr"><%WebStr(menu,MENU_DIAGNOSTICS)%></td>
+		<td class="titletbl3"></td>
+		</tr>
+		</table>
+</td>
+</tr>
+<tr>
+		<td class="mframe">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td class="cfgframe" width="50%" style="vertical-align: top" valign="top">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr><td class="cfgframe">
+<!-- Begin LAN diag Info -->
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+		<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(diag,TEST_LAN)%></td></tr>
+		<tr><td class="sframe">
+				<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<script language="javascript">
+<!-- hide
+<%ejGet(enetDiag)%>
+if ('<%ejGet(enblUsb)%>' == '1') {
+	document.write("<tr><td class='title'><%WebStr(diag,TEST_USB)%></td>");
+	document.write("<td class='content'><B><%ejGetOther(diagnostic, 13)%></B></td>");
+	document.write("<td  class='content'><A href='hlpusbconn.html'><%WebStr(diag,HELP)%></A></td></tr>");
+}
+if ('<%ejGet(enblWireless)%>' == '1') {
+	document.write("<tr><td class='title'><%WebStr(diag,TEST_WLAN)%></td>");
+	document.write("<td class='content'><B><%ejGetOther(diagnostic, 17)%></B></td>");
+	document.write("<td class='content'><A href='hlpwlconn.html'><%WebStr(diag,HELP)%></A></td></tr>");
+}
+// done hiding -->
+</script>
+		<tr><td class="btnline" colspan=3><input type='button' onClick='location.href="diag.html"' value='<%WebStr(diag,RERUN_DIAG)%>'></td></tr>
+				</table>
+		</td>
+		</tr>
+</table>
+<!-- End LAN diag Info -->
+</td></tr>
+</table>
+</body>
+</html>
+<% WebStr(menu.sr,_c)%>
+<% WebStr(diag.sr,_c)%>
+<% WebStr(cus.sr,_c)%>
+

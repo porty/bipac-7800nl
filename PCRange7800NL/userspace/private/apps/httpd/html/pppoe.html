@@ -1,0 +1,558 @@
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+var timeOut = '<%ejGet(pppTimeOut)%>';
+var onDemand = '<%ejGet(enblOnDemand)%>';
+var ipExtension = '<%ejGet(pppIpExtension)%>';
+var authMethod = '<%ejGet(pppAuthMethod)%>';
+var prtcl = '<%ejGetOther(memInfo, ntwkPrtcl)%>';
+var enblIpAddr = '<%ejGet(useStaticIpAddress)%>';
+var localIpAddr = '<%ejGet(pppLocalIpAddress)%>';
+var pppDebug = '<%ejGet(enblPppDebug)%>';
+var pppShowAuthErrorRetry = '<%ejGet(pppShowAuthErrorRetry)%>';
+var pppAuthErrorRetry = '<%ejGet(pppAuthErrorRetry)%>';
+var enetWan = parseInt('<%ejGet(enblEnetWan)%>');
+var ppptobr = '<%ejGet(pppToBridge)%>';
+var fullcone = '<%ejGet(enblFullcone)%>';
+var enblAdvDmz = '<%ejGet(enblAdvDmz)%>';
+var serviceId= '<%ejGet(serviceId)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var cfgL2tpAc= '<%ejGet(cfgL2tpAc)%>';
+
+var enblIP6 = '<%ejGet(enblv6)%>';
+var unnumbered = '<%ejGet(unnumberedModel)%>';
+var addr6Type = '<%ejGet(wanAddr6Type)%>'; if ( addr6Type == '&nbsp' ) addr6Type = '';
+var addr6 = '<%ejGet(wanAddr6)%>';  if (addr6 == '&nbsp') addr6 = '';
+
+var dnsAuto='<%ejGet(v_autodns)%>';
+var dnsPri='<%ejGet(v_dnsPri)%>';
+var dnsSec='<%ejGet(v_dnsSec)%>';
+
+function frmLoad() {
+	with ( document.forms[0] ) {
+		if (enblAdvDmz == 1) {
+			var enblAdvancedDmz = '<%ejGet(enableAdvancedDmz)%>';
+			var nonDmzIpAddr = '<%ejGet(nonDmzIpAddress)%>';
+			var nonDmzIpMsk = '<%ejGet(nonDmzIpMask)%>';
+			if ( enblAdvancedDmz == '1' )
+				enableAdvancedDmz.checked = true;
+			else
+				enableAdvancedDmz.checked = false;
+			nonDmzIpAddress.value = nonDmzIpAddr;
+			nonDmzIpMask.value = nonDmzIpMsk;
+		}
+
+		if (timeOut == '' || timeOut == '0') onDemand = '0'; // sarah add
+		if ( onDemand == '1' ) {
+			enblOnDemand.checked = true;
+			hideOnDemandInfo(0);
+		} else {
+			enblOnDemand.checked = false;
+			hideOnDemandInfo(1);
+		}
+
+		if (cfgL2tpAc == '1')
+			hidePppToBridgeInfo(1);
+
+		if ( enblIpAddr == '1' && cfgL2tpAc != '1') {
+			enblPppIpAddress.checked = true;
+			hidePppIpAddressInfo(0);
+		} else {
+			enblPppIpAddress.checked = false;
+			hidePppIpAddressInfo(1);
+		}
+		if ( enblIP6 == '1' ) {
+			if ( addr6Type == 'Static' ) {
+				enblPppIp6Address.checked = true;
+			} else {
+				enblPppIp6Address.checked = false;
+			}
+      
+			if ( unnumbered == '1' )
+				enblUnnumbered.checked = true;
+			else
+				enblUnnumbered.checked = false;
+
+			hideWan6Info(0);
+		} else {
+			hideWan6Info(1);
+		}
+		if ( fullcone == '1' )
+			enblFullcone.checked = true;
+		else
+			enblFullcone.checked = false; 
+	
+		if (serviceId == '1' || cfgL2tpAc == '1'  || prtcl == 'PPPoA')
+			hideIpExtension(1);
+		else {
+			if ( ipExtension == '1' )
+			pppIpExtension.checked = true;
+			else
+			pppIpExtension.checked = false;
+		}
+		if ( authMethod == '1' )
+			pppAuthMethod.selectedIndex = 1;
+		else if ( authMethod == '2' )
+			pppAuthMethod.selectedIndex = 2;
+		else if ( authMethod == '3' )
+			pppAuthMethod.selectedIndex = 3;
+		else
+			pppAuthMethod.selectedIndex = 0;
+	
+		pppUserName.value = '<%ejGet(pppUserName)%>';
+		pppPassword.value = '<%ejGet(pppPassword)%>';
+		pppTimeOut.value = timeOut;
+		pppLocalIpAddress.value = localIpAddr;
+		if ( prtcl == 'PPPoE' )
+			pppServerName.value = '<%ejGet(pppServerName)%>';
+	
+		if ( pppShowAuthErrorRetry == '1' )
+			hidePppAuthErrorRetry(0);
+		else
+			hidePppAuthErrorRetry(1);
+	
+		if ( pppAuthErrorRetry == '1' )
+			authErrorRetry.checked = true;
+		else
+			authErrorRetry.checked = false;
+	
+		if ( pppDebug == '1' )
+			enblPppDebug.checked = true;
+		else
+			enblPppDebug.checked = false;
+		
+		if (prtcl == 'PPPoE') {
+			setCheck(pppToBridge, ppptobr);
+		}   
+		else {
+			setCheck(pppToBridge, 0);
+		}
+		pppIpExtChange(pppIpExtension);
+	
+		var enableIgmp = '<%ejGet(enblIgmp)%>';
+		if ( enableIgmp == '1' )
+			enblIgmp.checked = true;
+		else
+			enblIgmp.checked = false;
+	
+		if ( enblIP6 == '1' ) {
+			var enableMld = '<%ejGet(enblMld)%>';
+			if ( enableMld == '1' )
+				enblMld.checked = true;
+			else
+				enblMld.checked = false;
+			hideMldInfo(0);
+		}
+		else
+			hideMldInfo(1);
+		
+		if (serviceId == '1') {
+			enableAuto.checked = (dnsAuto == "0") ? false : true;
+			dnsPrimary.value = dnsPri;
+			dnsSecondary.value = dnsSec;
+			dnsPrimary.disabled = (dnsAuto == "0") ? false : true;
+			dnsSecondary.disabled = (dnsAuto == "0") ? false : true;
+		} else {
+			enableAuto.checked = true;
+			dnsPrimary.disabled = true;
+			dnsSecondary.disabled = true;
+		}
+	}
+}
+
+function btnNext() {
+	var loc = 'ifcgateway.cgi?';
+	var strInvalid="<%WebStr(comm,INVALID)%>";
+	
+	if (serviceId == '1' || cfgL2tpAc == '1')
+		loc = 'ntwksum2.cgi?';
+	
+	with ( document.forms[0] ) {
+		// validate inactivity timeout
+		if ( enblOnDemand.checked == true ) {
+			var strInactTm="<%WebStr(wan,FN_WAN_DIALD_TMOUT)%>";
+			if ( isNumberStr(pppTimeOut.value) == false ) {
+				alert(strInactTm+": "+strInvalid);
+				pppTimeOut.focus();
+				return;
+			}
+			timeOutNum = parseInt(pppTimeOut.value);
+			if ( timeOutNum < 1 || timeOutNum > 4320 ) {
+				alert(strInactTm+": <%WebStr(comm,ERR_OUT_RANGE)%>");
+				pppTimeOut.focus();
+				return;
+			}
+		}
+	
+		if (enblAdvDmz == 1) {
+			// validate non DMZ IP address and Netmask
+			if ( enableAdvancedDmz.checked == true ) {
+				if ( isValidIpAddress(nonDmzIpAddress.value) == false ) {
+					alert("<%WebStr(wan,FN_WAN_NON_DMZ_IP)%>: "+strInvalid);
+					nonDmzIpAddress.focus();
+					return;
+				}
+				if ( isValidSubnetMask(nonDmzIpMask.value) == false) {
+					alert("<%WebStr(wan,FN_WAN_NON_DMZ_MASK)%>: "+strInvalid);
+					nonDmzIpMask.focus();
+					return;
+				}
+			}
+		}
+		// validate ppp IP address
+		if ( enblPppIpAddress.checked == true ) {
+			if ( isValidIpAddress(pppLocalIpAddress.value) == false ) {
+				alert("<%WebStr(wan,FN_WAN_IPV4)%>: "+strInvalid);
+				pppLocalIpAddress.focus();
+				return;
+			}
+		}
+		// DNS
+		if (enableAuto.checked == false) {
+			if ( isValidIpAddress(dnsPrimary.value) == false ) {
+				alert("<%WebStr(wan,FN_WAN_PRI)%>: "+strInvalid);
+				dnsPrimary.focus();
+				return;
+			}
+			if (dnsSecondary.value != "" && isValidIpAddress(dnsSecondary.value) == false ) {
+				alert("<%WebStr(wan,FN_WAN_2ND)%>: "+strInvalid);
+				dnsSecondary.focus();
+				return;
+			}
+		}
+		
+		if ( enblIP6 == '1' && enblPppIp6Address.checked == true ) {
+			if (pppLocalIp6Address.value != '' && isValidIpAddress6(pppLocalIp6Address.value) == false) {
+				alert("<%WebStr(wan,FN_WAN_IPV6)%>: "+strInvalid);
+				pppLocalIp6Address.focus();
+				return;
+			}
+		}
+
+		loc += 'pppUserName=' + encodeUrl(pppUserName.value);
+		loc += '&pppPassword=' + encodeUrl(pppPassword.value);
+		if ( enblOnDemand.checked == true ) {
+			loc += '&enblOnDemand=1';
+			loc += '&pppTimeOut=' + timeOutNum;
+		} else {
+			loc += '&enblOnDemand=0';
+			loc += '&pppTimeOut=' + timeOut;
+		}
+		if ( enblPppIpAddress.checked == true ) {
+			loc += '&useStaticIpAddress=1';
+			loc += '&pppLocalIpAddress=' + pppLocalIpAddress.value;
+		} else {
+			loc += '&useStaticIpAddress=0';
+			loc += '&pppLocalIpAddress=' + localIpAddr;
+		}
+		if (enableAuto.checked == false) {
+			loc += '&v_dnsPri='+dnsPrimary.value;
+			loc += '&v_dnsSec='+dnsSecondary.value;
+		}
+		loc += '&v_autodns='+((enableAuto.checked == true) ? 1 : 0);
+		if ( ipExtension == '1' || pppIpExtension.checked == true ) {
+			loc += '&pppIpExtension=1&enblNat=0&enblFirewall=0';
+			if (enblAdvDmz == '1') {
+				if ( enableAdvancedDmz.checked == true ) {
+					loc += '&enableAdvancedDmz=1';
+					loc += '&nonDmzIpAddress=' + nonDmzIpAddress.value;
+					loc += '&nonDmzIpMask=' + nonDmzIpMask.value;
+				} else {
+					loc += '&enableAdvancedDmz=0';
+				}
+			}
+		}
+		else
+			loc += '&pppIpExtension=0&enblFirewall=1&enblNat=1';
+		if ( enblFullcone.checked == true )
+			loc += '&enblFullcone=1';
+		else
+			loc += '&enblFullcone=0';
+		var idx = pppAuthMethod.selectedIndex;
+		loc += '&pppAuthMethod=' + pppAuthMethod.options[idx].value;
+		if ( prtcl == 'PPPoE')
+			loc += '&pppServerName=' + encodeUrl(pppServerName.value);
+	
+		if ( authErrorRetry.checked == true )
+			loc += '&pppAuthErrorRetry=1';
+		else
+			loc += '&pppAuthErrorRetry=0';
+	
+		if ( enblPppDebug.checked == true )
+			loc += '&enblPppDebug=1';
+		else
+			loc += '&enblPppDebug=0';
+			
+		loc += submitCheck(pppToBridge);
+	
+		if ( enblIgmp.checked == true )
+			loc += '&enblIgmp=1';
+		else
+			loc += '&enblIgmp=0';
+	
+		if ( enblIP6 == '1' ) {
+			if ( enblPppIp6Address.checked == false )
+				loc += '&wanAddr6Type=DHCP';   // auto WAN address
+			else {
+				loc += '&wanAddr6Type=Static';   // static WAN address
+				if (pppLocalIp6Address.value != '' && isValidIpAddress6(pppLocalIp6Address.value) == false) {
+					alert("<%WebStr(wan,FN_WAN_IPV6)%>: "+strInvalid);
+					pppLocalIp6Address.focus();
+					return;
+				}
+				loc += '&wanAddr6=' + pppLocalIp6Address.value;
+			}
+
+			if ( enblUnnumbered.checked == true )
+				loc += '&unnumberedModel=1';
+			else
+				loc += '&unnumberedModel=0';
+
+			if ( enblMld.checked == true )
+				loc += '&enblMld=1';
+			else
+				loc += '&enblMld=0';
+		}
+	}
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function btnBack() {
+	var loc = 'wancfg.cmd';
+	
+	if (serviceId == '1')
+		loc = 'wancfg.cmd';
+	else if (cfgL2tpAc == '1')
+		loc = 'cfgl2tpac.html';
+	else if (serviceId == '0') //sarah, 20100111
+		loc = 'wanifc.cmd';
+
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function hideIpExtension(hide) {
+	document.getElementById("divIpExtension").style.display = (hide == 1) ? "none" : "";
+}
+
+function hideOnDemandInfo(hide)
+{
+	document.forms[0].pppTimeOut.disabled = (hide == 1) ? true : false;
+}
+
+function dialOnDemandClick(cb) {
+   if ( cb.checked == true )
+      hideOnDemandInfo(0);
+   else
+      hideOnDemandInfo(1);
+}
+
+function advancedDmzClick(cb) {
+   with ( document.forms[0] ) {
+     setDisable(nonDmzIpAddress, cb.checked != true);
+     setDisable(nonDmzIpMask, cb.checked != true);
+   }
+}
+
+function hidePppIpAddressInfo(hide)
+{
+	document.forms[0].pppLocalIpAddress.disabled = (hide == 1) ? true : false;
+}
+
+function pppIpAddressClick(cb) {
+   if ( cb.checked == true )
+      hidePppIpAddressInfo(0);
+   else
+      hidePppIpAddressInfo(1);
+}
+
+function hidePppIp6AddressInfo(hide)
+{
+	document.forms[0].pppLocalIp6Address.disabled = (hide == 1) ? true : false;
+}
+
+function pppIp6AddressClick() {
+   with ( document.forms[0] ) {
+      pppLocalIp6Address.value = addr6;
+      if ( enblPppIp6Address.checked == true ) {
+         pppLocalIp6Address.value = addr6;
+         hidePppIp6AddressInfo(0);
+      }
+      else {
+         pppLocalIp6Address.value = '';
+         hidePppIp6AddressInfo(1);
+      }
+   }
+}
+
+function hideWan6Info(hide) {
+	document.getElementById("wan6Info").style.display = (hide == 1) ? "none" : "";
+	document.getElementById("wan6Info2").style.display = (hide == 1) ? "none" : "";
+	document.getElementById("wan6Info3").style.display = (hide == 1) ? "none" : "";
+	pppIp6AddressClick();
+}
+
+function hideMldInfo(hide) {
+	document.getElementById("MldInfo").style.display = (hide == 1) ? "none" : "";
+}
+
+function hidePppToBridgeInfo(hide) {
+	document.getElementById("divPppToBridge").style.display = (hide == 1) ? "none" : "";
+}
+
+function hidePppAuthErrorRetry(hide) {
+	document.getElementById("pppAuthErrorInfo").style.display = (hide == 1) ? "none" : "";
+}
+
+function pppIpExtChange(item) {
+	if ( item.checked == true ) {
+		with ( document.forms[0] ) {
+			if (enblAdvDmz == '1') {
+				setDisable(enableAdvancedDmz, 0);
+				setDisable(nonDmzIpAddress, enableAdvancedDmz.checked != true);
+				setDisable(nonDmzIpMask, enableAdvancedDmz.checked != true);
+			}
+		}
+	} else {
+		with ( document.forms[0] ) {
+			if (enblAdvDmz == '1') {
+				setDisable(enableAdvancedDmz,1);
+				setDisable(nonDmzIpAddress,1);
+				setDisable(nonDmzIpMask,1);
+			}
+		}
+	}
+
+	if (enetWan == '1' || prtcl != 'PPPoE' || item.checked == true)  {
+		showhide("divPppToBridge", 0);
+	}
+	else {
+		showhide("divPppToBridge", 1);
+	}
+}
+function dnsClick()
+{
+	with ( document.forms[0] ) {
+		var fg = enableAuto.checked;
+		dnsPrimary.disabled=fg;
+		dnsSecondary.disabled=fg;
+	} 
+}
+
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr><td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td></tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_WAN)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(comm,USRNAME)%></td>
+<td class="content"><input type="text" name="pppUserName" size="40" maxlength="64"></td></tr>
+<tr><td class="title"><%WebStr(wan,FN_PPP_PSWD)%></td>
+<td class="content"><input type="password" name="pppPassword" size="40" maxlength="32"></td></tr>
+<script language="javascript">
+<!-- hide
+if ( prtcl == 'PPPoE') {
+	document.write("<tr><td class='title'><%WebStr(wan,FN_PPP_SERV_NAME)%></td>");
+	document.write("<td class='content'><input type='text' name='pppServerName' size='40' maxlength='32'></td></tr>");
+}
+// done hiding -->
+</script>
+<tr><td class="title"><%WebStr(wan,FN_WAN_AUTH)%></td>
+<td class="content"><select name='pppAuthMethod'>
+	<option value="0">AUTO</option>
+	<option value="1">PAP</option>
+	<option value="2">CHAP</option>
+	<option value="3">MSCHAP</option>
+</select></td></tr>
+<tr><td class="title"><%WebStr(wan,FN_WAN_NAT)%></td>
+<td class="content"><input type='checkbox' name='enblFullcone'><%WebStr(comm,ENABLE)%></td></tr>
+<tr><td class="title"><%WebStr(wan,FN_WAN_DIAL_DEMAND)%></td>
+<td class="content"><input type='checkbox' name='enblOnDemand' onClick='dialOnDemandClick(this)'><%WebStr(comm,ENABLE)%></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_DIALD_TMOUT)%></td>
+<td class="content"><input type='text' name='pppTimeOut' size='20' value='<%ejGet(pppTimeOut)%>' maxlength='4'>&nbsp;(<%WebStr(comm,MINUTES)%>)&nbsp;&nbsp;[1-4320]</td></tr>
+
+<tr id='divIpExtension'><td class="title"><%WebStr(wan,FN_WAN_PPP_IPEXT)%></td>
+<td class="content"><input type='checkbox' name='pppIpExtension' onClick='pppIpExtChange(this)'><%WebStr(comm,ENABLE)%></td></tr>
+<script language="javascript">
+<!-- hide
+if (enblAdvDmz == '1')
+{
+	document.writeln("<tr id='advancedDmzInfo'>");
+	document.writeln("<td class='title'><%WebStr(wan,FN_WAN_ADV_DMZ)%></td>");
+	document.writeln("<td class='content'><input type='checkbox' name='enableAdvancedDmz' onClick='advancedDmzClick(this)'></td></tr>");
+	
+	document.writeln("<tr id='nonDmzIpAddressInfo1'>");
+	document.writeln("<td class='title'><%WebStr(wan,FN_WAN_NON_DMZ_IP)%></td>");
+	document.writeln("<td class='content'><input type='text' name='nonDmzIpAddress'></td></tr>");
+	document.writeln("<tr id='nonDmzIpAddressInfo2'>");
+	document.writeln("<td class='title'><%WebStr(wan,FN_WAN_NON_DMZ_MASK)%></td>");
+	document.writeln("<td class='content'><input type='text' name='nonDmzIpMask'></td></tr>");
+}
+// done hiding -->
+</script>
+<tr><td class="title"><%WebStr(wan,FN_WAN_IPV4)%></td>
+<td class="content"><input type='checkbox' name='enblPppIpAddress' onClick='pppIpAddressClick(this)'><%WebStr(wan,STATIC)%></td></tr>
+<tr><td class="titsub1"><%WebStr(comm,IP_ADDR)%></td>
+<td class="content"><input type='text' name='pppLocalIpAddress' maxlength='15' value='<%ejGet(pppLocalIpAddress)%>'></td></tr>
+
+<tr><td class="title"><%WebStr(wan,FN_DNSOBT)%></td>
+<td class="content"><input type="checkbox" name="enableAuto" onclick="dnsClick()"><%WebStr(wan,DNS_AUTO)%></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_PRI)%></td>
+<td class="content"><input type="text" size=17 maxlength="15" name="dnsPrimary"></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_2ND)%></td>
+<td class="content"><input type="text" size=17 maxlength="15" name="dnsSecondary"></td></tr>
+
+<tr id='wan6Info'><td class="title"><%WebStr(wan,FN_WAN_IPV6)%></td>
+<td class="content"><input type='checkbox' name='enblPppIp6Address' onClick='pppIp6AddressClick()'><%WebStr(wan,STATIC)%></td></tr>
+<tr id='wan6Info2'><td class="titsub1"><%WebStr(comm,IP_ADDR)%></td>
+<td class="content"><input type='text' name='pppLocalIp6Address' disabled></td></tr>
+
+<tr id='wan6Info3'><td class="titsub1"><%WebStr(wan,FN_WAN_IPV6_UNMUM)%></td>
+<td class="content"><input type='checkbox' name='enblUnnumbered'><%WebStr(comm,ENABLED)%></td></tr>
+
+<tr id='pppAuthErrorInfo'><td class="title"><%WebStr(wan,FN_WAN_PPP_PSWD_AUTH_ERR)%></td>
+<td class="content"><input type='checkbox' name='authErrorRetry'><%WebStr(comm,ENABLE)%></td></tr>
+<tr><td class="title"><%WebStr(wan,FN_WAN_PPP_DEBUG)%></td>
+<td class="content"><input type='checkbox' name='enblPppDebug'><%WebStr(comm,ENABLE)%></td></tr>
+<tr id='divPppToBridge'><td class="title"><%WebStr(wan,FN_WAN_BR_PPPOE_WAN_LAN)%></td>
+<td class="content"><input type='checkbox' name='pppToBridge'><%WebStr(comm,ENABLE)%></td></tr>
+
+<tr><td class="title"><%WebStr(wan,FN_WAN_IGMP_MULT_PRXY)%></td>
+<td class="content"><input type='checkbox' name='enblIgmp'><%WebStr(comm,ENABLE)%></td></tr>
+<tr id='MldInfo'><td class="title"><%WebStr(wan,FN_WAN_MLD_MULT_PRXY)%></td>
+<td class="content"><input type='checkbox' name='enblMld'><%WebStr(comm,ENABLE)%></td></tr>
+
+<tr><td colspan="2" class="btnline">
+<input type="button" name="bBack" value="<%WebStr(comm,BACK)%>" onClick="btnBack()">&nbsp;
+<input type="button" name="bNext" value="<%WebStr(comm,NEXT)%>" onclick="btnNext();"></td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(wan,_c)%>
+<%WebStr(comm,_c)%>
+<%WebStr(cus,_c)%>

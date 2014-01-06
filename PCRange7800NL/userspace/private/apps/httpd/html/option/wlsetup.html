@@ -1,0 +1,106 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(wlan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var fields=["<%WebStr(wlan,SSID)%>"];
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>"];
+var ssid = '<%ejGetWl(wlSsid)%>';
+var enbl = '<%ejGetWl(wlEnbl)%>';
+function wlSecCbClick() {
+	var pg=(document.forms[0].wlEnbl.checked)?"":"none";
+	document.getElementById("wlSecInfo").style.display=pg;
+}
+function frmLoad() {
+	with ( document.forms[0] ) {
+		var fg=( enbl == '1' )?true:false;
+		wlEnbl.checked=fg;
+		wlSecCbClick();
+		wlSsid.value = ssid;
+	}
+}
+function btnNext() {
+	var loc = 'ntwksum2.wl?';
+	with ( document.forms[0] ) {
+		if ( wlEnbl.checked == false ) {
+			loc += 'wlSsid=' + ssid;
+			loc += '&wlEnbl=0';
+		} else {
+			if ( wlSsid.value == '' ) {
+				alert(fields[0]+" : "+errMsg[1]);
+				wlSsid.focus();
+				return;
+			}
+			loc += 'wlSsid=' + encodeUrl(wlSsid.value);
+			if ( wlEnbl.checked == true )
+				loc += '&wlEnbl=1';
+			else
+				loc += '&wlEnbl=0';
+		}
+	}
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function btnBack() {
+	var prtcl = '<%ejGetOther(memInfo, ntwkPrtcl)%>';
+	var ipExtension = '<%ejGet(pppIpExtension)%>';
+	var loc = 'lancfg.html';
+	if ( prtcl == 'Bridge' )
+		loc = 'lancfgbr.html';
+	else if ( (ipExtension == '1') &&
+				((prtcl == 'PPPoE') || (prtcl == 'PPPoA')) )
+		loc = 'lancfgbr.html';
+	else
+		loc = 'lancfg.html';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_WIRELESS_SETTINGS)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(wlan,WL_SETUP)%></td></tr>
+<form>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(menu,MENU_WIRELESS_SETTINGS)%></td>
+			<td class="content"><input type='checkbox' name='wlEnbl' onClick='wlSecCbClick()' value="ON"><%WebStr(comm,ENABLE)%></td></tr>
+		<tr id="wlSecInfo" style="dispaly:none"><td class="title"><%WebStr(wlan,SSID)%></td>
+			<td class="content"><input type='text' name='wlSsid' id='wlSsid' maxlength="32" size="32"></td></tr>
+		<tr><td colspan="2" class="btnline">
+			<input type='button' onClick='btnBack()' value='<%WebStr(comm,BACK)%>'>&nbsp;
+			<input type='button' onClick='btnNext()' value='<%WebStr(comm,NEXT)%>'></td></tr>
+	</table><!-- cfgframe -->
+</form>
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(wlan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

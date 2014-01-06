@@ -1,0 +1,229 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script language="javascript" src="portName.js"></script>
+<script type="text/javascript">
+<!-- hide
+var errMsg=["<% WebStr(comm,INVALID); %>","<% WebStr(comm,ERR_EMPTY); %>"];
+var fields=["<%WebStr(lan,DST_IP)%>/<%WebStr(lan,PREFIX_LEN)%>","<% WebStr(lan,GW_IP); %>","<%WebStr(lan,METRIC)%>"];
+var enblIP6 = '<%ejGetOther(sysInfo, enblIPv6)%>';
+function frmLoad()
+{
+	document.getElementById("wanIf").style.display="";
+	showhide("wanIf",1);
+}
+function changeSelect(OnPageLoad)
+{
+	with ( document.forms[0] ) {
+		//var idd=document.getElementById("wanIf");
+		//var idd6=document.getElementById("wanIf6");
+		if (getSelect(ipver) == '4') {
+			//idd.style.display="";
+			//idd6.style.display="none";
+			showhide("wanIf",1);
+			showhide("wanIf6",0);
+		}
+		else {
+			//idd.style.display="none";
+			//idd6.style.display="";
+			showhide("wanIf",0);
+			showhide("wanIf6",1);
+		}
+	}
+}
+function changeSelectNextHop(OnPageLoad)
+{
+	with ( document.forms[0] )
+	{
+		var ifc = dstWanIf.options[dstWanIf.selectedIndex].value;
+		var idd=document.getElementById('nexthop');
+		idd.style.display=( ifc.indexOf('ppp') == -1 )?"":"none";
+	}
+}
+function btnApply() {
+	var loc = 'rtroutecfg.cmd?action=add';
+	with ( document.forms[0] ) {
+		var ifc;
+		var ipv = ipver.options[ipver.selectedIndex].value;	
+		if (ipv == '4')
+			ifc = dstWanIf.options[dstWanIf.selectedIndex].value;
+		else
+			ifc = dstWanIf6.options[dstWanIf6.selectedIndex].value;	
+		if (dstAddr.value == '') {
+			alert(fields[0]+" : "+errMsg[1]);
+			dstAddr.focus();
+			return;
+		}
+		if (dstAddr.value.indexOf('/') == -1) {
+			alert(fields[0]+" : "+errMsg[0]);
+			dstAddr.focus();
+			return;
+		}
+		if( (ipver.options[ipver.selectedIndex].value == '4' && !isValidIpAddress(dstAddr.value) )||
+			(ipver.options[ipver.selectedIndex].value == '6' && !isValidIpAddress6(dstAddr.value)) ) {
+				alert(fields[0]+" : "+errMsg[0]);
+				dstAddr.focus();
+				return;
+		}
+		var pf=dstAddr.value.split("/");
+		if(isNaN(pf[1]) || isNumberStr(pf[1])==false )
+		{
+			alert(fields[0]+" : "+errMsg[0]);
+			dstAddr.focus();
+			return;
+		}
+		if (ifc != '') {
+			// if chosen interface is IPOE but does not specify static IP address then display error
+			if ( ifc.indexOf('ppp') == -1  && 
+				((ipver.options[ipver.selectedIndex].value == '4' && isValidIpAddress(dstGtwy.value) == false ) ||
+				(ipver.options[ipver.selectedIndex].value == '6' && isValidIpAddress6(dstGtwy.value) == false )))
+			{
+				alert("<%WebStr(lan,PPP_HINT)%>");
+				dstGtwy.focus();
+				return;
+			}
+		}else {
+			if (dstGtwy.value == '') {
+				alert(fields[1]+" : "+errMsg[1]);
+				dstGtwy.focus();
+				return;
+			}
+			else if (dstGtwy.value.toLowerCase().indexOf("fe80") == 0) {
+				alert("<%WebStr(lan,IPV6_HINT)%>");
+				dstGtwy.focus();
+				return;
+			}
+		}
+		if (ifc.indexOf('ppp') == -1 && dstGtwy.value != '') {
+			if (dstGtwy.value.indexOf('/') != -1) {
+				alert(fields[1]+" : "+errMsg[0]);
+				dstGtwy.focus();
+				return;
+			}
+			if ((ipver.options[ipver.selectedIndex].value == '4' && isValidIpAddress(dstGtwy.value) == false ) ||
+			 (ipver.options[ipver.selectedIndex].value == '6' && isValidIpAddress6(dstGtwy.value) == false ))
+			{
+					alert(fields[1]+" : "+errMsg[0]);
+					dstGtwy.focus();
+					return;
+			}
+		}
+		if(metric.value != '' &&( isNaN(metric.value) || parseInt(metric.value)<0 || parseInt(metric.value)>2147483647 || isNumberStr(metric.value)==false))
+		{
+			alert(fields[2]+" : "+errMsg[0]);
+			metric.focus();
+			return;
+		}
+		loc += '&ipver=' + ipv;
+		loc += '&dstAddr=' + dstAddr.value;
+		if (ifc != '') loc += '&dstWanIf=' + ifc;
+		else	loc += '&dstGtwy=' + dstGtwy.value;
+
+		if(metric.value != '')
+				loc += '&metric=' + metric.value;
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onload=frmLoad()>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr><td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td></tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_RT_STATIC_ROUTE)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(lan,IP_VERSION)%></td>
+<td class="content"><select name='ipver' size='1' onChange='changeSelect(0)'>
+<script language="javascript">
+<!-- hide
+{
+	document.writeln(" <option value='4'>IPv4</option>");
+	if (enblIP6 == '1')	document.writeln("<option value='6'>IPv6</option>");
+}
+// done hiding -->
+</script></select></td></tr>
+<tr><td class="title"><%WebStr(lan,DST_IPADDR)%> / <%WebStr(lan,PREFIX_LEN)%></td>
+<td class="content"><input type='text' name='dstAddr' size='20' maxlength='43'></td></tr>
+<tr id='wanIf' style="display:none"><td class="title"><%WebStr(comm,INTERFACE)%></td>
+<td class="content"><select name='dstWanIf' onChange='changeSelectNextHop(1)'>
+<script language="javascript">
+<!-- hide
+{
+	var i;
+	var intfInfo = '<%ejGetOther(wanInterfaceInfo, route)%>';
+	var intf     = intfInfo.split('|');	
+	document.write("<option value=''>&nbsp;&nbsp;&nbsp;&nbsp;</option>");
+	for ( i = 0; i < intf.length; i++ ) {
+		var names = intf[i].split('/');
+		if (names.length > 1) {
+			document.write("  <option value='" + names[1] + "'>");
+			document.writeln(intf[i]);
+			document.writeln("</option>");
+		}
+	}
+	document.writeln("  <option value='br0'> LAN/br0</option>");
+}
+// done hiding -->
+</script></select></td></tr>
+<tr id='wanIf6' style="display:none"><td class="title"><%WebStr(comm,INTERFACE)%></td>
+<td class="content"><select name='dstWanIf6'>
+<script language="javascript">
+<!-- hide
+{
+	var intfInfo = '<%ejGetOther(wanInterfaceInfo, route6)%>';
+	var intf     = intfInfo.split('|');
+
+	document.write("<option value=''>&nbsp;&nbsp;&nbsp;&nbsp;</option>");
+	for (var i = 0; i < intf.length; i++ ) {
+		var names = intf[i].split('/');
+		if (names.length > 1) {
+			document.write("  <option value='" + names[1] + "'>");
+			document.writeln(intf[i]);
+			document.writeln("</option>");
+		}
+	}
+	document.writeln("  <option value='br0'> LAN/br0</option>");
+}
+// done hiding -->
+</script></select></td></tr>
+<tr id='nexthop'><td class="title"><%WebStr(lan,GW_IP)%></td>
+<td class="content"><input type='text' name='dstGtwy' size='20' maxlength='39'></td></tr>
+<tr><td class="title"><%WebStr(lan,METRIC)%></td>
+<td class="content"><input type='text' name='metric'  size='20' maxlength='10'>&nbsp;<%WebStr(lan,METRIC_HINT)%></td></tr>
+<tr><td colspan="2" class="btnline">
+<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

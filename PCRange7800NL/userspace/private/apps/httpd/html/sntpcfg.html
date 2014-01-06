@@ -1,0 +1,238 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(mgmt.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>"];
+var fields=["<%WebStr(mgmt,NTPSRV1)%>","<%WebStr(mgmt,NTPSRV2)%>","<%WebStr(mgmt,NTPSRV3)%>","<%WebStr(mgmt,NTPSRV4)%>","<%WebStr(mgmt,NTPSRV5)%>"];
+var ntpServers = ["clock.fmt.he.net", "clock.nyc.he.net", "clock.sjc.he.net", "clock.via.net", "ntp1.tummy.com", "time.cachenetworks.com", "time.nist.gov"];
+var timeZones = ["(GMT-12:00) International Date Line West", "(GMT-11:00) Midway Island, Samoa", "(GMT-10:00) Hawaii", "(GMT-09:00) Alaska",
+ "(GMT-08:00) Pacific Time, Tijuana", "(GMT-07:00) Arizona, Mazatlan", "(GMT-07:00) Chihuahua, La Paz", "(GMT-07:00) Mountain Time",
+"(GMT-06:00) Central America", "(GMT-06:00) Central Time", "(GMT-06:00) Guadalajara, Mexico City, Monterrey", "(GMT-06:00) Saskatchewan",
+"(GMT-05:00) Bogota, Lima, Quito", "(GMT-05:00) Eastern Time", "(GMT-05:00) Indiana", "(GMT-04:00) Atlantic Time",
+"(GMT-04:00) Caracas, La Paz", "(GMT-04:00) Santiago", "(GMT-03:30) Newfoundland", "(GMT-03:00) Brasilia",
+"(GMT-03:00) Buenos Aires, Georgetown", "(GMT-03:00) Greenland", "(GMT-02:00) Mid-Atlantic", "(GMT-01:00) Azores",
+"(GMT-01:00) Cape Verde Is.", "(GMT-00:00) Casablanca, Monrovia", "(GMT-00:00) Greenwich Mean Time: Dublin, Edinburgh, Lisbon, London", "(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna",
+"(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague", "(GMT+01:00) Brussels, Copenhagen, Madrid, Paris", "(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb", "(GMT+01:00) West Central Africa",
+"(GMT+02:00) Athens, Istanbul, Minsk", "(GMT+02:00) Bucharest", "(GMT+02:00) Cairo", "(GMT+02:00) Harare, Pretoria",
+"(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius", "(GMT+02:00) Jerusalem", "(GMT+03:00) Baghdad", "(GMT+03:00) Kuwait, Riyadh",
+"(GMT+03:00) Moscow, St. Petersburg, Volgograd", "(GMT+03:00) Nairobi", "(GMT+03:30) Tehran", "(GMT+04:00) Abu Dhabi, Muscat",
+"(GMT+04:00) Baku, Tbilisi, Yerevan", "(GMT+04:30) Kabul", "(GMT+05:00) Ekaterinburg", "(GMT+05:00) Islamabad, Karachi, Tashkent",
+"(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi", "(GMT+05:45) Kathmandu", "(GMT+06:00) Almaty, Novosibirsk", "(GMT+06:00) Astana, Dhaka",
+"(GMT+06:00) Sri Jayawardenepura", "(GMT+06:30) Rangoon", "(GMT+07:00) Bangkok, Hanoi, Jakarta", "(GMT+07:00) Krasnoyarsk",
+"(GMT+08:00) Beijing, Chongquing, Hong Kong, Urumqi", "(GMT+08:00) Irkutsk, Ulaan Bataar", "(GMT+08:00) Kuala Lumpur, Singapore", "(GMT+08:00) Perth",
+"(GMT+08:00) Taipei", "(GMT+09:00) Osaka, Sapporo, Tokyo", "(GMT+09:00) Seoul", "(GMT+09:00) Yakutsk",
+"(GMT+09:30) Adelaide", "(GMT+09:30) Darwin'", "(GMT+10:00) Brisbane", "(GMT+10:00) Canberra, Melbourne, Sydney",
+"(GMT+10:00) Guam, Port Moresby", "(GMT+10:00) Hobart", "(GMT+10:00) Vladivostok", "(GMT+11:00) Magadan",
+"(GMT+11:00) Solomon Is., New Caledonia", "(GMT+12:00) Auckland, Wellington", "(GMT+12:00) Fiji, Kamchatka, Marshall Is."];
+var ntps=[["ntpServer1","ntpServerOther1"], ["ntpServer2", "ntpServerOther2"], ["ntpServer3", "ntpServerOther3"], ["ntpServer4", "ntpServerOther4"], ["ntpServer5", "ntpServerOther5"]];
+var cfg_array=["cfg1","cfg2","cfg3","cfg4","cfg5","cfg6"];
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var state = '<%ejGet(sntpRefresh)%>';
+if ( state == '1' ) {
+	var loc = 'sntpcfg.cgi?sntpRefresh=0';
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function show_cfg()
+{
+	var fg=(document.forms[0].ntpEnabled.checked)?1:0;
+	showEntries(cfg_array,fg);
+}
+function showNTP()
+{
+	var q, c, aa, bb;
+	with (document.forms[0]) {
+		for( var i=0; i<ntps.length; i++){
+			q=document.getElementById(ntps[i][1]);
+			c=ntpServers.length;
+			if(i>1) c++;
+			aa=document.getElementById(ntps[i][0]);
+			bb=document.getElementById(ntps[i][1]);
+			if(q.value==""){
+				aa.selectedIndex = 0;
+				bb.value="";
+				bb.disabled=true;
+			}else{
+				for( var b=0; b<ntpServers.length; b++){
+					if(q.value==ntpServers[b]){
+						aa.selectedIndex = (i==0)?b:b+1;
+						bb.value="";
+						bb.disabled=true;
+						break;
+					}else{
+						aa.selectedIndex = c;
+						bb.disabled=false;
+					}
+				}
+			}
+		}
+	}
+}
+function frmLoad() {
+	var i = 0;
+	var ntp_enabled = "<%ejGet(ntp_enabled)%>";
+	var tz_name = "<%ejGet(timezone)%>";
+	with (document.forms[0]) {
+		ntpEnabled.checked=( ntp_enabled == "1" )?true:false;
+		show_cfg();
+		showNTP();
+		cboTimeZone.selectedIndex = getTimeZoneIndex(tz_name);
+	}
+}
+function getTimeZoneIndex(timeZoneName) {
+	var i = 0, ret = 4;  // default to Pacific time	
+	for ( var i = 0; i < timeZones.length; i++ ) {
+		if ( timeZones[i].search(timeZoneName) != -1 )
+		break;
+	}
+	if ( i < timeZones.length )	ret = i;
+	return ret;
+}
+function getTimeZoneName(idx) {
+	var str = timeZones[idx];
+	var ret = str.substr(12);
+	return ret;
+}
+function getTimeZoneOffset(idx) {
+	var str = timeZones[idx];
+	var ret = '';
+	if ( idx != 25 && idx != 26 )	ret = str.substr(4, 6);
+	return ret;
+}
+function writeTimeZoneList() {
+	for( var i = 0; i < timeZones.length; i++ )
+		document.writeln("<option value=" + getTimeZoneOffset(i) + ">" + timeZones[i] + "</option>");
+}
+function writeNtpList(needed) {
+	if(!needed) 	document.writeln("<option value=None><%WebStr(mgmt,NONE)%></option>");
+	for( var i = 0; i < ntpServers.length; i++ )
+		document.writeln("<option value=" + ntpServers[i] + ">" + ntpServers[i] + "</option>");
+	document.writeln("<option value=Other><%WebStr(mgmt,OTHER)%></option>");
+}
+function ntpChange(optionlist,textbox) {
+	if( optionlist[optionlist.selectedIndex].value == "Other" )
+		textbox.disabled = false;
+	else {
+		textbox.value = "";
+		textbox.disabled = true;
+	}
+}
+function chkSrv()
+{
+	for( var i=1; i<6; i++)
+	{
+		var a=(i==1)?ntpServers.length:ntpServers.length+1;
+		if( document.getElementById("ntpServer"+i).selectedIndex == a)//Other
+		{
+			if( document.getElementById("ntpServerOther"+i).value.length == 0 )
+			{
+				alert(fields[i-1]+" : "+errMsg[1]);
+				return false;
+			}
+		}
+	}
+	return true;
+}
+function btnApply() {
+	var loc = 'sntpcfg.cgi?ntp_enabled=';
+	var aa;
+	with( document.forms[0] ) {
+		if( ntpEnabled.checked ) {
+			if(!chkSrv())	return;
+			loc +='1';
+			for( var i=0; i<ntps.length; i++)
+			{
+				aa=document.getElementById(ntps[i][0]).value;
+				if( aa == "Other")
+						loc +=('&' + ntps[i][0] +'=' + document.getElementById(ntps[i][1]).value);
+				else if( i>1 && aa !="None")
+						loc +=('&' + ntps[i][0] +'=' + aa);
+				else if( i>1 && aa =="None")
+						loc +=('&' + ntps[i][0] +'=');
+				else //i==1
+						loc +=('&' + ntps[i][0] +'=' + aa);
+			}
+			loc += '&timezone_offset=' + cboTimeZone.value;
+			loc += '&timezone=' + getTimeZoneName(cboTimeZone.selectedIndex);
+			loc += '&use_dst=0';
+		} else	loc += '0';
+	}
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_MANAGEMENT)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_SNTP)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(mgmt,SYNC_SNTP)%></td>
+			<td class="content"><input type='checkbox' name='ntpEnabled' onClick='show_cfg()'><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr id="cfg1" style="display:none"><td class="title"><%WebStr(mgmt,NTPSRV1)%></td>
+			<td class="content"><select name='ntpServer1' id='ntpServer1' size="1" onChange='ntpChange(this.form.ntpServer1,this.form.ntpServerOther1)'>
+					<script language="javascript">writeNtpList(true);</script></select> <input type='text' name='ntpServerOther1' id='ntpServerOther1' value="<%ejGet(ntpServer1)%>"></td>
+			</tr>
+		<tr id="cfg2" style="display:none"><td class="title"><%WebStr(mgmt,NTPSRV2)%></td>
+			<td class="content"><select name='ntpServer2' id='ntpServer2' size="1" onChange='ntpChange(this.form.ntpServer2,this.form.ntpServerOther2)'>
+					<script language="javascript">writeNtpList(false);</script></select> <input type='text' name='ntpServerOther2' id='ntpServerOther2' value="<%ejGet(ntpServer2)%>"></td>
+			</tr>
+		<tr id="cfg3" style="display:none"><td class="title"><%WebStr(mgmt,NTPSRV3)%></td>
+			<td class="content"><select name='ntpServer3' id='ntpServer3' size="1" onChange='ntpChange(this.form.ntpServer3,this.form.ntpServerOther3)'>
+					<script language="javascript">writeNtpList(false);</script></select> <input type='text' name='ntpServerOther3' id='ntpServerOther3' value="<%ejGet(ntpServer3)%>"></td>
+			</tr>
+		<tr id="cfg4" style="display:none"><td class="title"><%WebStr(mgmt,NTPSRV4)%></td>
+			<td class="content"><select name='ntpServer4' id='ntpServer4' size="1" onChange='ntpChange(this.form.ntpServer4,this.form.ntpServerOther4)'>
+					<script language="javascript">writeNtpList(false);</script></select> <input type='text' name='ntpServerOther4' id='ntpServerOther4' value="<%ejGet(ntpServer4)%>"></td>
+			</tr>
+		<tr id="cfg5" style="display:none"><td class="title"><%WebStr(mgmt,NTPSRV5)%></td>
+			<td class="content"><select name='ntpServer5' id='ntpServer5' size="1" onChange='ntpChange(this.form.ntpServer5,this.form.ntpServerOther5)'>
+					<script language="javascript">writeNtpList(false);</script></select> <input type='text' name='ntpServerOther5' id='ntpServerOther5' value="<%ejGet(ntpServer5)%>"></td>
+			</tr>
+		<tr id="cfg6" style="display:none"><td class="title"><%WebStr(mgmt,TZ_OFFSET)%></td>
+			<td class="content"><select name='cboTimeZone' id='cboTimeZone' size="1">
+					<script language="javascript">writeTimeZoneList();</script></select></td>
+			</tr>
+		<tr>
+			<td colspan=2 class="btnline"><input type='button' onClick='btnApply()' value="<%WebStr(comm,APPLY)%>" name="bApply">&nbsp;
+<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td>
+		</tr>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(mgmt.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

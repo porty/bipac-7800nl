@@ -1,0 +1,657 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(qos.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var enableTc  = '<%ejGetOther(sysInfo, enblTc)%>';
+var queueInfo = '<%ejGetOther(qosqueueInfo, all)%>';
+var queues    = queueInfo.split('|');
+var allinfo=["etype", "etype_route", "smac","dmac1","dmac2","dmac3","eth_ip1","eth_ip2","eth_ip3","dscpcheck", "proto4", "proto6", "tcp_udp_port1","tcp_udp_port2","eth_8021q", "mark_8021p", "tag_vlanid", "ipQos1","ipQos2"];
+var PortArr=["tcp_udp_port1","tcp_udp_port2"];
+var LocalArr=["etype_route","dscpcheck","proto4"];
+var WANArr=["etype_route","smac","eth_ip1","eth_ip2","eth_ip3","dscpcheck","proto4"];
+var Q800Arr=["etype","mark_8021p", "tag_vlanid","smac","dmac1","dmac2","dmac3","eth_ip1","eth_ip2","eth_ip3","dscpcheck", "proto4"];
+var Q86DDArr=["etype","mark_8021p", "tag_vlanid","smac","eth_ip1","eth_ip2","eth_ip3","dscpcheck","proto6"];
+var Q8100Arr=["etype","mark_8021p", "tag_vlanid","eth_8021q"];
+var DefaultArr=["etype","mark_8021p", "tag_vlanid","smac","dmac1","dmac2","dmac3"];
+var onLoadArr=["etype","smac", "dmac1","dmac2","dmac3","mark_8021p", "tag_vlanid"];
+var ipQosArr=["ipQos1","ipQos2"];
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>"];
+var fields=["<%WebStr(qos,CLS_NAME)%>","<%WebStr(qos,ASSIGN_QUEUE)%>","<%WebStr(qos,TAG_VID)%>",
+"<%WebStr(qos,SET_RATE)%>","<%WebStr(qos,SRC_IP)%>","<%WebStr(qos,UDPTCP_SPORT)%>","<%WebStr(qos,DST_IPMASK)%>",
+"<%WebStr(qos,UDPTCP_DPORT)%>","<%WebStr(qos,SRC_MAC)%>","<%WebStr(qos,SRC_MACMASK)%>","<%WebStr(qos,DST_MAC)%>",
+"<%WebStr(qos,DST_MACMASK)%>"];
+var RatioSum=[<%RatioSumGet()%>];
+function frmLoad() {
+	showEntries(allinfo,0);
+	showEntries(onLoadArr,1);
+	changeSelect();
+}
+function showPort()
+{
+	with ( document.forms[0] ) {
+		var proto = getSelect(protocol4);
+		if (proto == '6' || proto == '17')	showEntries(PortArr,1);
+	}
+}
+function changeSelect()
+{
+	with ( document.forms[0] ) {
+		var ifc = getSelect(classIfc);
+		var clsIntf = ifc.split('/');
+		var showArr, showP=1;
+	
+		showEntries(allinfo,0);
+		if (ifc == 'Local')	showArr=LocalArr;
+		else if (ifc == 'WAN' || ifc.indexOf('ro') != -1)	showArr=WANArr;
+		else{
+			var type  = getSelect(ethtype);
+			if (type == '800')	showArr=Q800Arr;
+			else if (type == '86DD')	showArr=Q86DDArr;
+			else if (type == '8100')	showArr=Q8100Arr;
+			else { // for now, we always show mark_8021p and tag_vlanid even if the
+         // queue interface is not vlan enabled.  This is to support
+         // vlan pass-through frame remarking.
+					showArr=DefaultArr;
+					showP=0;
+			}
+		}
+		showEntries(showArr,1);
+		if(showP) showPort();
+		 //adjust the queuekey select list.
+		queuekey.length = queues.length + 1;
+		for (var i = 0, j = 1; i < queues.length; i++ ) {
+			if (queues[i] != '') {
+				var info = queues[i].split(':');	
+				//do not support wan to wan traffic classification
+				//if ifc is wan interface, exclude wan interface queues.
+				if ((ifc == 'WAN' || ifc.indexOf('br') != -1 || ifc.indexOf('ro') != -1) &&
+					(info[1].indexOf('wan') != -1 || info[1].indexOf('atm') != -1 || info[1].indexOf('ptm') != -1))
+					continue;
+/*Tammy*/
+			if(ifc == 'LAN'){ 
+				if(info[1].indexOf('wl') != -1 || (info[1].indexOf('eth') != -1 &&( info[1].indexOf('wan') == -1 && info[1].indexOf('atm') == -1 && info[1].indexOf('ptm') == -1)))
+				{
+					queuekey.length--;
+					continue;
+				}	
+			}
+			
+/*end*/
+				//exclude interface queues on the class interface
+				if (clsIntf[0] != '' && info[1].indexOf(clsIntf[0]) != -1)
+					continue;	
+				queuekey.options[j].value = info[0];
+				queuekey.options[j].text  = info[1];
+				j++;
+			}
+		}
+		queuekey.length = j;
+		queuekey.selectedIndex = 0;
+	}
+	if(ifc == 'WAN' || ifc == 'LAN' ){
+		showElm("rate_control", 0);
+		showEntries(ipQosArr,1);
+	}else{
+		showElm("rate_control", 1);
+		showEntries(ipQosArr,0);
+	}
+}
+function cleanUnused()
+{
+		with ( document.forms[0] ) {	
+		// Clean up un-applicable parameters
+		if (classIfc.options[classIfc.selectedIndex].value == 'Local') {
+			ethtype.selectedIndex = 0;
+			srcmacaddr.value = "";
+			srcmacmask.value = "";
+			dstmacaddr.value = "";
+			dstmacmask.value = "";
+			srcaddr.value = "";
+			dstaddr.value = "";
+			vlan8021p.selectedIndex = 0;
+			wanVlan8021p.selectedIndex = 0;
+			wanVlanID.value = "";
+			if ( enableTc == '1' )
+				txtrate.value = "";
+		}
+		else if (classIfc.options[classIfc.selectedIndex].value == 'WAN' ||
+				classIfc.options[classIfc.selectedIndex].value.indexOf('ro') != -1) {
+			ethtype.selectedIndex = 0;
+			srcmacmask.value = "";
+			dstmacaddr.value = "";
+			dstmacmask.value = "";
+			vlan8021p.selectedIndex = 0;
+			wanVlan8021p.selectedIndex = 0;
+			wanVlanID.value = "";
+			if ( enableTc == '1' )
+				txtrate.value = "";
+		}
+		else {
+			var qkey = getSelect(queuekey);
+			ethtyperoute.selectedIndex = 0;
+			idx = ethtype.selectedIndex;
+			if (ethtype.options[idx].value == '800') {
+				protocol6.selectedIndex = 0;
+				vlan8021p.selectedIndex = 0;
+			}
+			else if (ethtype.options[idx].value == '86DD') {
+				srcmacmask.value = "";
+				dstmacaddr.value = "";
+				dstmacmask.value = "";
+				protocol4.selectedIndex = 0;
+				vlan8021p.selectedIndex = 0;
+			}
+			else if (ethtype.options[idx].value == '8100') {
+				srcmacaddr.value = "";
+				srcmacmask.value = "";
+				dstmacaddr.value = "";
+				dstmacmask.value = "";
+				srcaddr.value = "";
+				dstaddr.value = "";
+				protocol4.selectedIndex = 0;
+				protocol6.selectedIndex = 0;
+				dscpchk.selectedIndex = 0;
+			}
+			else {
+				srcaddr.value = "";
+				dstaddr.value = "";
+				protocol4.selectedIndex = 0;
+				protocol6.selectedIndex = 0;
+				dscpchk.selectedIndex = 0;
+				vlan8021p.selectedIndex = 0;
+			}
+		}
+		idx4 = protocol4.selectedIndex;
+		idx6 = protocol6.selectedIndex;
+		if (protocol4.options[idx4].value != '6' && protocol4.options[idx4].value != '17' &&
+			protocol6.options[idx6].value != '6' && protocol6.options[idx6].value != '17') {
+			srcport.value = "";
+			dstport.value = "";
+		}
+	}
+}
+function chkFields()
+{
+	with ( document.forms[0] ) {
+		if ( txtclsname.value == '' ) {
+				alert(fields[0]+" : "+errMsg[1]);
+				txtclsname.focus();
+				return false;
+			}
+			if (! isValidName(txtclsname.value)  ) {
+				alert(fields[0]+" : "+errMsg[0]);
+				txtclsname.focus();
+				return false;
+			}
+			if ( queuekey.selectedIndex == 0 ) {
+				alert(fields[1]+" : "+errMsg[1]);
+				queuekey.select();
+				return false;
+			}
+			if ( wanVlanID.value != "" ) {
+				var vlanid = parseInt(wanVlanID.value);
+				if ( isNaN(vlanid) == true || vlanid < 0 || vlanid > 4094 || isNumberStr(wanVlanID.value)==false) {
+					alert(fields[2]+" : "+errMsg[0]);
+					return false;
+				}
+			}
+			if (classIfc.selectedIndex == 0 && ethtype.selectedIndex == 0 && srcmacaddr.value == "" && dstmacaddr.value == "") {
+				alert("<%WebStr(qos,CRITERIA_ERR)%>");
+				classIfc.select();
+				return false;
+			}
+			if ( enableTc == '1' ) {
+				var rateNum = parseInt(txtrate.value);
+				if ( txtrate.value != "" &&  (isNaN(rateNum) == true || rateNum < 1 || isNumberStr(txtrate.value)==false) ) {
+					alert(fields[3]+" : "+errMsg[0]);
+					txtrate.focus();
+					return false;
+				}
+			}
+/*Tammy@20100414*/
+			if (classIfc.selectedIndex == 0 || classIfc.selectedIndex == 1)//only for LAN and WAN
+			{
+				ratioNum = parseInt(QOS_RATIO.value);
+				if ( QOS_RATIO.value == "" ) {
+					alert("<%WebStr(qos,RATIO)%> : "+errMsg[1]);
+					QOS_RATIO.focus();
+					return false;
+				}
+				if ( isNaN(ratioNum) == true || ratioNum < 1 || ratioNum > 99|| isNumberStr(QOS_RATIO.value)==false) {
+					alert("<%WebStr(qos,RATIO)%> : "+errMsg[0]);
+					QOS_RATIO.focus();
+					return false;
+				}
+				if( RatioSum.length!=0){
+					if( (classIfc.selectedIndex == 0 && ratioNum+parseInt(RatioSum[0])>100 ) || (classIfc.selectedIndex == 1 && ratioNum+parseInt(RatioSum[1]) >100) )
+					{
+						alert("<%WebStr(qos,RATIO)%> : <%WebStr(qos,ERRQOSBW)%>");
+						QOS_RATIO.focus();
+						return false;
+					}
+				}
+			}
+/*end*/
+			if ( ipoptionlist.selectedIndex == 0 && srcaddr.value != "" ) {
+				var sa = srcaddr.value;
+				var addrParts = sa.split('/');
+				var srErr=0;
+				if ( addrParts.length > 2 || addrParts[0] == "" ) 	srErr=1;
+				if ( ethtype.value == '800' || ethtyperoute.value == '800' ) {
+					if (! isValidIpAddress(addrParts[0])) 	srErr=1;
+					if ( addrParts.length == 2 ) {
+						num = parseInt(addrParts[1]);
+						if ( num <= 0 || num > 32 ) srErr=1;
+					}
+				}else {
+					if (! isValidIpAddress6(addrParts[0])) srErr=1;
+					if ( addrParts.length == 2 ) {
+						num = parseInt(addrParts[1]);
+						if ( num <= 0 || num > 128 ) srErr=1;
+					}
+				}
+				if(srErr==1)
+				{
+					alert(fields[4]+" : "+errMsg[0]);
+					srcaddr.focus();
+					return false;
+				}
+			}
+			if ( srcport.value != "" && !isValidPort(srcport.value) ) {
+				alert(fields[5]+" : "+errMsg[0]);
+				srcport.focus();
+				return false;
+			}
+			if ( dstaddr.value != "" ) {
+				var da = dstaddr.value;
+				var addrParts = da.split('/');
+				var dstErr=0;
+				if ( addrParts.length > 2 ) dstErr=1;
+				if ( addrParts[0] == "" ) dstErr=1;
+				if ( ethtype.value == '800' || ethtyperoute.value == '800' ) {
+					if (! isValidIpAddress(addrParts[0])) dstErr=1;
+					if ( addrParts.length == 2 ) {
+						num = parseInt(addrParts[1]);
+						if ( num <= 0 || num > 32 ) dstErr=1;
+					}
+				}else {
+					if (! isValidIpAddress6(addrParts[0])) dstErr=1;
+					if ( addrParts.length == 2 ) {
+						num = parseInt(addrParts[1]);
+						if ( num <= 0 || num > 128 ) dstErr=1;
+					}
+				}
+				if(dstErr==1)
+				{
+					alert(fields[6]+" : "+errMsg[0]);
+					dstaddr.focus();
+					return false;
+				}
+			}
+			if ( dstport.value != "" &&! isValidPort(dstport.value)) {
+				alert(fields[7]+" : "+errMsg[0]);
+				dstport.focus();
+				return false;
+			}
+			if ( ( srcmacaddr.value != "" && !isValidMacAddress(srcmacaddr.value)) || (srcmacaddr.value == "" && srcmacmask.value != "" ))  
+			{
+				alert(fields[8]+" : "+errMsg[0]);
+				srcmacaddr.focus();
+				return false;
+			}
+			if ( srcmacmask.value != "" && !isValidMacMask(srcmacmask.value)) {
+				alert(fields[9]+" : "+errMsg[0]);
+				srcmacmask.focus();
+				return false;
+			}
+			if ( (dstmacaddr.value != "" && !isValidMacAddress(dstmacaddr.value) ) || (dstmacaddr.value == "" && dstmacmask.value != "" )) 
+			{
+				alert(fields[10]+" : "+errMsg[0]);
+				dstmacaddr.focus();
+				return false;
+			}
+			if ( dstmacmask.value != "" &&! isValidMacMask(dstmacmask.value) ) {
+				alert(fields[11]+" : "+errMsg[0]);
+				dstmacmask.focus();
+				return false;
+			}
+		return true;
+	}
+}
+function btnApply() {
+	var loc = 'qoscls.cmd?action=add';
+	with ( document.forms[0] ) {
+		cleanUnused();
+		// Sanity checks
+		if(!chkFields()) return;	
+		// class name
+		loc += '&clsName=' + encodeUrl(txtclsname.value);
+		// rule order
+		loc += '&rulsOrder=' + rulsorder.options[rulsorder.selectedIndex].value;	
+		// rule status
+		loc += '&rulsEnbl=' + rulsenbl.options[rulsenbl.selectedIndex].value;
+		// physical lan port ifc name
+		val = classIfc.options[classIfc.selectedIndex].value.split('/');
+		loc += '&classIf=' + val[0];
+		// ether type
+		if ( classIfc.options[classIfc.selectedIndex].value == 'Local' ||
+			classIfc.options[classIfc.selectedIndex].value == 'WAN'   ||
+			classIfc.options[classIfc.selectedIndex].value.indexOf('ro') != -1)
+			loc += '&ethertype=' + ethtyperoute.options[ethtyperoute.selectedIndex].value;
+		else if ( ethtype.selectedIndex > 0 )
+			loc += '&ethertype=' + ethtype.options[ethtype.selectedIndex].value;
+		// source MAC address
+		if ( srcmacaddr.value != "" )
+			loc += '&srcMacAddr=' + srcmacaddr.value;
+		// destination MAC address
+		if ( dstmacaddr.value != "" )
+			loc += '&dstMacAddr=' + dstmacaddr.value;
+		// source MAC mask
+		if ( srcmacmask.value != "" )
+			loc += '&srcMacMask=' + srcmacmask.value;
+		// destination MAC mask
+		if ( dstmacmask.value != "" )
+			loc += '&dstMacMask=' + dstmacmask.value;
+		// source address
+		if ( srcaddr.value != "" ) {
+			loc += '&ipoptionlist=' + ipoptionlist.selectedIndex;
+			loc += '&srcAddr=' + srcaddr.value;
+		}
+		// destination address
+		if ( dstaddr.value != "" )
+			loc += '&dstAddr=' + dstaddr.value;
+		// protocol
+		if ( protocol4.selectedIndex > 0 )
+			loc += '&protocol=' + protocol4.options[protocol4.selectedIndex].value;
+		else if ( protocol6.selectedIndex > 0 )
+			loc += '&protocol=' + protocol6.options[protocol6.selectedIndex].value;
+		// source port
+		if ( srcport.value != "" )
+			loc += '&srcPort=' + srcport.value;
+		// destination port
+		if ( dstport.value != "" )
+			loc += '&dstPort=' + dstport.value;
+		// dscp check
+		if ( dscpchk.selectedIndex > 0 )
+			loc += '&dscpCheck=' + dscpchk.options[dscpchk.selectedIndex].value;
+		// 8021p priority check
+		loc += '&vlan8021p=' + vlan8021p.options[vlan8021p.selectedIndex].value;
+		// queuekey
+		loc += '&queuekey=' + queuekey.options[queuekey.selectedIndex].value;
+		// egress interface
+		val = queuekey.options[queuekey.selectedIndex].text.split('&');
+		loc += '&egress=' + val[0];
+		// dscp mark
+		loc += '&dscpMark=' + dscp.options[dscp.selectedIndex].value;
+		// VLAN id tagging
+		if ( wanVlanID.value != "" )
+			loc += '&wanVlanID=' + wanVlanID.value;
+		// WAN 802.1p priority mark
+		loc += '&wanVlan8021p=' + wanVlan8021p.options[wanVlan8021p.selectedIndex].value;
+		// rate control
+		//if ( enableTc == '1' ) {
+		if (classIfc.selectedIndex == 0 || classIfc.selectedIndex == 1){
+			loc += '&rateType=' + getSelect(QOS_RTYPE);
+			loc += '&ratio=' + QOS_RATIO.value;
+		}else{
+			if ( txtrate.value != "" )
+				loc += '&rate=' + txtrate.value;
+		}
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(qos,ADD_QRULE)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td colspan=2 class="title"><%WebStr(qos,CLS_HINT1)%> <br><%WebStr(qos,CLS_HINT2)%><br> <%WebStr(qos,CLS_HINT3)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(qos,CLS_NAME)%></td>
+			<td class="content"><input type="text" size="22" maxlength="15" name="txtclsname"></td></tr>
+		<tr><td class="title"><%WebStr(qos,RULE_ORDER)%></td>
+		<td class="content"><select size="1" name="rulsorder">
+<script language="javascript">
+<!-- hide
+{
+	var order;
+	var queueclsRulsOrder = '<%ejGetOther(qosclsRulsOrder, all)%>';
+	var rules = queueclsRulsOrder.split('|');
+	rules.sort();
+	for (var i = 0; i < rules.length; i++ )
+	{
+		order = i + 1;
+		document.write("  <option value='" + order);
+		if (rules[i] == 'Last') document.write("' selected> ");
+		else document.write(">");
+		document.write(rules[i]+"</option>");
+	}
+}
+// done hiding -->
+</script></select></td></tr>
+		<tr><td class="title"><%WebStr(qos,RULE_STATUS)%></td>
+		<td class="content"><select size="1" name='rulsenbl'>
+			<option value="0"> <%WebStr(comm,DISABLE)%></option>
+			<option value="1"> <%WebStr(comm,ENABLE)%></option>
+		</select></td></tr>
+		<tr><td colspan=2 class="header"><%WebStr(qos,CLS_CRITERIA)%></td></tr>
+		<tr><td colspan=2 class="title"><%WebStr(qos,CLS_CRITERIA_HINT)%></td></tr>
+		<tr><td class="title"><%WebStr(qos,CLS_IF)%></td>
+		<td class="content"><select size='1' name='classIfc' onChange='changeSelect(0)'>
+			<option value='LAN'> <%WebStr(qos,LAN2WAN)%></option>
+			<option value='WAN'> <%WebStr(qos,WAN2LAN)%></option>
+			<option value='Local'> <%WebStr(qos,LOCAL)%></option>
+<script language="javascript">
+<!-- hide
+{
+	var qosIntf = '<%ejGetOther(qosIntf, all)%>';
+	var intf = qosIntf.split('|');
+	intf.sort();
+	for (var i = 0; i < intf.length; i++ ) {
+		if (intf[i] != '') {
+			if (intf[i].indexOf('usb') != -1)
+				continue;      // skip usb ifc
+			document.writeln("  <option value='" + intf[i] + "'>" + intf[i]+"</option>");
+		}
+	}
+}
+// done hiding -->
+</script></select></td></tr>
+		<tr id='etype' style="display:none"><td class="title"><%WebStr(qos,ETH_TYPE)%></td>
+		<td class="content"><select size="1" name='ethtype' onChange='changeSelect(0)'>
+			<option value="-1"  > &nbsp;</option>
+			<option value="800" > IP (0x800)</option>
+			<option value="806" > ARP (0x806)</option>
+			<option value="86DD"> IPv6 (0x86DD)</option>
+			<option value="8863"> PPPoE_DISC (0x8863)</option>
+			<option value="8864"> PPPoE_SES (0x8864)</option>
+			<option value="8865"> 8865 (0x8865)</option>
+			<option value="8866"> 8866 (0x8866)</option>
+			<option value="8100"> 8021Q (0x8100)</option>
+		</select></td></tr>
+		<tr id='etype_route' style="display:none"><td class="title"><%WebStr(qos,ETH_TYPE)%></td>
+		<td class="content"><select size="1" name='ethtyperoute'>
+            <option value="800"> IP (0x800)</option></select></td></tr>
+		<tr id='smac' style="display:none"><td class="title"><%WebStr(qos,SRC_MAC)%></td>
+		<td class="content"><input type="text" size="22" maxlength="17" name="srcmacaddr"></td></tr>
+		<tr id='dmac1' style="display:none"><td class="title"><%WebStr(qos,SRC_MACMASK)%></td>
+		<td class="content"><input type="text" size="22" maxlength='57' name="srcmacmask"></td></tr>
+		<tr id='dmac2' style="display:none"><td class="title"><%WebStr(qos,DST_MAC)%></td>
+		<td class="content"><input type="text" size="22" maxlength="17" name="dstmacaddr"></td></tr>
+		<tr id='dmac3'><td class="title"><%WebStr(qos,DST_MACMASK)%></td>
+		<td class="content"><input type="text" size="22" maxlength='57' name="dstmacmask"></td></tr>
+		<tr id='eth_ip1' style="display:none"><td class="title"><%WebStr(qos,IP_OPTION)%></td>
+		<td class="content"><select size="1" name="ipoptionlist">
+			<option value="0"><%WebStr(qos,SRC_IPMASK)%></option>
+			<option value="1"><%WebStr(qos,VCID)%></option>
+			<option value="2"><%WebStr(qos,UCID)%></option>
+		</select></td></tr>
+		<tr id='eth_ip2' style="display:none"><td class="title"><%WebStr(qos,SRC_IP)%></td>
+		<td class="content"><input type="text" size="22" maxlength='39' name="srcaddr"></td></tr>
+		<tr id='eth_ip3' style="display:none"><td class="title"><%WebStr(qos,DST_IPMASK)%></td>
+		<td class="content"><input type="text" size="22" maxlength='39' name="dstaddr"></td></tr>
+		<tr id='dscpcheck' style="display:none"><td class="title"><%WebStr(qos,DSCP)%></td>
+		<td class="content"><select size="1" name="dscpchk">
+			<option value="-1"> &nbsp;</option>
+			<option value="0">default</option>
+			<option value="56"> AF13(001110)</option>
+			<option value="48"> AF12(001100)</option>
+			<option value="40"> AF11(001010)</option>
+			<option value="32"> CS1(001000)</option>
+			<option value="88"> AF23(010110)</option>
+			<option value="80"> AF22(010100)</option>
+			<option value="72"> AF21(010010)</option>
+			<option value="64"> CS2(010000)</option>
+			<option value="120"> AF33(011110)</option>
+			<option value="112"> AF32(011100)</option>
+			<option value="104"> AF31(011010)</option>
+			<option value="96"> CS3(011000)</option>
+			<option value="152"> AF43(100110)</option>
+			<option value="144"> AF42(100100)</option>
+			<option value="136"> AF41(100010)</option>
+			<option value="128"> CS4(100000)</option>
+			<option value="184"> EF(101110)</option>
+			<option value="160"> CS5(101000)</option>
+			<option value="192"> CS6(110000)</option>
+			<option value="224"> CS7(111000)</option>
+		</select></td></tr>
+		<tr id='proto4' style="display:none"><td class="title"><%WebStr(comm,PROTOCOL)%></td>
+		<td class="content"><select size="1" name="protocol4" onChange='changeSelect(0)'>
+			<option value="-1"> &nbsp;</option>
+			<option value="6"> TCP</option>
+			<option value="17"> UDP</option>
+			<option value="1"> ICMP</option>
+			<option value="2"> IGMP</option>
+		</select></td></tr>
+		<tr id='proto6' style="display:none"><td class="title"><%WebStr(comm,PROTOCOL)%></td>
+		<td class="content"><select size="1" name="protocol6" onChange='changeSelect(0)'>
+			<option value="-1"> &nbsp;</option>
+			<option value="6"> TCP</option>
+			<option value="17"> UDP</option>
+			<option value="58"> ICMPv6</option>
+		</select></td></tr>
+		<tr id='tcp_udp_port1' style="display:none"><td class="title"><%WebStr(qos,UDPTCP_SPORT)%></td>
+		<td class="content"><input type="text" size="22" maxlength=11 name="srcport"></td></tr>
+		<tr id='tcp_udp_port2' style="display:none"><td class="title"><%WebStr(qos,UDPTCP_DPORT)%></td>
+		<td class="content"><input type="text" size="22" maxlength=11 name="dstport"></td></tr>
+		<tr id='eth_8021q' style="display:none"><td class="title"><%WebStr(qos,8021P)%></td>
+		<td class="content"><select size="1" name="vlan8021p">
+			<option value="-1"> &nbsp;</option>
+			<option value="0"> 0</option>
+			<option value="1"> 1</option>
+			<option value="2"> 2</option>
+			<option value="3"> 3</option>
+			<option value="4"> 4</option>
+			<option value="5"> 5</option>
+			<option value="6"> 6</option>
+			<option value="7"> 7</option>
+		</select></td></tr>
+		<tr><td colspan=2 class="header"><%WebStr(qos,CLS_RESULT)%></td></tr>
+		<tr><td colspan=2 class="title"><%WebStr(qos,RESULT_HINT1)%><%WebStr(qos,RESULT_HINT2)%></td></tr>
+		<tr><td class="title"><%WebStr(qos,ASSIGN_QUEUE)%></td>
+		<td class="content"><select size="1" name="queuekey">
+            <option value="-1"> &nbsp;</option>
+<script language="javascript">
+<!-- hide
+{
+//queues.sort();
+	for ( var i = 0; i < queues.length; i++ ) {
+		if (queues[i] != '') {
+			var info = queues[i].split(':');
+			document.writeln("  <option value='" + info[0] + "'>" + info[1]+"</option>");
+		}
+	}
+}
+// done hiding -->
+</script></select></td></tr>
+		<tr><td class="title"><%WebStr(qos,MARK_DSCP)%></td>
+		<td class="content"><select size="1" name="dscp">
+			<option value="-1" selected> &nbsp;</option>
+			<option value="-2"> <%WebStr(qos,AUTO_MARK)%></option>
+			<option value="0"> <%WebStr(qos,DEFAULT)%></option>
+			<option value="56"> AF13(001110)</option>
+			<option value="48"> AF12(001100)</option>
+			<option value="40"> AF11(001010)</option>
+			<option value="32"> CS1(001000)</option>
+			<option value="88"> AF23(010110)</option>
+			<option value="80"> AF22(010100)</option>
+			<option value="72"> AF21(010010)</option>
+			<option value="64"> CS2(010000)</option>
+			<option value="120"> AF33(011110)</option>
+			<option value="112"> AF32(011100)</option>
+			<option value="104"> AF31(011010)</option>
+			<option value="96"> CS3(011000)</option>
+			<option value="152"> AF43(100110)</option>
+			<option value="144"> AF42(100100)</option>
+			<option value="136"> AF41(100010)</option>
+			<option value="128"> CS4(100000)</option>
+			<option value="184"> EF(101110)</option>
+			<option value="160"> CS5(101000)</option>
+			<option value="192"> CS6(110000)</option>
+			<option value="224"> CS7(111000)</option>
+		</select></td></tr>
+		<tr id='mark_8021p' style="display:none"><td class="title"><%WebStr(qos,MARK_8021P)%></td>
+		<td class="content"><select size="1" name="wanVlan8021p">
+			<option value="-1" selected> &nbsp;</option>
+			<option value="0"> 0</option>
+			<option value="1"> 1</option>
+			<option value="2"> 2</option>
+			<option value="3"> 3</option>
+			<option value="4"> 4</option>
+			<option value="5"> 5</option>
+			<option value="6"> 6</option>
+			<option value="7"> 7</option>
+		</select></td></tr>
+		<tr id='tag_vlanid' style="display:none"><td class="title"><%WebStr(qos,TAG_VID)%></td>
+		<td class="content"><input type="text" size='6' maxlength="4" name="wanVlanID">&nbsp;[0-4094]</td></tr>
+		<tr id='rate_control'><td class="title"><%WebStr(qos,SET_RATE)%></td>
+		<td class="content"><input type='text' size='6' maxlength="4" name='txtrate'></td></tr>
+		<tr id='ipQos1' style="display:none"><td class="title"><%WebStr(qos,RATE_TYPE)%></td>
+		<td class="content"><select id="idtype" name="QOS_RTYPE" onchange="chgType();">
+									<option value="0"><%WebStr(qos,LIMITED)%></option>
+									<option value="1" selected><%WebStr(qos,GUARANTEED)%></option>
+							</select>
+		</td></tr>
+		<tr id='ipQos2' style="display:none"><td class="title"><%WebStr(qos,RATIO)%></td>
+		<td class="content"><input type="text" class="txt" id="idratio" name="QOS_RATIO" size="3" maxlength="2">%</td></tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(qos.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

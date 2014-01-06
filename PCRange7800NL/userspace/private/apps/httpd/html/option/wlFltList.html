@@ -1,0 +1,180 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(wlan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var Entries=[<%WlMacFltGet()%>];
+var supportMbss='<%ejGetWl(wlSupportMbss)%>';
+var idx='<%ejGetWl(wlSsidIdx)%>';
+var enbl = '<%ejGetWl(wlEnbl_wl0v0)%>';
+var mode='<%ejGetWl(wlFltMacMode)%>';
+var wlRefresh = '<%ejGetWl(wlRefresh)%>';
+var syncNvram = '<%ejGetWl(wlSyncNvram)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>'
+if ( wlRefresh == '1' ) {
+	var loc = 'wlmacflt.cmd?action=refresh';
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function showList()
+{
+	for(var i=0; i<Entries.length; i++)
+	{
+		document.write("<tr><td class=listrow>"+Entries[i]+"</td>");
+		document.write("<td class=listrow><input type='checkbox' name='rml' value="+Entries[i]+" onclick=selDel()></td></tr>");
+	}
+}
+function selDel()
+{
+	document.getElementById("bCancel").disabled=false;
+}
+function pageRefresh() {
+	with ( document.forms[0] ) {
+		var loc = 'wlmacflt.cmd?action=refresh';
+		loc += '&sessionKey=' + sessionKey;
+		if(supportMbss=='1')		loc +=  submitSelect(wlSsidIdx);
+		var code = 'location="' + loc + '"';
+		eval(code);
+	}
+}
+function frmLoad() {
+	with ( document.forms[0] ) {
+		if(supportMbss=="1")	
+		{	
+			document.getElementById("ssid").style.display="";
+			setSelect(wlSsidIdx,idx);
+		}
+		if ( mode == 'disabled' )
+			wlFltMacMode[0].checked = true;
+		else if (mode== 'allow' )
+			wlFltMacMode[1].checked = true;
+		else
+			wlFltMacMode[2].checked = true;
+		if(Entries.length>=32)
+			document.getElementById("bApply").disabled=true;
+		document.getElementById("bCancel").disabled=true;
+	}
+}
+function addClick() {
+	if (enbl== '0' ) {
+		alert("<%WebStr(wlan,MACFLT_ADDERR)%>");
+		return;
+	}
+	var loc = 'wlmacflt.html';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function removeClick(rml) {
+	if ( enbl == '0' ) {
+		alert("<%WebStr(wlan,MACFLT_RMERR)%>");
+		return;
+	}
+	if( !chkSelected(rml))
+	{
+	 	alert("<%WebStr(comm,ERRNOEDIT)%>");
+		return;
+	}
+	var lst = '';
+	if (rml.length > 0)
+		for (i = 0; i < rml.length; i++) {
+			if ( rml[i].checked == true )
+				lst += rml[i].value + ', ';
+		}
+	else if ( rml.checked == true )
+		lst = rml.value;
+	var loc = 'wlmacflt.cmd?action=remove&rmLst=' + lst;	
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function chkSelected(rml)
+{
+	if (rml.length > 0){
+		for (i = 0; i < rml.length; i++) {
+			if ( rml[i].checked == true )
+				return true;
+		}
+	}else if ( rml.checked == true )
+		return true;
+	return false;
+}
+function modeClick() {
+	var loc = 'wlmacflt.cmd?action=save';
+	if ( enbl == '0' ) {
+		alert("<%WebStr(wlan,MACFLT_CHGERR)%>");
+		return;
+	}
+	with ( document.forms[0] ) {
+		if ( wlFltMacMode[0].checked == true )
+			loc += '&wlFltMacMode=disabled';
+		else if ( wlFltMacMode[1].checked == true )
+			loc += '&wlFltMacMode=allow';
+		else
+			loc += '&wlFltMacMode=deny';
+	}
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onload=frmLoad()>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_WIRELESS_SETTINGS)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_WL_MAC_FILTERING)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td colspan=6 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr id="ssid" style="display:none"><td class=title width=35%><%WebStr(wlan,SELECT_SSID)%></td>
+			<td class=content><select name='wlSsidIdx' onChange='pageRefresh()' >
+			<%ejGetWl(wlSsidList)%></select></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(wlan,MAC_RESTRICTMODE)%></td>
+			<td class="content"><input type='radio' name='wlFltMacMode' onClick='modeClick()'><%WebStr(comm,DISABLE)%>
+			<input type='radio' name='wlFltMacMode' onClick='modeClick()'><%WebStr(wlan,ALLOW)%>
+			<input type='radio' name='wlFltMacMode' onClick='modeClick()'><%WebStr(wlan,DENY)%></td></tr>
+		<tr>
+			<td class="listhead"><%WebStr(comm,MAC_ADDR)%></td>
+			<td class="listhead"><%WebStr(comm,REMOVE)%></td>
+		</tr>
+<script language="javascript">
+<!-- hide
+showList();
+// done hiding -->
+</script>
+		<tr><td colspan="6" class="btnline">
+			<input type="button" name="bApply" id="bApply" value="<%WebStr(comm,ADD)%>" onClick="addClick()">&nbsp;
+			<input type="button" name="bCancel" id="bCancel" value="<%WebStr(comm,REMOVE)%>" onclick="removeClick(this.form.rml)"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(wlan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

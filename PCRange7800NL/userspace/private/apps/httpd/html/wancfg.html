@@ -1,0 +1,434 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(wan.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+var dhcpClnt = '<%ejGet(enblDhcpClnt)%>';
+var addr = '<%ejGet(wanIpAddress)%>';
+var mask = '<%ejGet(wanSubnetMask)%>';
+var gateway = '<%ejGet(wanIntfGateway)%>';
+
+var enblIP6 = '<%ejGet(enblv6)%>';
+var addr6Type = '<%ejGet(wanAddr6Type)%>'; if ( addr6Type == '&nbsp' ) addr6Type = '';
+var addr6 = '<%ejGet(wanAddr6)%>'; if (addr6 == '&nbsp') addr6 = '';
+var gtwy6 = '<%ejGet(wanGtwy6)%>'; if (gtwy6 == '&nbsp') gtwy6 = '';
+
+var op60vid = '<%ejGet(dhcpcOp60VID)%>';
+var op61duid = '<%ejGet(dhcpcOp61DUID)%>';
+var op61iaid = '<%ejGet(dhcpcOp61IAID)%>';
+var op125 = '<%ejGet(dhcpcOp125Enabled)%>';
+/*For now just set to disabled.  This is for later use 
+#var enblAdvDmz = '<%ejGet(enblAdvDmz)%>';
+*/
+var enblAdvDmz = '0'; 
+var serviceId= '<%ejGet(serviceId)%>';
+var dnsAuto='<%ejGet(v_autodns)%>';
+var dnsPri='<%ejGet(v_dnsPri)%>';
+var dnsSec='<%ejGet(v_dnsSec)%>';
+
+function disableWanInfo() {
+   with ( document.forms[0] ) {
+      wanIpAddress.disabled = 1;
+      wanIpAddress.value = '';
+      wanSubnetMask.disabled = 1;
+      wanSubnetMask.value = '';
+      wanIntfGateway.disabled = 1;
+      wanIntfGateway.value = '';
+
+	  dhcpcOp60VID.disabled = 0;
+	  dhcpcOp60VID.value = op60vid;
+	  dhcpcOp61DUID.disabled = 0;
+	  dhcpcOp61DUID.value = op61duid;
+	  dhcpcOp61IAID.disabled = 0;
+	  dhcpcOp61IAID.value = op61iaid;
+	  dhcpcOp125[0].disabled = 0;
+	  dhcpcOp125[1].disabled = 0;
+      if ( op125 == '0' ) {
+         dhcpcOp125[0].checked = true;
+      } else {
+         dhcpcOp125[1].checked = true;
+      }
+	  
+   }
+}
+
+function enableWanInfo() {
+   with ( document.forms[0] ) {
+      wanIpAddress.disabled = 0;
+      wanIpAddress.value = (addr != "0.0.0.0" ? addr : "");
+      wanSubnetMask.disabled = 0;
+      wanSubnetMask.value = (mask != "0.0.0.0" ? mask : "");
+      wanIntfGateway.disabled = 0
+      wanIntfGateway.value = (gateway != "0.0.0.0" ? gateway : "");
+
+	  dhcpcOp60VID.disabled = 1;
+	  dhcpcOp60VID.value = '';
+	  dhcpcOp61DUID.disabled = 1;
+	  dhcpcOp61DUID.value = '';
+	  dhcpcOp61IAID.disabled = 1;
+	  dhcpcOp61IAID.value = '';
+	  dhcpcOp125[0].disabled = 1;
+	  dhcpcOp125[1].disabled = 1;
+   }
+}
+
+function dnsAutoFunc (fg)
+{
+	with ( document.forms[0] ) {
+		var chk=enableAuto.checked;
+		enableAuto.checked = (chk == true && fg == true) ? true : false;
+		enableAuto.disabled = (fg == false) ? true : false;
+		dnsPrimary.disabled=(enableAuto.checked == true) ? true : false;
+		dnsSecondary.disabled=(enableAuto.checked == true) ? true : false;
+	} 
+}
+function wanClick() {
+   with ( document.forms[0] ) {
+      if ( wan.checked == true )
+         disableWanInfo();
+      else
+         enableWanInfo();
+      dnsAutoFunc (wan.checked);
+   }
+}
+
+function disableWan6Info() {
+   with ( document.forms[0] ) {
+      wanAddress6.disabled = 1;
+      wanAddress6.value = addr6;
+      wanGateway6.value = gtwy6;
+   }
+}
+
+function enableWan6Info() {
+   with ( document.forms[0] ) {
+      wanAddress6.disabled = 0;
+      wanAddress6.value = addr6;
+      wanGateway6.value = gtwy6;
+   }
+}
+
+function wan6Click() {
+   with ( document.forms[0] ) {
+      if ( wan6.checked == true )
+         disableWan6Info();
+      else
+         enableWan6Info();
+   }
+}
+
+function hideWan6Info(hide) {
+	for (var i=0; i<3; i++) {
+		document.getElementById("wan6Info"+i).style.display = (hide == 1) ? "none" : "";
+	}
+
+   if (hide == 0) {
+      wan6Click();
+   }
+}
+
+function frmLoad() {
+   with ( document.forms[0] ) {
+   	
+      if (enblAdvDmz == 1) {
+	    var enblAdvancedDmz = '<%ejGet(enableAdvancedDmz)%>';
+  	    var nonDmzIpAddr = '<%ejGet(nonDmzIpAddress)%>';
+	    var nonDmzIpMsk = '<%ejGet(nonDmzIpMask)%>';
+        if ( enblAdvancedDmz == '1' )
+          enableAdvancedDmz.checked = true;
+        else
+          enableAdvancedDmz.checked = false;	
+        nonDmzIpAddress.value = nonDmzIpAddr;
+        nonDmzIpMask.value = nonDmzIpMsk;		 
+      }
+	
+      if ( dhcpClnt == '1' ) {
+         wan.checked = true;
+         disableWanInfo();
+      } else {
+         wan.checked = false;
+         enableWanInfo();
+      }
+      
+		if (serviceId == '1') {
+			enableAuto.checked = (dnsAuto == "0") ? false : true;
+			dnsPrimary.value = dnsPri;
+			dnsSecondary.value = dnsSec;
+			dnsPrimary.disabled = (dnsAuto == "0") ? false : true;
+			dnsSecondary.disabled = (dnsAuto == "0") ? false : true;
+			dnsAutoFunc(wan.checked);
+		} else {
+			enableAuto.checked = true;
+			dnsPrimary.disabled = true;
+			dnsSecondary.disabled = true;
+		}
+      if ( enblIP6 == '1' ) {
+         if (addr6Type == 'Static')
+            wan6.checked = false;
+         else
+            wan6.checked = true;
+         hideWan6Info(0);
+      } else {
+         hideWan6Info(1);
+      }
+   }
+}
+
+function btnNext() {
+	var loc = 'natcfg2.cgi?';
+	var strInvalid="<%WebStr(comm,INVALID)%>";
+
+	with ( document.forms[0] ) {
+		// wan IP address
+		if ( wan.checked == true ) {
+			loc += 'enblDhcpClnt=1';   // auto WAN address
+			if (enblAdvDmz == 1) {
+				// validate non DMZ IP address and Netmask
+				if ( enableAdvancedDmz.checked == true ) {
+					if ( isValidIpAddress(nonDmzIpAddress.value) == false ) {
+						alert("<%WebStr(wan,FN_WAN_NON_DMZ_IP)%>: "+strInvalid);
+						nonDmzIpAddress.focus();
+						return;
+					}
+					if ( isValidSubnetMask(nonDmzIpMask.value) == false) {
+						alert("<%WebStr(wan,FN_WAN_NON_DMZ_MASK)%>: "+strInvalid);
+						nonDmzIpMask.focus();
+						return;
+					}
+					loc += '&enableAdvancedDmz=1';
+					loc += '&nonDmzIpAddress=' + nonDmzIpAddress.value;
+					loc += '&nonDmzIpMask=' + nonDmzIpMask.value;
+				} else {
+					loc += '&enableAdvancedDmz=0';
+				}
+			}
+			loc += '&dhcpcOp60VID=' + dhcpcOp60VID.value;
+			if (dhcpcOp61IAID.value.length != 0 && (dhcpcOp61IAID.value.length != 8 || isValidKey(dhcpcOp61IAID.value,4) == false)) {
+				alert("Option 61 IAID: <%WebStr(wan,ERR_WAN_OPT61_IAID)%>");
+				dhcpcOp61IAID.focus();
+				return;
+			}
+			loc += '&dhcpcOp61IAID=' + dhcpcOp61IAID.value;
+			loc += '&dhcpcOp61DUID=' + dhcpcOp61DUID.value;
+			if ((dhcpcOp61DUID.value.length != 0 && dhcpcOp61IAID.value.length == 0) || 
+			(dhcpcOp61DUID.value.length == 0 && dhcpcOp61IAID.value.length != 0)) {
+				alert("<%WebStr(wan,ERR_WAN_OPT61_NEED_ONE)%>");
+				if (dhcpcOp61IAID.value.length == 0)   dhcpcOp61IAID.focus();
+				else dhcpcOp61DUID.focus();
+				return;
+			}
+
+			if ( dhcpcOp125[0].checked == true )
+				loc += '&dhcpcOp125Enabled=0';
+			else
+				loc += '&dhcpcOp125Enabled=1';
+		} else {
+			loc += 'enblDhcpClnt=0';   // static WAN address
+			if ( isValidIpAddress(wanIpAddress.value) == false ) {
+				alert("<%WebStr(wan,FN_WAN_WAN_IP)%>: "+strInvalid);
+				wanIpAddress.focus();
+				return;
+			}
+			loc += '&wanIpAddress=' + wanIpAddress.value;
+			if ( isValidSubnetMask(wanSubnetMask.value) == false) {
+				alert("<%WebStr(wan,FN_WAN_WAN_MASK)%>: "+strInvalid);
+				wanSubnetMask.focus();
+				return;
+			}
+			loc += '&wanSubnetMask=' + wanSubnetMask.value;
+
+			if ( isValidIpAddress(wanIntfGateway.value) == false ) {
+				alert("<%WebStr(wan,FN_WAN_WAN_GW)%>: "+strInvalid);
+				wanIntfGateway.focus();
+				return;
+			}
+			loc += '&wanIntfGateway=' + wanIntfGateway.value;
+		}
+
+		// DNS
+		if (enableAuto.checked == false) {
+			if ( isValidIpAddress(dnsPrimary.value) == false ) {
+				alert("<%WebStr(wan,FN_WAN_PRI)%>: "+strInvalid);
+				dnsPrimary.focus();
+				return;
+			}
+			if (dnsSecondary.value != "" && isValidIpAddress(dnsSecondary.value) == false ) {
+				alert("<%WebStr(wan,FN_WAN_2ND)%>: "+strInvalid);
+				dnsSecondary.focus();
+				return;
+			}
+			loc += '&v_dnsPri='+dnsPrimary.value;
+			loc += '&v_dnsSec='+dnsSecondary.value;
+		}
+		loc += '&v_autodns='+((enableAuto.checked == true) ? 1 : 0);
+		
+		if ( enblIP6 == '1' ) {
+			var wanIp6Str="<%WebStr(wan,FN_WAN_WAN_IP6)%>";
+			if ( wan6.checked == true )
+				loc += '&wanAddr6Type=DHCP';   // auto WAN address
+			else {
+				var errfg = 0;
+				loc += '&wanAddr6Type=Static';   // static WAN address
+				if (wanAddress6.value == '') {
+					alert("<%WebStr(wan,FN_WAN_WAN_IP6)%>: <%WebStr(comm,ERR_EMPTY)%>");
+					wanAddress6.focus();
+					return;
+				}
+				if (isValidIpAddress6(wanAddress6.value) == false) {
+					errfg = 1;
+				} else {
+					if (wanAddress6.value.indexOf('/') == -1) {
+						//use default prefix length 64.
+						wanAddress6.value = wanAddress6.value + '/64';
+					} else {
+						var chk_prefix=wanAddress6.value.split('/');
+						if (isNumberStr(chk_prefix[1]) == false) errfg = 1;
+						else {
+							var n=parseInt(chk_prefix[1]);
+							if (n < 1 || n > 64) errfg = 1;
+						}
+					}
+				}
+				if (errfg == 1) {
+					alert("<%WebStr(wan,FN_WAN_WAN_IP6)%>: "+strInvalid);
+					wanAddress6.focus();
+					return;
+				}
+				loc += '&wanAddr6=' + wanAddress6.value;
+			}
+
+			if (wanGateway6.value == '') {
+				alert("<%WebStr(wan,FN_WAN_NEXTHOP_IP6)%>: <%WebStr(comm,ERR_EMPTY)%>");
+				wanGateway6.focus();
+				return;
+			}
+			if (wanGateway6.value.indexOf('/') != -1) {
+				alert("<%WebStr(wan,FN_WAN_NEXTHOP_IP6)%>: <%WebStr(wan,ERR_WAN_IP6_NEXTHOP)%>");
+				wanGateway6.focus();
+				return;
+			}
+			if (isValidIpAddress6(wanGateway6.value) == false) {
+				alert("<%WebStr(wan,FN_WAN_NEXTHOP_IP6)%>: "+strInvalid);
+				wanGateway6.focus();
+				return;
+			}
+			loc += '&wanGtwy6=' + wanGateway6.value;
+		}
+	}
+
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+function advancedDmzClick(cb) {
+   with ( document.forms[0] ) {
+     setDisable(nonDmzIpAddress, cb.checked != true);
+     setDisable(nonDmzIpMask, cb.checked != true);
+   }
+}
+
+function btnBack() {
+   var loc = 'wanifc.cmd';
+
+	//if (serviceId == '1')
+		//loc = 'wancfg.cmd';
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+
+function dnsClick()
+{
+	with ( document.forms[0] ) {
+		var fg = enableAuto.checked;
+		dnsPrimary.disabled=fg;
+		dnsSecondary.disabled=fg;
+	} 
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr><td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td></tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_WAN)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(wan,FN_WAN_DHCP_IP)%></td>
+<td class="content"><input type="checkbox" name="wan" onClick='wanClick()'><%WebStr(comm,ENABLE)%></td></tr>
+<tr><td class="titsub1">Option 60 Vendor ID</td>
+<td class="content"><input type='text' name='dhcpcOp60VID' size='30' maxlength='255'></td></tr>
+<tr><td class="titsub1">Option 61 IAID</td>
+<td class="content"><input type='text' name='dhcpcOp61IAID' size='30'>&nbsp;<%WebStr(wan,HEX_8)%></td></tr>
+<tr><td class="titsub1">Option 61 DUID</td>
+<td class="content"><input type='text' name='dhcpcOp61DUID' size='30' maxlength='255'>&nbsp;<%WebStr(wan,HEX)%></td></tr>
+<tr><td class="titsub1">Option 125</td>
+<td class="content"><input type="radio" name="dhcpcOp125"><%WebStr(comm,DISABLE)%>&nbsp;&nbsp;
+<input type="radio" name="dhcpcOp125"><%WebStr(comm,ENABLE)%></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_WAN_IP)%></td>
+<td class="content"><input type='text' name='wanIpAddress' size='30' maxlength="15"></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_WAN_MASK)%></td>
+<td class="content"><input type='text' name='wanSubnetMask' maxlength="15" size='30'></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_WAN_GW)%></td>
+<td class="content"><input type='text' name='wanIntfGateway' maxlength="15" size='30'></td></tr>
+<script language="javascript">
+<!-- hide
+if (enblAdvDmz == '1') {
+	document.write("<tr id='advancedDmzInfo'><td class='title'><%WebStr(wan,FN_WAN_ADV_DMZ)%></td>");
+	document.write("<td class='content'><input type='checkbox' name='enableAdvancedDmz' onClick='advancedDmzClick(this)'><%WebStr(comm,ENABLE)%></td></tr>");
+	
+	document.write("<tr id='nonDmzIpAddressInfo1'><td class='titsub1'><%WebStr(wan,FN_WAN_NON_DMZ_IP)%></td>");
+	document.write("<td class='content'><input type='text' name='nonDmzIpAddress' maxlength='15' size='30'></td></tr>");
+	document.write("<tr id='nonDmzIpAddressInfo2'><td class='titsub1'><%WebStr(wan,FN_WAN_NON_DMZ_MASK)%></td>");
+	document.write("<td class='content'><input type='text' name='nonDmzIpMask' maxlength='15' size='30'></td></tr>");
+}
+// done hiding -->
+</script>
+
+<tr><td class="title"><%WebStr(wan,FN_DNSOBT)%></td>
+<td class="content"><input type="checkbox" name="enableAuto" onclick="dnsClick()"><%WebStr(wan,DNS_AUTO)%></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_PRI)%></td>
+<td class="content"><input type="text" size=17 maxlength="15" name="dnsPrimary"></td></tr>
+<tr><td class="titsub1"><%WebStr(wan,FN_WAN_2ND)%></td>
+<td class="content"><input type="text" size=17 maxlength="15" name="dnsSecondary"></td></tr>
+
+<tr id='wan6Info0'><td class="title" width="35%"><%WebStr(wan,FN_WAN_DHCP_IP6)%></td>
+<td class="content"><input type="checkbox" name="wan6" onClick='wan6Click()'><%WebStr(comm,ENABLE)%></td></tr>
+<tr id='wan6Info1'><td class="titsub1"><%WebStr(wan,FN_WAN_WAN_IP6)%></td>
+<td class="content"><input type='text' name='wanAddress6' size='30'></td></tr>
+<tr id='wan6Info2'><td class="titsub1"><%WebStr(wan,FN_WAN_NEXTHOP_IP6)%></td>
+<td class="content"><input type='text' name='wanGateway6' size='30'></td></tr>
+
+<tr><td colspan="2" class="btnline">
+<input type="button" name="bBack" value="<%WebStr(comm,BACK)%>" onClick="btnBack()">&nbsp;
+<input type="button" name="bNext" value="<%WebStr(comm,NEXT)%>" onclick="btnNext();"></td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(wan,_c)%>
+<%WebStr(comm,_c)%>
+<%WebStr(cus,_c)%>
+

@@ -1,0 +1,93 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(mgmt.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var errMsg=["<% WebStr(comm,INVALID)%>", "<% WebStr(comm,ERREMPTYFLD)%>"];
+var Entries=[<%RMAGet()%>];
+function showRMA()
+{
+	with ( document.forms[0] ) {
+		var flag=(enable[0].checked)?false:true;
+		allowIpAddress.disabled=flag;
+	}
+}
+function btnApply() {
+	var loc = 'remoteAccess.cmd?';
+	with ( document.forms[0] ) {
+		if (enable[0].checked == true)
+		{
+			loc += 'enableService=1';
+			if( !isValidHostIp(allowIpAddress.value) )
+			{
+				alert("<%WebStr(mgmt,RMA_IP)%> : "+errMsg[0]);
+				allowIpAddress.focus();
+				return;
+			}
+			loc += '&allowIpAddress=' + allowIpAddress.value;
+		}else loc += 'enableService=0';
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function frmLoad() {
+	with ( document.forms[0] ) {
+		enable[0].checked=(Entries[0]=="1")?true:false;
+		allowIpAddress.value=(Entries[1]=="(null)")?"":Entries[1];
+		showRMA();
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_MANAGEMENT); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(menu,MENU_REMOTE_ACC) %></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><% WebStr(menu,MENU_REMOTE_ACC); %></td>
+			<td class="content"><input type='radio' name='enable' onClick='showRMA()'><%WebStr(comm,ENABLE)%>&nbsp;&nbsp;
+			<input type='radio' name='enable' onClick='showRMA()' checked><%WebStr(comm,DISABLE)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,RMA_IP)%></td>
+			<td class="content"><input type='text' name='allowIpAddress' size='20' maxlength='15'></td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(mgmt.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

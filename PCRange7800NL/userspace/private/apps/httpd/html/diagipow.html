@@ -1,0 +1,110 @@
+<%WebStr(cus.sr,_o);%>
+<%WebStr(info.sr,_o);%>
+<%WebStr(menu.sr,_o);%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="portName.js"></script>
+</head>
+<body class="main" bgcolor="#ffffff" link="#3300cc" alink="#ff0000" vlink="#990066">
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr>
+<td class="mframe">
+		<table class="titletbl" cellpadding="3" cellspacing="0" width="100%">
+		<tr>
+		<td class="titletbl1"></td>
+		<td class="titletbl2 capstr"><%WebStr(menu,MENU_DIAGNOSTICS)%> --- <%ejGetOther(diagInfo, serviceName)%></td>
+		<td class="titletbl3"></td>
+		</tr>
+		</table>
+</td>
+</tr>
+<tr>
+		<td class="mframe">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td class="cfgframe" width="50%" style="vertical-align: top" valign="top">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr><td class="cfgframe">
+<!-- Begin LAN diag Info -->
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+		<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(diag,TEST_LAN)%></td></tr>
+		<tr><td class="sframe">
+				<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<script language="javascript">
+<!-- hide
+<%ejGet(enetDiag)%>
+if ('<%ejGet(enblUsb)%>' == '1') {
+	document.write("<tr><td class='title'><%WebStr(diag,TEST_USB)%></td>");
+	document.write("<td class='content'><B><%ejGetOther(diagnostic, 13)%></B></td>");
+	document.write("<td class='content'><A href='hlpusbconn.html'><%WebStr(diag,HELP)%></A></td></tr>"");
+}
+if ('<%ejGet(enblWireless)%>' == '1') {
+	document.write("<tr><td class='title'><%WebStr(diag,TEST_WLAN)%></td>");
+	document.write("<td class='content'><B><%ejGetOther(diagnostic, 17)%></B></td>");
+	document.write("<td class='content'><A href='hlpwlconn.html'><%WebStr(diag,HELP)%></A></td></tr>");
+}
+// done hiding -->
+</script>
+				</table>
+		</td>
+		</tr>
+	<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(diag,TEST_ISP)%></td></tr>
+		<tr><td class="sframe">
+				<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr>
+				<td class='title' width='35%'><%WebStr(diag,TEST_GW)%></td>
+				<td class='content' width='25%'><B><%ejGetOther(diagnostic, 9)%></B></td>
+				<td class='content'><A href='hlppnggw.html'><%WebStr(diag,HELP)%></A></td>
+				</tr>
+				<tr>
+				<td class='title'><%WebStr(diag,TEST_DNS)%></td>
+				<td class='content'><B><%ejGetOther(diagnostic, 10)%></B></td>
+				<td class='content'><A href='hlppngdns.html'><%WebStr(diag,HELP)%></A></td>
+				</tr>
+		<tr><td class="btnline" colspan=3>
+<script language="javascript">
+<!-- hide
+var diagPrev = '<%ejGetOther(diagInfo, diagPrev)%>';
+var diagNext = '<%ejGetOther(diagInfo, diagNext)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var GO_PREV = 0;
+var GO_NEXT = 1;
+function btnGo(where) {
+	var loc = 'diag.cgi?diagCurr=';
+	if ( where == GO_PREV )
+		loc += diagPrev;
+	else
+		loc += diagNext;
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function btnTest(type) {
+	var loc = 'diag.cgi?';
+	loc += 'diagType=' + type;
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+if ( diagPrev != '' )
+document.writeln("<input type='button' onClick='btnGo(GO_PREV)' value='<%WebStr(diag,PREV_CONN)%>'>");
+if ( diagNext != '' )
+document.writeln("<input type='button' onClick='btnGo(GO_NEXT)' value='<%WebStr(diag,NXT_CONN)%>'>");
+// done hiding -->
+</script>
+		<input type='button' onClick="btnTest('f5')" value='<%WebStr(diag,TEST)%>'>
+				<input type='button' onClick="btnTest('f4')" value='<%WebStr(diag,TEST_F4)%>'>
+				</table>
+		</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+<%WebStr(diag.sr,_c);%>
+<%WebStr(cus.sr,_c);%>
+<%WebStr(menu.sr,_c);%>
+
+

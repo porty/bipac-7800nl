@@ -1,0 +1,98 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(usb.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var errMsg=["<% WebStr(comm,INVALID)%>", "<% WebStr(comm,ERREMPTYFLD)%>"];
+function showInfo()
+{
+	with ( document.forms[0] ) {
+		var flag=(ippEnabled[0].checked)?false:true;
+		ippName.disabled=flag;
+		ippMake.disabled=flag;
+	}
+}
+function btnApply() {
+	 var loc = 'ippcfg.cmd?action=savapply&ippEnabled=';
+	with ( document.forms[0] ) {
+		if (ippEnabled[0].checked == true){
+			loc += '1';
+			if (ippName.value == '' || ippMake.value == '')
+			{
+				alert(errMsg[1]);
+				if(ippName.value == '') ippName.focus();
+				else if(ippMake.value == '') ippMake.focus();
+				return;
+			}
+			loc += '&ippName=' + ippName.value;
+			loc += '&ippMake=' + ippMake.value;
+		}else	loc += '0';
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function frmLoad() {
+with ( document.forms[0] ) {
+	var enable = "<%ejGetOther(sysInfo, ippEnabled)%>";
+	if (enable == 1)	ippEnabled[0].checked = true;
+	else	ippEnabled[1].checked = true;
+	showInfo();
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_ADVANCED_SETUP); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(menu,MENU_IPP) %></td></tr>
+<form>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><% WebStr(usb,PRINTER_SRV); %></td>
+			<td class="content"><input type='radio' name='ippEnabled' onClick='showInfo()'><%WebStr(comm,ENABLE)%>&nbsp;&nbsp;
+			<input type='radio' name='ippEnabled' onClick='showInfo()'><%WebStr(comm,DISABLE)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(usb,PRINTER_NAME)%></td>
+			<td class="content"><input type='text' name='ippName' size=20 maxlength=80 value="<%ejGetOther(sysInfo, ippName)%>"></td>
+		</tr>
+		<tr><td class="title"><%WebStr(usb,MAKE_MODEL)%></td>
+			<td class="content"><input type='text' name='ippMake' size=20 maxlength=80 value="<%ejGetOther(sysInfo, ippMake)%>"></td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</form>
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(usb.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

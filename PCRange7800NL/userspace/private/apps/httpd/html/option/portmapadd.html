@@ -1,0 +1,204 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(vlan.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language="javascript" src="portName.js"></script>
+<script language='javascript'>
+<!-- hide
+var errMsg=["<% WebStr(comm,INVALID)%>", "<% WebStr(comm,ERREMPTYFLD)%>"];
+var field=["<% WebStr(vlan,GROUP_NAME)%>"];
+function btnRemove() {
+	with ( document.choiceForm ) {
+		var arrSelected = new Array();
+		var count = 0;
+		for (var i = 0; i < lstChoice.options.length; i++ ) {
+			if ( lstChoice.options[i].selected == true ) {
+				arrSelected[count] = lstChoice.options[i].value;
+			}
+			count++;
+		}
+		for (var i = 0; i < lstChoice.options.length; i++) {
+			for (var x = 0; x < arrSelected.length; x++) {
+				if (lstChoice.options[i].value == arrSelected[x]) {
+					varOpt = new Option(lstChoice.options[i].text, lstChoice.options[i].value);
+					lstAvailable.options[lstAvailable.length] = varOpt;
+					lstChoice.options[i] = null;
+				}
+			}
+		}
+	}
+}
+function btnAdd() {
+	with ( document.choiceForm ) {
+		var arrSelected = new Array();
+		var count = 0;
+		for (var i = 0; i < lstAvailable.options.length; i++ ) {
+			if ( lstAvailable.options[i].selected == true ) {
+				arrSelected[count] = lstAvailable.options[i].value;
+			}
+			count++;
+		}
+		for (var i = 0; i < lstAvailable.options.length; i++) {
+			for (var x = 0; x < arrSelected.length; x++) {
+				if (lstAvailable.options[i].value == arrSelected[x]) {
+				varOpt = new Option(lstAvailable.options[i].text, lstAvailable.options[i].value);
+				lstChoice.options[lstChoice.length] = varOpt;
+				lstAvailable.options[i] = null;
+				}
+			}
+		}
+	}
+}
+function btnApply() {
+	var loc = 'portmapcfg.cmd?action=add';
+	with ( document.forms[0] ) {
+		if (groupName.value == '') {
+			alert(field[0]+" : "+errMsg[0]);
+			groupName.focus();
+			return;
+		}
+		if (vendorid0.value != '')
+			loc += '&vendorid0=' + vendorid0.value;
+		if (vendorid1.value != '')
+			loc += '&vendorid1=' + vendorid1.value;
+		if (vendorid2.value != '')
+			loc += '&vendorid2=' + vendorid2.value;
+		if (vendorid3.value != '')
+			loc += '&vendorid3=' + vendorid3.value;
+		if (vendorid4.value != '')
+			loc += '&vendorid4=' + vendorid4.value;
+	
+		var vendoridUsed = loc.search('&vendorid');
+		
+		if (lstChoice.length == 0 && vendoridUsed == -1) {
+			alert("<% WebStr(vlan,ERR_LANIFC)%>");
+			return;
+		}
+		loc += '&groupName=' + groupName.value;
+		var ifc = '';
+		var tempList = '';
+		for (var i = 0; i < lstChoice.length; i++) {
+			tempList += lstChoice.options[i].value + '|';
+		}
+		var interfaces = tempList.split('|');
+		interfaces.sort();
+		for (var i = 0; i < interfaces.length; i++ ) {
+			ifc += interfaces[i] + '|';
+		}
+		loc += '&choiceBox=' + ifc;	
+		var idx = wanIf.selectedIndex;
+		var wanIfc = wanIf.options[idx].value;
+		loc += '&wanIfName=' + wanIfc;
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<form name="choiceForm">
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_ADVANCED_SETUP); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(vlan,IFC_GROUP_CFG) %></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=3 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td colspan=3 class="title"><%WebStr(vlan,CREATE_NEW_HINT1)%><br>
+<%WebStr(vlan,CREATE_NEW_HINT2)%><br>
+<%WebStr(vlan,CREATE_NEW_HINT3)%></td></tr>
+		<tr><td class="title" width="35%"><% WebStr(vlan,GROUP_NAME); %></td>
+			<td class="content" colspan=2><input type="text" name="groupName" size="32" maxlength="31"></td>
+		</tr>
+		<tr><td class="title"><%WebStr(vlan,WANIFC_USED)%></td>
+			<td class="content" colspan=2><select name='wanIf'>
+						<script language="javascript">
+<!-- hide
+{
+	var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, allEoAPvc)%>';
+	var interfaces = interfaceInfo.split('|');
+	
+	for (var i = 0; i < interfaces.length; i++ ) {
+		var names = interfaces[i].split('/');
+		document.write("<option value='" + names[1] + "'>");
+		document.writeln(interfaces[i]+"</option>");
+	}
+}
+// done hiding -->
+</script>
+						</select></td>
+		</tr>
+		<tr><td class="title" width="35%"><%WebStr(vlan,GROUPED_LANIFC)%></td>
+			<td class="title" width="10%">&nbsp;</td>
+			<td class="title"><%WebStr(vlan,AVAILABLE_LANIFC)%></td>
+		</tr>
+		<tr><td class="content" align=center><select multiple name="lstChoice" size="10" style="width: 100"></select></td>
+			<td class="content"><input type="button" value="->" onClick="btnRemove()" style="width: 30; height: 30"><br>
+					<input type="button" value="<-" onClick="btnAdd()" style="width: 30; height: 30"></td>
+			<td class="content"><select multiple name="lstAvailable" size="10" style="width: 100">
+<script language="javascript">
+<!-- hide
+{
+	var dispName = '';
+	var brdId = '<%ejGet(boardID)%>';
+	var interfaceInfo = '<%ejGetOther(bridgeInterfaceInfo, all)%>';
+	var interfaces = interfaceInfo.split('|');
+	interfaces.sort();
+	for (var i = 0; i < interfaces.length; i++ ) {
+		if (interfaces[i] != '') {
+			document.write("  <option value='" + interfaces[i] + "'>");
+			dispName = getUNameByLName(brdId + '|' + interfaces[i]);
+			document.writeln(dispName+"</option>");
+		}
+	}
+}
+// done hiding -->
+						</script>
+					</select></td>
+		</tr>
+		<tr><td class="title" rowspan=5><%WebStr(vlan,AUTOADD)%></td>
+			<td class="content" colspan=2><input type='text' name='vendorid0' size="32" maxlength="64"></td>
+		</tr>
+		<tr><td class="content" colspan=2><input type='text' name='vendorid1' size="32" maxlength="64"></td>
+		</tr>
+		<tr><td class="content" colspan=2><input type='text' name='vendorid2' size="32" maxlength="64"></td>
+		</tr>
+		<tr><td class="content" colspan=2><input type='text' name='vendorid3' size="32" maxlength="64"></td>
+		</tr>
+		<tr><td class="content" colspan=2><input type='text' name='vendorid4' size="32" maxlength="64"></td>
+		</tr>
+		<tr><td colspan="3" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();location.reload();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(vlan.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

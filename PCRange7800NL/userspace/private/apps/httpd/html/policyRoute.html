@@ -1,0 +1,112 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var Entries=[<%PRouteGet()%>];
+function addClick() {
+	if(Entries.length>=8)
+	{
+		alert("<%WebStr(comm,ERRADDMORE)%>");
+		return;
+	}
+	var loc = 'pradd.html';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function removeClick(rml) {
+	var lst = '';
+	if (rml.length > 0)
+	{
+		for (i = 0; i < rml.length; i++) {
+			if ( rml[i].checked == true )
+				lst += rml[i].value + ', ';
+		}
+	}else if ( rml.checked == true )
+		lst = rml.value;
+	var loc = 'prmngr.cmd?action=remove&rmLst=' + lst;
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function showRoute()
+{
+	for(var i=0; i<Entries.length; i++)
+	{
+		document.write("<tr><td class=listrow align=center>"+Entries[i][0]+"</td><td class=listrow align=center>"+Entries[i][1]+"</td>");
+		document.write("<td class=listrow align=center>"+Entries[i][2]+"</td><td class=listrow align=center>"+Entries[i][3]+"</td>");
+		document.write("<td class=listrow align=center>"+Entries[i][4]+"</td>");
+		document.write("<td class=listrow align=center><input type='checkbox' name='rml' value="+Entries[i][0]+" onClick=showRm();></td></tr>");
+	}
+}
+function showRm() {
+	var count=0;
+	with ( document.forms[0] ) {
+		if (Entries.length > 1){
+			for (var i = 0; i < Entries.length; i++) {
+				if ( rml[i].checked == true )
+				count++;
+			}
+			btnRm.disabled=( count>0)?false:true;
+		}else if (Entries.length == 1)
+			btnRm.disabled=( rml.checked == true )?false:true;
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_POLICY_ROUTING)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=6 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="listhead" width="18%" align=center><%WebStr(lan,POLICY_NAME)%></td>
+			<td class="listhead" width="15%" align=center><%WebStr(lan,SRC_IP)%></td>
+			<td class="listhead" width="10%" align=center><%WebStr(lan,LAN_PORT)%></td>
+			<td class="listhead" width="15%" align=center>WAN</td>
+			<td class="listhead" width="15%" align=center><%WebStr(lan,DEF_GW)%></td>
+			<td class="listhead" align=center><%WebStr(comm,REMOVE)%></td>
+		</tr>
+<script language="javascript">
+<!-- hide
+showRoute();
+// done hiding -->
+</script>
+		<tr><td colspan="6" class="btnline">
+			<input type='button' onClick='addClick()' value='<%WebStr(comm,ADD)%>'>&nbsp;
+			<input type='button' name='btnRm' onClick='removeClick(this.form.rml)' value='<%WebStr(comm,REMOVE)%>' disabled>
+		</td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

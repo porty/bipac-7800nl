@@ -1,0 +1,430 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var state = '<%ejGet(lanRefresh)%>';
+if ( state == '1' ) {
+	var loc = 'lancfg2.cgi?lanRefresh=0';
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+var enblLanFirewall = '<%ejGet(enblLanFirewall)%>';
+var proto = '<%ejGetOther(sysInfo, noBrPrtcl)%>';
+var ipExt = '<%ejGetOther(sysInfo, pppIpExtension)%>';
+var dhcpEnbl = '<%ejGet(enblDhcpSrv)%>';
+var enblIgmpSnp = '<%ejGetOther(sysInfo, enblIgmpSnp)%>';
+var enblIgmpMode = '<%ejGetOther(sysInfo, enblIgmpMode)%>';
+var dhcpAll=["dhcpInfot","dhcpInfo","dhcpInfo0","dhcpInfo1","dhcpInfo2","dhcpInfo3","dhcpInfo4","dhcpInfo5","dhcpInfo6","relayInfo","lan2Infot","lan2Info","lan2Info0","lan2Info1"];
+var dhcpSub=["dhcpInfot","dhcpInfo","lan2Infot","lan2Info","lan2Info0","lan2Info1"];
+var dhcpChg=["dhcpInfo0","dhcpInfo1","dhcpInfo2","dhcpInfo3","dhcpInfo4","dhcpInfo5","dhcpInfo6","relayInfo"];
+var dhcpSer=["dhcpInfo","dhcpInfo0","dhcpInfo1","dhcpInfo2","dhcpInfo3","dhcpInfo4","dhcpInfo5","dhcpInfo6"];
+var dhcpRelay=["relayInfo"];
+var ipAlias=["lan2IpAddress","lan2SubnetMask"];
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>"];
+function igmpClick() {
+	var fg=(document.forms[0].chkIgmpSnp.checked)?1:0;
+	showhide("igmpSnpInfo",fg);
+}
+function addClick() {
+	var loc = 'StaticIpAdd.html';
+	var code = 'location=\"' + loc + '\"';
+	eval(code);
+}
+function removeClick(rml) {
+	var lst = '';
+	if (rml.length > 0)
+		for (var i = 0; i < rml.length; i++) {
+			if ( rml[i].checked == true )
+				lst += rml[i].value + ', ';
+		}
+	else if ( rml.checked == true )
+		lst = rml.value;
+	var loc = 'dhcpdstaticlease.cmd?action=remove&rmLst=' + lst;
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location=\"' + loc + '\"';
+	eval(code);
+}
+function changeBrName() {
+	var loc = 'lancfg2get.cgi?';
+	with ( document.forms[0] ) {
+		loc += 'brName=' + brName.value;
+	}
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function showLease(t)
+{
+	var idd;
+	var fg=(t==1)?"":"none";
+	if(staticiplease.length!=0)
+	{
+		for(var i=0; i<staticiplease.length; i++)
+		{
+			document.getElementById("lease"+i).style.display=fg;
+		}
+	}
+}
+function chgDHCPtype()
+{
+	var t=document.forms[0].dhcpSrvType.selectedIndex;
+	showEntries(dhcpChg,0);
+	showLease(0);
+	if(t==1){
+		showEntries(dhcpSer,1);
+		showLease(1);
+	}else if(t==2)
+		showEntries(dhcpRelay,1);
+}
+function frmLoad(){
+	with ( document.forms[0] ) {
+		//brName.value = '<%ejGet(brName)%>'; // Not used?
+		//chkLanFirewallEnbl.checked=( enblLanFirewall == '1' )?true:false;
+		chkIgmpSnp.checked=( enblIgmpSnp == '1' )?true:false;
+		igmpClick();
+		igmpMode[enblIgmpMode].checked=true;
+		// if protocol is Bridge or PPP IP extension, then don't show DHCP info
+		if (proto == 'Bridge' || ipExt == '1'){
+			showEntries(dhcpAll,0);
+			 showLease(0);
+		}else {
+		// if dhcp relay is supported and no NAT in the system display that option
+			showEntries(dhcpSub,1);
+			dhcpSrvType.selectedIndex=dhcpEnbl;
+			chgDHCPtype();
+			enblLan2.checked= ('<%ejGet(enblLan2)%>'=='1')?true:false;
+			showLan2();
+		}
+	}
+}
+function showLan2()
+{
+	/*var fg=(document.forms[0] .enblLan2.checked)?false:true;
+	for( var i=0; i<ipAlias.length; i++)
+		document.getElementById(ipAlias[i]).disabled=fg;*/
+	var fg=(document.forms[0] .enblLan2.checked)?0:1;
+	showEntriesDisable(ipAlias,fg);
+}
+function isEndGTEStart(EndIp, StartIp)
+{
+	var addrEnd = EndIp.split('.');
+	var addrStart = StartIp.split('.');
+	var E = parseInt(addrEnd[3]) + 1;
+	var S = parseInt(addrStart[3]) + 1;
+	if (E < S) 
+		return false;
+	return true;
+}
+function btnSave(reboot) 
+{
+	var loc = 'lancfg2.cgi?';
+	if (reboot) 	loc = 'lancfg2Reset.cgi?';
+	with ( document.forms[0] ) {
+		if(!chkIP("ethIpAddress", "<%WebStr(comm,IP_ADDR)%>") || !chkIP("ethSubnetMask", "<%WebStr(comm,SUBNET_MASK)%>"))	return;
+
+		loc += 'ethIpAddress=' + ethIpAddress.value;
+		loc += '&ethSubnetMask=' + ethSubnetMask.value;
+		//loc += '&enblLanFirewall=1';
+
+		if ( chkIgmpSnp.checked == true )
+			loc += '&enblIgmpSnp=1';
+		else
+			loc += '&enblIgmpSnp=0';
+		if ( igmpMode[1].checked == true )
+			loc += '&enblIgmpMode=1';
+		else
+			loc += '&enblIgmpMode=0';
+		if ( dhcpSrvType.selectedIndex==1 ) {
+			if (isValidHostIp(dhcpEthStart.value) == false || dhcpEthStart.value==ethIpAddress.value ||
+				!(isSameSubNet(ethIpAddress.value, ethSubnetMask.value, dhcpEthStart.value, ethSubnetMask.value))) {
+				alert("<%WebStr(lan,START_IP)%> : "+errMsg[0]);
+				dhcpEthStart.focus();
+				return;
+			}
+			if ( isValidHostIp(dhcpEthEnd.value) == false || dhcpEthEnd.value==ethIpAddress.value ||
+				!(isSameSubNet(ethIpAddress.value, ethSubnetMask.value, dhcpEthEnd.value, ethSubnetMask.value))) {
+				alert("<%WebStr(lan,END_IP)%> : "+errMsg[0]);
+				dhcpEthEnd.focus();
+				return;
+			}
+			if (!(isEndGTEStart(dhcpEthEnd.value, dhcpEthStart.value))) {
+				alert("<%WebStr(lan,IP_ERR)%>");
+				dhcpEthStart.focus();
+				return;
+			}
+			if ( isNaN(dhcpLeasedTime.value) == true || parseInt(dhcpLeasedTime.value) <= 0 || parseInt(dhcpLeasedTime.value) > 596523 || isNumberStr(dhcpLeasedTime.value)==false) {
+				alert("<%WebStr(lan,LEASE_TIME)%> : "+errMsg[0]);
+				dhcpLeasedTime.focus();
+				return;
+			}
+			if ( isNaN(maxdhcpLeasedTime.value) == true || parseInt(maxdhcpLeasedTime.value) <= 0 || parseInt(maxdhcpLeasedTime.value) > 596523 || isNumberStr(maxdhcpLeasedTime.value)==false ) {
+				alert("<%WebStr(lan,MAXLEASE_TIME)%> : "+errMsg[0]);
+				maxdhcpLeasedTime.focus();
+				return;
+			}
+			loc += '&dhcpEthStart=' + dhcpEthStart.value;
+			loc += '&dhcpEthEnd=' + dhcpEthEnd.value;
+			loc += '&dhcpLeasedTime=' + dhcpLeasedTime.value;
+			loc += '&maxdhcpLeasedTime=' + maxdhcpLeasedTime.value;
+			loc += '&enblDhcpSrv=1';
+		} else {
+				if ( dhcpSrvType.selectedIndex==2 ) {
+					if ( isValidHostIp(dhcpSrvAddr.value) == false ) {
+						alert("<%WebStr(lan,DHCPSRV_IP)%> : "+errMsg[0]);
+						dhcpSrvAddr.focus();
+						return;
+					}
+					loc += '&dhcpRelayServer=' + dhcpSrvAddr.value;
+					loc += '&enblDhcpSrv=2';
+				} else
+				loc += '&enblDhcpSrv=0';
+		}
+		if (enblLan2.checked == true) {
+			if(!chkIP("lan2IpAddress", "<%WebStr(comm,IP_ADDR)%>") || !chkIP("lan2SubnetMask", "<%WebStr(comm,SUBNET_MASK)%>"))	return;
+
+			if (ethIpAddress.value == lan2IpAddress.value) {
+				alert("<%WebStr(lan,LANIP_ERR)%> ");
+				lan2IpAddress.focus();
+				return;
+			}
+			if (isSameSubNet(ethIpAddress.value, ethSubnetMask.value, lan2IpAddress.value, lan2SubnetMask.value)) {
+				alert("<%WebStr(lan,LANMASK_ERR)%> ");
+				lan2SubnetMask.focus();
+				return;
+			}
+			loc += '&enblLan2=1';
+			loc += '&lan2IpAddress=' + lan2IpAddress.value;
+			loc += '&lan2SubnetMask=' + lan2SubnetMask.value;
+		}
+		else
+			loc += '&enblLan2=0';
+	}
+	loc += '&sessionKey=' + sessionKey;
+	if("<%ejGet(ethIpAddress)%>" != document.forms[0].ethIpAddress.value)
+		alert("<%WebStr(lan,LAN_IPCHCANED)%>");
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function chkIP(elm, name)
+{
+	var idd=document.getElementById(elm);
+	if(!isValidIpAddress(idd.value))
+	{
+		alert(name+" : "+errMsg[0]);
+		idd.focus();
+		return false;
+	}
+	if(elm.indexOf('Ip')!=-1){
+		if(!isValidHostIp(idd.value))
+		{
+			alert(name+" : "+errMsg[0]);
+			idd.focus();
+			return false;
+		}
+	}
+	return true;
+}
+function setDhcpAddresses() {
+	var ipArr = [0, 0, 0, 0],  maskArr = [0, 0, 0, 0], startArr = [0, 0, 0, 0],  endArr = [0, 0, 0, 0];
+	with ( document.forms[0] ) {
+		if(!chkIP("ethIpAddress", "<%WebStr(comm,IP_ADDR)%>") || !chkIP("ethSubnetMask", "<%WebStr(comm,SUBNET_MASK)%>"))	return;
+		lanIp = ethIpAddress.value;
+		subnetMask = ethSubnetMask.value;
+		addrParts = lanIp.split('.');
+		maskParts = subnetMask.split('.');
+		if ( addrParts.length != 4 || maskParts.length != 4) {
+			alert("<%WebStr(comm,IP_ADDR)%>/<%WebStr(comm,SUBNET_MASK)%> : "+errMsg[0]);
+			ethIpAddress.focus();
+			return;
+		}
+		for (var i = 0; i < 4; i++) {
+			ipArr[i] = parseInt(addrParts[i]);
+			startArr[i] = parseInt(addrParts[i]);
+			endArr[i] = parseInt(addrParts[i]);
+			maskArr[i] = parseInt(maskParts[i]);
+		}
+		m3 = maskArr[3];
+		bcast = 255;
+		n3 = 0;
+		if (maskArr[0] == 255 && maskArr[1] == 0 &&  maskArr[2] == 0 && maskArr[3] == 0) {
+			/* 255.0.0.0 is only class A supported */
+			endArr[1] = 255;
+			endArr[2] = 255;
+		}else if (maskArr[0] == 255 && maskArr[1] == 255 &&  maskArr[2] == 0 && maskArr[3] == 0)
+			/* 255.255.0.0 is only class B supported */
+			endArr[2] = 255;
+		else if ((maskArr[0] == 255 && maskArr[1] == 255 &&  maskArr[2] == 255 ) &&
+				(m3 == 0 || m3 == 128 || m3 == 192 || m3 == 224 || m3== 240 || m3 == 248 ||  m3 == 252)) {
+			/* 255.255.255.0/128/192... class C supported */
+			n3 = ipArr[3] & m3;
+			hosts = 255 - m3;
+			bcast = n3 + hosts;
+		}else {
+			/*alert("Only support subnet mask: Class A: 255.0.0.0; Class B: 255.255.0.0 and Class C: 255.255.255.0/255.255.255.128/255.255.255.192/255.255.255.224/255.255.255.240/255.255.255.248/255.255.255.252.");*/
+			alert("<%WebStr(comm,SUBNET_MASK)%> : "+errMsg[0]);
+			ethSubnetMask.focus();
+			return;
+		}
+		if (ipArr[3] == bcast) {
+			alert("<%WebStr(lan,IP_BCAST_ERR)%>");
+			ethIpAddress.focus();
+			return;
+		}
+		dhcpEthStart.value = dhcpEthEnd.value = "";
+		for (i = 0; i < 3; i++) {
+			dhcpEthStart.value = dhcpEthStart.value + startArr[i] + ".";
+			dhcpEthEnd.value = dhcpEthEnd.value + endArr[i] + ".";
+		}
+		if (ipArr[3] == (bcast-1)) {
+			startArr[3] = n3 + 1;
+			endArr[3] = bcast -2;
+		}
+		else {
+			startArr[3] = ipArr[3] + 1;
+			endArr[3] = bcast -1;
+		}
+		dhcpEthStart.value = dhcpEthStart.value + startArr[3];
+		dhcpEthEnd.value = dhcpEthEnd.value + endArr[3];
+	}
+}
+function showRmBtn()
+{
+	var count=0;
+	with ( document.forms[0] ) {
+		if (staticiplease.length > 1){
+			for (var i = 0; i < staticiplease.length; i++) {
+				if ( rml[i].checked == true )
+				count++;
+			}
+			btnRm.disabled=( count>0)?false:true;
+		}else if (staticiplease.length == 1)
+			btnRm.disabled=( rml.checked == true )?false:true;
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_LAN)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td colspan=4 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(lan,LAN_GROUP)%></td>
+			<td class="content" colspan="3"><%ejGet(groupList)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(comm,IP_ADDR)%></td>
+			<td class="content" colspan="3"><input type='text' name='ethIpAddress' id='ethIpAddress' onChange='setDhcpAddresses()' size=18 maxlength=15 value='<%ejGet(ethIpAddress)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(comm,SUBNET_MASK)%></td>
+			<td class="content" colspan="3"><input type='text' name='ethSubnetMask' id='ethSubnetMask' onChange='setDhcpAddresses()' size=18 maxlength=15 value='<%ejGet(ethSubnetMask)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,IGMPSNOOP)%></td>
+			<td class="content" colspan="3"><input type='checkbox' name='chkIgmpSnp' onClick='igmpClick()'><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr id="igmpSnpInfo" style="display:none"><td class="title"><%WebStr(lan,IGMPSNOOP_MODE)%></td>
+			<td class="content" colspan="3"><input type='radio' name='igmpMode' checked><%WebStr(lan,STANDARD_MODE)%>&nbsp;&nbsp;
+										<input type='radio' name='igmpMode'><%WebStr(lan,BLOCK_MODE)%></td>
+		</tr>
+		<!--tr><td class="title"><%WebStr(lan,LAN_FIREWALL)%></td>
+			<td class="content"><input type='checkbox' name='chkLanFirewallEnbl' onClick='firewallClick(this)'><%WebStr(comm,ENABLE)%></td>
+		</tr-->
+		<tr id='dhcpInfot' style="display:none"><td colspan=4 class="header"><%WebStr(lan,DHCP_SERVER)%></td></tr>
+		<tr id='dhcpInfo' style="display:none"><td class="title"><%WebStr(lan,DHCP_SERVER)%></td>
+			<td class="content" colspan="3"><select name='dhcpSrvType' onChange='chgDHCPtype()'>
+				<option value=0><%WebStr(comm,DISABLE)%></option>
+				<option value=1><%WebStr(comm,ENABLE)%></option>
+				<option value=2><%WebStr(lan,DHCP_RELAY)%></option>
+			</select></td>
+		</tr>
+		<tr id='dhcpInfo0' style="display:none"><td class="title"><%WebStr(lan,START_IP)%></td>
+			<td class="content" colspan="3"><input type='text' name='dhcpEthStart' size=18 maxlength=15 value='<%ejGet(dhcpEthStart)%>'></td>
+		</tr>
+		<tr id='dhcpInfo1' style="display:none"><td class="title"><%WebStr(lan,END_IP)%></td>
+			<td class="content" colspan="3"><input type='text' name='dhcpEthEnd' size=18 maxlength=15 value='<%ejGet(dhcpEthEnd)%>'></td>
+		</tr>
+		<tr id='dhcpInfo2' style="display:none"><td class="title" ><%WebStr(lan,LEASE_TIME)%></td>
+			<td class="content" colspan="3"><input type='text' name='dhcpLeasedTime' size=10 maxlength=6 value='<%ejGet(dhcpLeasedTime)%>'></td>
+		</tr>
+		<tr id='dhcpInfo3' style="display:none"><td class="title" ><%WebStr(lan,MAXLEASE_TIME)%></td>
+			<td class="content" colspan="3"><input type='text' name='maxdhcpLeasedTime' size=10 maxlength=6 value='<%ejGet(maxdhcpLeasedTime)%>'></td>
+		</tr>
+		<tr id='dhcpInfo4' style="display:none"><td colspan=4 class="header"><%WebStr(lan,FIXIP_LIST)%></td></tr>
+		<tr id='dhcpInfo5' style="display:none">
+					<td class=listhead width=30% align=center><%WebStr(comm,MAC_ADDR)%></td>
+					<td class=listhead width=30% align=center><%WebStr(comm,IP_ADDR)%></td>
+					<td class=listhead width=30% align=center><%WebStr(comm,HOST_NAME)%></td>
+					<td class=listhead align=center><%WebStr(comm,REMOVE)%></td></tr>
+<script language="javascript">
+<!-- hide
+{
+	var staticiplease =[<%ejGetOther(staticiplease)%>];
+	if(staticiplease.length!=0)
+	{
+		for (var i = 0; i < staticiplease.length; i++ ){
+			document.writeln("<tr id=lease"+i+"><td class=listrow align=center>" + staticiplease[i][0] + "</td><td class=listrow align=center>" + staticiplease[i][1] + "</td><td class=listrow align=center>" + staticiplease[i][2] + "</td>");
+			document.writeln("<td class=listrow align=center><input type='checkbox' name='rml' value='" + staticiplease[i][0]  + "' onclick=showRmBtn()></td></tr>");
+		}
+	}
+	i++;
+	document.writeln("<tr id=dhcpInfo6><td colspan=4 class=listrow>");
+	if (staticiplease.length < 32)
+		document.writeln("<input type='button' onClick='addClick()' value='<%WebStr(comm,ADD)%>'>&nbsp;&nbsp;");
+	if (staticiplease.length > 0)
+		 document.writeln("<input type='button' name='btnRm' onClick='removeClick(this.form.rml)' value='<%WebStr(comm,REMOVE)%>' disabled>");
+	document.writeln("</td></tr>");
+}
+// done hiding -->
+</script>
+		<tr id='relayInfo' style="display:none"><td class="title"><%WebStr(lan,DHCPSRV_IP)%></td>
+			<td class="content" colspan="3"><input type='text' name='dhcpSrvAddr' size=18 maxlength=15 value='<%ejGet(dhcpRelayServer)%>'></td>
+		</tr>
+		<tr id='lan2Infot' style="display:none"><td colspan=4 class="header"><%WebStr(lan,IP_ALIAS)%></td></tr>
+		<tr id='lan2Info' style="display:none"><td class="title"><%WebStr(lan,IP_ALIAS)%></td>
+			<td class="content" colspan="3"><input type='checkbox' name='enblLan2' onClick='showLan2()'><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr id='lan2Info0' style="display:none"><td class="title"><%WebStr(comm,IP_ADDR)%></td>
+			<td class="content" colspan="3"><input type='text' name='lan2IpAddress' id='lan2IpAddress' size=18 maxlength=15 value = '<%ejGet(lan2IpAddress)%>'></td>
+		</tr>
+		<tr id='lan2Info1' style="display:none"><td class="title"><%WebStr(comm,SUBNET_MASK)%></td>
+			<td class="content" colspan="3"><input type='text' name='lan2SubnetMask' id='lan2SubnetMask' size=18 maxlength=15 value = '<%ejGet(lan2SubnetMask)%>'></td>
+		</tr>
+		<tr><td colspan="4" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnSave(0)">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

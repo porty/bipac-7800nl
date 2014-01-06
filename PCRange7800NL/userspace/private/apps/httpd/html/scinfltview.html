@@ -1,0 +1,256 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(sec.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET,utf-8)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+var sessionKey="<%ejGetOther(sessionKey)%>";
+var pfMax = "<%ScGet(pf_max)%>";
+pfMax = (pfMax == "" || isNaN(pfMax)) ? 0 : parseInt (pfMax);
+var ordRec;
+var pfRules=<%ScGet(pfrules)%>;
+var ruleNum;
+if (pfRules.length == 1 && pfRules[0].length <= 1 && pfRules[0] == "") {
+	ruleNum = 0;
+} else {
+	ruleNum = pfRules.length;
+}
+function addClick() {
+	var loc = 'scinflt.html';
+	var code = 'location=\"' + loc + '\"';
+	eval(code);
+}
+function removeClick(rml) {
+	var lst = '';
+	if (rml.length > 0) {
+		for (i = 0; i < rml.length; i++) {
+			if ( rml[i].checked == true )
+				lst += rml[i].value + ', ';
+		}
+	} else if ( rml.checked == true ) {
+		lst = rml.value;
+	}
+	var loc = 'scinflt.cmd?action=remove&rmLst=' + lst;
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location=\"' + loc + '\"';
+	eval(code);
+}
+function reOrdClick()
+{
+	for (var j = 0; j < ruleNum; j++) {
+		if (ordRec[j] != j) break;
+	}
+	if (j >= ruleNum) return;
+	var ordStr=ordRec[0];
+	for (var i = 1; i < ruleNum; i++) {
+		ordStr += ","+ordRec[i];
+	}
+	var loc = 'scinflt.cmd?action=reorder&ordLst=' + ordStr;
+	loc += '&sessionKey='+sessionKey;
+	var code = 'location=\"' + loc + '\"';
+	eval(code);
+}
+function getTextRange(s1, s2, ids)
+{
+	var str="";
+	if (s1==s2) {
+		str += (s1=="") ? "<%WebStr(sec,ANY)%>" : s1;
+	} else {
+		str += s1;
+		if (s2 != "") str += " ~ "+s2;
+	}
+	return str;
+}
+function MoveOrder(d, idx)
+{
+	// change ordRec data
+	var dst=(d == 1) ? idx - 1: idx + 1;
+	var v=ordRec[dst], i, j, str, idd;
+	ordRec[dst] = ordRec[idx];
+	ordRec[idx] = v;
+	var n=[ordRec[dst],ordRec[idx]], o=[dst,idx];
+	for (i = 0; i < ruleNum; i++) {
+		if ((idd=document.getElementById("del"+i)).checked==true) {
+			idd.checked=false;
+		}
+	}
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 3; j++) {
+			document.getElementById("pf"+o[i]+"_"+j).innerHTML=pfRules[n[i]][j];
+		}
+		// internal IP
+		str=getTextRange (pfRules[n[i]][j], pfRules[n[i]][j+1]);
+		document.getElementById("pf"+o[i]+"_"+j).innerHTML=str;
+		j += 2;
+		// internal port
+		str = getTextRange (pfRules[n[i]][j], pfRules[n[i]][j+1]);
+		document.getElementById("pf"+o[i]+"_"+j).innerHTML=str;
+		j += 2;
+		// direction
+		document.getElementById("pf"+o[i]+"_"+j).innerHTML=(pfRules[n[i]][j]=="0")?"<%WebStr(sec,INCOMING)%>":"<%WebStr(sec,OUTGOING);%>";
+		j++
+		// action
+		document.getElementById("pf"+o[i]+"_"+j).innerHTML=(pfRules[n[i]][j]=="0")?"<%WebStr(sec,PF_FORWARD)%>":"<%WebStr(sec,PF_DROP);%>";
+		j++
+		// external IP
+		str=getTextRange (pfRules[n[i]][j], pfRules[n[i]][j+1]);
+		document.getElementById("pf"+o[i]+"_"+j).innerHTML=str;
+		j += 2;
+		// external port
+		str=getTextRange (pfRules[n[i]][j], pfRules[n[i]][j+1]);
+		document.getElementById("pf"+o[i]+"_"+j).innerHTML=str;
+		j += 2;
+	}
+}
+function initPfInfo()
+{
+	if (ruleNum == 0) return;
+	for (i = 0; i < ruleNum; i++) {
+		// internal IP
+		if (pfRules[i][3] == "(null)" || pfRules[i][3] == "0.0.0.0") pfRules[i][3] = "";
+		if (pfRules[i][4] == "(null)" || pfRules[i][4] == "0.0.0.0") pfRules[i][4] = "";
+		// internal Port
+		if (pfRules[i][5] == "(null)" || pfRules[i][5] == "0") pfRules[i][5] = "";
+		if (pfRules[i][6] == "(null)" || pfRules[i][6] == "0") pfRules[i][6] = "";
+		// external IP
+		if (pfRules[i][9] == "(null)" || pfRules[i][9] == "0.0.0.0") pfRules[i][9] = "";
+		if (pfRules[i][10] == "(null)" || pfRules[i][10] == "0.0.0.0") pfRules[i][10] = "";
+		// internal Port
+		if (pfRules[i][11] == "(null)" || pfRules[i][11] == "0") pfRules[i][11] = "";
+		if (pfRules[i][12] == "(null)" || pfRules[i][12] == "0") pfRules[i][12] = "";
+		if (pfRules[i][7] == "") pfRules[i][7] = "0"; // direction
+		if (pfRules[i][8] == "") pfRules[i][8] = "0"; // action
+	}
+	// get order
+	ordRec = new Array (ruleNum);
+	for (i = 0; i < ruleNum; i++) {
+		ordRec[i] = i;
+	}
+}
+function showRange(s1, s2, ids)
+{
+	document.write("<td class=\"listrow\"><span id=\""+ids+"\">");
+	var str = getTextRange(s1, s2);
+	document.write(str+"</span></td>");
+}
+function showPfTable ()
+{
+	var i, j, v;
+	// alwarys show the 1st interface rules
+	for (i = 0; i < ruleNum; i++) {
+		document.write("<tr>");
+		for (j = 0; j < 3; j++) {
+			document.write("<td class=\"listrow\" rowspan=\"2\" id=\"pf"+i+"_"+j+"\">"+pfRules[i][j]+"</td>");
+		}
+		// internal IP
+		showRange(pfRules[i][j], pfRules[i][j+1], "pf"+i+"_"+j);
+		j += 2;
+		// internal port
+		showRange (pfRules[i][j], pfRules[i][j+1], "pf"+i+"_"+j);
+		j += 2;
+		// direction
+		document.write("<td class=\"listrow\" rowspan=\"2\" id=\"pf"+i+"_"+j+"\">"+(pfRules[i][j++]=="0"?"<%WebStr(sec,INCOMING)%>":"<%WebStr(sec,OUTGOING);%>")+"</td>");
+		// action
+		document.write("<td class=\"listrow\" rowspan=\"2\" id=\"pf"+i+"_"+j+"\">"+(pfRules[i][j++]=="0"?"<%WebStr(sec,PF_FORWARD)%>":"<%WebStr(sec,PF_DROP);%>")+"</td>");
+		document.write("<td class=\"listrow\" rowspan=\"2\">");
+		if (ruleNum > 1) {
+			if (i > 0)
+				document.write('<img src="arup.gif" style="cursor: pointer" onclick="MoveOrder(1,'+i+');">&nbsp;&nbsp;');
+			if (i < ruleNum-1)
+				document.write('<img src="ardn.gif" style="cursor: pointer" onclick="MoveOrder(0,'+i+');">');
+		}
+		document.write("</td>");
+		document.write("<td class='listrow' rowspan='2'><input type='checkbox' id='del"+i+"' name='rml' value='"+pfRules[i][0]+"'></td>");
+		document.write("</tr>");
+		// external IP
+		document.write("<tr>");
+		showRange(pfRules[i][j], pfRules[i][j+1], "pf"+i+"_"+j);
+		j += 2;
+		// external port
+		showRange(pfRules[i][j], pfRules[i][j+1], "pf"+i+"_"+j);
+		j += 2;
+	}
+}
+function init()
+{
+	if (ruleNum == 0)
+		document.getElementById("iddel").disabled = true;
+	if (ruleNum <= 1)
+		document.getElementById("idsort").disabled = true;
+	if (ruleNum >= pfMax)
+		document.getElementById("idadd").disabled = true;
+}
+// done hiding -->
+</script>
+</head>
+<body onload="init();">
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+
+<td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td>
+</tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_SC_PKTFLT)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<tr><td colspan="12" class="header"><%WebStr(sec,TN_PF_CONF)%></td></tr>
+<tr id="trsel" style="display: none"><td class="title" colspan="2"><%WebStr(comm,INTERFACE)%></td>
+<td class="content" colspan="7"><script type="text/javascript">
+<!-- hiding
+	initPfInfo();
+//done hiding -->
+</script>
+</td></tr>
+<tr>
+	<td class="listhead" rowspan="2" width="15%"><%WebStr(sec,FN_PF_NAME)%></td>
+	<td class="listhead" rowspan="2" width="8%"><%WebStr(sec,FN_PF_IPV)%></td>
+	<td class="listhead" rowspan="2" width="12%"><%WebStr(comm,PROTOCOL)%></td>
+	<td class="listhead" width="18%"><%WebStr(sec,FN_PF_IIP)%></td>
+	<td class="listhead" width="13%"><%WebStr(sec,FN_PF_IPO)%></td>
+	<td class="listhead" rowspan="2" width="10%"><%WebStr(sec,FN_PF_DIR)%></td>
+	<td class="listhead" rowspan="2" width="10%"><%WebStr(sec,FN_PF_ACT)%></td>
+	<td class="listhead" rowspan="2" width="7%"><%WebStr(sec,FN_PF_ORDER)%></td>
+	<td class="listhead" rowspan="2"><%WebStr(comm,REMOVE)%></td>
+</tr>
+<tr>
+	<td class="listhead" width="20%"><%WebStr(sec,FN_PF_EIP)%></td>
+	<td class="listhead" width="12%"><%WebStr(sec,FN_PF_EPO)%></td>
+</tr>
+<script type="text/javascript">
+<!-- hidding
+	if (ruleNum > 0)  showPfTable ();
+// done hidding -->
+</script>
+<tr><td colspan="9" class="btnline">
+<input type="button" id="idadd" value="<%WebStr(comm,ADD)%>" onclick="addClick();">&nbsp;
+<input type="button" id="iddel" value="<%WebStr(comm,REMOVE)%>" onClick="removeClick(this.form.rml)">&nbsp;
+<input type="button" id="idsort" value="<%WebStr(sec,BTN_REORDER)%>" onClick="reOrdClick()">
+</td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(sec.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

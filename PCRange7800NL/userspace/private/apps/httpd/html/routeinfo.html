@@ -1,0 +1,70 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(info.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language='javascript'>
+<!-- hide
+var Entries=[<%RouteGet()%>];
+function showRoute()
+{
+	for(var i=0; i<Entries.length; i++)
+	{
+		document.write("<tr>");
+		for(var a=0; a<7; a++)
+		{
+			document.write("<td class=listrow>"+Entries[i][a]+"</td>");
+		}
+		document.write("</tr>");
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_DEVICE_INFO)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_DEVICE_ROUTE)%></td></tr>
+<tr><td class="sframe">
+	<table class=cfgframe cellspacing=2 cellpadding=0 width=100% align=center>	
+	<tr><td colspan=7 class="statusHeader"><%WebStr(info,ROUTE_HINT)%></td></tr>
+	<tr><td class=listhead width=20%><%WebStr(info,DESTINATION)%></td>
+	<td class=listhead width=20%><%WebStr(info,GATEWAY)%></td>
+	<td class=listhead width=20%><%WebStr(info,SUBNET_MASK)%></td>
+	<td class=listhead><%WebStr(info,FLAGS)%></td>
+	<td class=listhead><%WebStr(info,METRIC)%></td>
+	<td class=listhead><%WebStr(comm,SERVICE)%></td>
+	<td class=listhead><%WebStr(comm,INTERFACE)%></td>
+	</tr>
+<script language="javascript">
+<!-- hide
+showRoute();
+// done hiding -->
+</script>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(info.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

@@ -1,0 +1,131 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(sec.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+var ifCount = 0;
+
+function btnApply() {
+	var loc = 'scmacflt.cmd?action=add';
+	var okChk = 0;
+	var strInvalid="<%WebStr(comm,INVALID)%>";
+	
+	with ( document.forms[0] ) {
+		loc += '&protocol=' + protocol.value;
+		if (destMac.value != '') {
+			destMac.value = chgMACFormat (destMac.value);
+			if (isValidMacAddress(destMac.value) == false ) {
+				alert("<%WebStr(sec,FN_MACF_DST_MAC_ADDR)%>: "+strInvalid);
+				destMac.focus();
+				return;
+			}
+			loc += '&destMac=' + destMac.value;
+		}
+		if (srcMac.value != '') {
+			srcMac.value = chgMACFormat (srcMac.value);
+			if (isValidMacAddress(srcMac.value) == false ) {
+				alert("<%WebStr(sec,FN_MACF_SRC_MAC_ADDR)%>: "+strInvalid);
+				srcMac.focus();
+				return;
+			}
+			loc += '&srcMac=' + srcMac.value;
+		}
+		if (protocol.value == 0 && destMac.value == '' && srcMac.value == '') {
+			alert("<%WebStr(sec,ERR_AT_LEAST_ONE)%>");
+			return;
+		}
+	
+		loc += '&wanIf=' + ifChk.value;
+		loc += '&direction=' + direction.value;
+	}
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+
+// done hiding -->
+</script>
+</head>
+<body>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr><td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td></tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_MAC_FILTER)%> -- <%WebStr(comm,ADD)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+<tr><td colspan="2" class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(comm,PROTOCOL)%></td>
+	<td class="content"><select name="protocol">
+		<option value="0" selected></option>
+		<option value="1">PPPoE</option>
+		<option value="2">IPv4</option>
+		<option value="3">IPv6</option>
+		<option value="4">AppleTalk</option>
+		<option value="5">IPX</option>
+		<option value="6">NetBEUI</option>
+		<option value="7">IGMP</option>
+	</select><td>
+</tr>
+<tr><td class="title"><%WebStr(sec,FN_MACF_DST_MAC_ADDR)%></td>
+	<td class="content"><input type="text" name="destMac" maxlength="17" size="30"></td>
+</tr>
+<tr><td class="title"><%WebStr(sec,FN_MACF_SRC_MAC_ADDR)%></td>
+	<td class="content"><input type="text" name="srcMac" maxlength="17" size="30"></td>
+</tr>
+<tr><td class="title"><%WebStr(sec,FN_MACF_DIR)%></td>
+	<td class="content"><select name="direction">
+		<option value="2" selected>LAN&lt;=&gt;WAN</option>
+		<option value="1">WAN=&gt;LAN</option>
+		<option value="0">LAN=&gt;WAN</option>
+	</select></td>
+</tr>
+<tr><td class="title"><%WebStr(sec,FN_VS_WAN_IFC)%> (<%WebStr(sec,CFG_BRIDGE_ONLY)%>)</td>
+	<td class="content"><select name="ifChk">
+<script language="javascript">
+<!-- hide
+{
+	var i = 0;
+	var interfaceInfo = '<%ejGetOther(wanInterfaceInfo, bridge)%>';
+	var interfaces = interfaceInfo.split('|');
+
+	for ( i = 0; i < interfaces.length; i++ ) {
+		var names = interfaces[i].split('/');
+		document.write("<option value='" + names[1] + "'>"+interfaces[i]+"</option>");
+	}
+}
+// done hiding -->
+</script>
+	</selected></td>
+</tr>
+<tr><td colspan='2' class='btnline'>
+	<input type='button' onClick='btnApply()' value="<%WebStr(comm,APPLY)%>">
+</td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(sec.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

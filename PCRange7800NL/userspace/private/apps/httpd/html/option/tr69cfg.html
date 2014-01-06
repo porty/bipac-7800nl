@@ -1,0 +1,225 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(tr69.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var interfaceInfo = '<%ejGetOther(tr69cInterfaceList)%>';
+var interfaces = interfaceInfo.split('|');
+var boundIfName = '<%ejGet(tr69cBoundIfName)%>';
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var errMsg=["<%WebStr(comm,INVALID)%>","<%WebStr(comm,ERR_EMPTY)%>","<%WebStr(comm,ERR_OUT_RANGE)%>"];
+var fields=[["informInterval", "<%WebStr(mgmt,INFO_INTVL)%>"], ["acsURL","<%WebStr(mgmt,ACS_URL)%>"],
+["acsUser","<%WebStr(mgmt,ACS_NAME)%>"], ["acsPwd","<%WebStr(mgmt,ACS_PWD)%>"],
+["connReqUser","<%WebStr(mgmt,TR_AUTHNAME)%>"], 
+["connReqPwd","<%WebStr(mgmt,TR_AUTHPWD)%>"]];
+var auth_array=["auth_1","auth_2","auth_3"];
+function frmLoad() {
+	with ( document.forms[0] ) {
+		enblInform = '<%ejGet(tr69cInformEnable)%>';
+		enblNoneConnReqAuth = '<%ejGet(tr69cNoneConnReqAuth)%>';
+		enblDebug = '<%ejGet(tr69cDebugEnable)%>';
+		connReqAuth.checked=(enblNoneConnReqAuth == '0')?true:false;
+		if ( enblInform == '1' )
+			inform[0].checked = true;
+		else
+			inform[1].checked = true;
+		if ( enblDebug == '1' )
+			debug[0].checked = true;
+		else
+			debug[1].checked = true;
+	}
+	showInform();
+	connAuthChange();
+}
+function connAuthChange() {
+	with ( document.forms[0] ) {
+		var fg=(connReqAuth.checked)?1:0;
+		showEntries(auth_array,fg);
+	}
+}
+function showInform()
+{
+	with ( document.forms[0] ) {
+		informInterval.disabled=(inform[0].checked)?false:true;
+	}
+}
+function chkBlank(flag)
+{
+	var start=(flag=="auth")?4:1;
+	var end=(flag=="auth")?6:4;
+	for(var i=start; i<end; i++)
+	{
+		if(document.getElementById(fields[i][0]).value=="")
+		{
+			alert(fields[i][1]+" : "+errMsg[1]);
+			document.getElementById(fields[i][0]).focus();
+			return false;
+		}
+	}
+	return true;
+}
+function chkStr(flag)
+{
+	var start=(flag=="auth")?4:1;
+	var end=(flag=="auth")?6:4;
+	for(var i=start; i<end; i++)
+	{
+		if(!isSafeStr(document.getElementById(fields[i][0]).value))
+		{
+			alert(fields[i][1]+" : "+errMsg[0]);
+			document.getElementById(fields[i][0]).focus();
+			return false;
+		}
+	}
+	return true;
+}
+function btnApply() {
+	var loc = 'tr69cfg.cgi?';
+	with ( document.forms[0] ) {
+		if( inform[0].checked ){
+			if(informInterval.value == "" ){
+				alert(fields[0][1]+" : "+errMsg[1]);
+				informInterval.focus();
+				return;
+			}
+			if(isNaN(informInterval.value) || informInterval.value.indexOf('.')!=-1 ){
+				alert(fields[0][1]+" : "+errMsg[0]);
+				informInterval.focus();
+				return;
+			}
+			if( parseInt(informInterval.value)<1 || parseInt(informInterval.value)> 4294967295){
+				alert(fields[0][1]+" : "+errMsg[2]);
+				informInterval.focus();
+				return;
+			}
+		}
+		if(!chkBlank("acs")) return;
+		if(!chkStr("acs")) return;
+		if(connReqAuth.checked) {
+			if(!chkBlank("auth"))	return;
+			if(!chkStr("auth"))	return;
+		}
+		if ( inform[0].checked == true )
+			loc += 'tr69cInformEnable=1';
+		else
+			loc += 'tr69cInformEnable=0';
+		if( inform[0].checked ) loc += '&tr69cInformInterval=' + informInterval.value;
+		loc += '&tr69cAcsURL=' + encodeUrl(acsURL.value);
+		loc += '&tr69cAcsUser=' + encodeUrl(acsUser.value);
+		loc += '&tr69cAcsPwd=' + encodeUrl(acsPwd.value);
+		if (connReqAuth.checked){
+			loc += '&tr69cConnReqUser=' + encodeUrl(connReqUser.value);
+			loc += '&tr69cConnReqPwd=' + encodeUrl(connReqPwd.value);
+		}
+		if (connReqAuth.checked == true)
+			loc += '&tr69cNoneConnReqAuth=0';
+		else
+			loc += '&tr69cNoneConnReqAuth=1';
+		if (debug[0].checked == true) 
+			loc += '&tr69cDebugEnable=1';
+		else
+			loc += '&tr69cDebugEnable=0';
+		loc += '&tr69cBoundIfName=' + getSelect(wanIf);
+	}
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location.assign("' + loc + '")';
+	eval(code);
+}
+function btnGet() {
+	var loc = 'tr69get.cgi?';
+	loc += 'sessionKey=' + sessionKey;
+	var code = 'location.assign("' + loc + '")';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_MANAGEMENT)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_TR69C)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr> <td class="title" width="35%"><%WebStr(mgmt,TR69_INFO)%></td>
+				<td class="content"><input name='inform' type='radio' onclick=showInform()><%WebStr(comm,ENABLE)%> 
+						<input name='inform' type='radio' onclick=showInform()><%WebStr(comm,DISABLE)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,INFO_INTVL)%></td>
+			<td class="content"><input type='text' name='informInterval' id='informInterval' size="20" maxlength="10" value="<%ejGet(tr69cInformInterval)%>"> [1-4294967295]</td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,ACS_URL)%></td>
+			<td class="content"><input type='text' name='acsURL' id='acsURL' size="20" maxlength="256" value="<%ejGet(tr69cAcsURL)%>"></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,ACS_NAME)%></td>
+		  	<td class="content"><input type='text' name='acsUser' id='acsUser' size="20" maxlength="256" value="<%ejGet(tr69cAcsUser)%>"></td>
+		</tr>
+		<tr> <td class="title"><%WebStr(mgmt,ACS_PWD)%></td>
+		  	<td class="content"><input type='password' name='acsPwd' id='acsPwd' size="20" maxlength="256" value="<%ejGet(tr69cAcsPwd)%>"></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,TR_WANIF)%></td>
+			<td class="content"><select name='wanIf'>
+<script language="javascript">
+<!-- hide
+{
+	for (var i = 0; i < interfaces.length; i++ ) {
+		if ( interfaces[i] == boundIfName )
+			document.write("  <option value='" + interfaces[i] + "' selected>");
+		else
+			document.write("  <option value='" + interfaces[i] + "'>");
+		document.writeln(interfaces[i]);
+	}
+}
+// done hiding -->
+</script></select></td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,SOAP)%></td>
+		  	<td class="content"><input name='debug' type='radio'><%WebStr(comm,ENABLE)%>&nbsp;&nbsp;
+										<input name='debug' type='radio'><%WebStr(comm,DISABLE)%> </td>
+		</tr>
+		<tr><td class="title"><%WebStr(mgmt,TR_AUTH)%></td>
+			<td class="content"><input type="checkbox" name="connReqAuth" onClick="connAuthChange()"></td></tr>
+		<tr id="auth_1" style="display:none"><td class="title"><%WebStr(mgmt,TR_AUTHNAME)%></td>
+		  	<td class="content"><input type='text' name='connReqUser' id='connReqUser' size="20" maxlength="256" value="<%ejGet(tr69cConnReqUser)%>"></td>
+		</tr>
+		<tr id="auth_2" style="display:none"><td class="title"><%WebStr(mgmt,TR_AUTHPWD)%></td>
+		  	<td class="content"><input type='password' name='connReqPwd' id='connReqPwd' size="20" maxlength="256" value="<%ejGet(tr69cConnReqPwd)%>"></td>
+		</tr>
+		<tr id="auth_3" style="display:none"><td class="title"><%WebStr(mgmt,AUTH_URL)%></td>
+		  	<td class="content"><%ejGet(tr69cConnReqURL)%></td>
+		</tr>
+		<tr><td colspan=2 class="btnline"><input type='button' onClick='btnApply()' value='<%WebStr(comm,APPLY)%>'>
+			<input type='button' onClick='btnGet()' value='<%WebStr(mgmt,GET_RPC")%>'></td>
+		</tr>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<% WebStr(menu.sr,_c)%>
+<% WebStr(tr69.sr,_c)%>
+<% WebStr(comm.sr,_c)%>
+<% WebStr(cus.sr,_c)%>

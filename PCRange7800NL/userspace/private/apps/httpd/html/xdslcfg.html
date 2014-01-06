@@ -1,0 +1,132 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var inputs=[ ["adslMod0","0x00000001"], ["adslMod1","0x00000002"], ["adslMod2","0x00000004"], ["adslMod3","0x00000008"],
+["adslMod4","0x00000010"], ["adslMod5","0x00000020"], ["adslMod6","0x00000040"], ["adslMod7","0x00000080"],
+["vdslProfile0","0x00000100"], ["vdslProfile1","0x00000200"], ["vdslProfile2","0x00000400"], ["vdslProfile3","0x00000800"],
+["vdslProfile4","0x00001000"], ["vdslProfile5","0x00002000"], ["vdslProfile6","0x00004000"], ["vdslProfile7","0x00008000"], 
+["us0Mask","0x007f0000"], ["adslPair1","0x01000000"], ["adslBitswap","0x02000000"], ["adslSra","0x08000000"]];
+function vdslCfgCbClick(cb) {
+   with ( document.forms[0] ) {
+		var fg=(cb.checked)?false:true;
+		for(var i=0; i<8;i++){
+			document.getElementById("vdslProfile"+i).disabled=fg;
+		}
+		us0Mask.disabled=fg;
+	}
+}
+function frmLoad() {
+	var adslFlag = '<%ejGet(adslFlag)%>';
+	for(var i=0; i<inputs.length; i++)
+	{
+		document.getElementById(inputs[i][0]).checked=(adslFlag&inputs[i][1])?true:false;
+	}
+	var fg=(adslFlag & 0x00000080)?false:true;
+	for(var i=0; i<8;i++){
+		document.getElementById("vdslProfile"+i).disabled=fg;
+	}
+	document.forms[0].us0Mask.disabled=fg;
+}
+function applyClick() {
+	var loc = 'xdslcfg.cgi?adslFlag=';
+	var adslFlag = 0;
+	for(var i=0; i<inputs.length; i++)
+	{
+		if(document.getElementById(inputs[i][0]).checked)
+			adslFlag |=inputs[i][1];
+	}
+	if ((adslFlag & 0x000000ff) == 0)
+	{
+		alert("<%WebStr(lan,SELECT_MOD)%>");
+		return;
+	}
+	if (((adslFlag & 0x00000080) != 0) && ((adslFlag & 0x000FF00) == 0))
+	{
+		alert("<%WebStr(lan,SELECT_PRO)%>");
+		return;
+	}
+	loc += adslFlag;
+	loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_DSL)%></td></tr>
+<form>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><%WebStr(lan,MODULATION)%></td>
+			<td class="content"><input type="checkbox" name="adslMod" id="adslMod0">G.Dmt&nbsp;&nbsp;
+			<input type="checkbox" name="adslMod" id="adslMod1">G.lite&nbsp;&nbsp;
+			<input type="checkbox" name="adslMod" id="adslMod2">T1.413&nbsp;&nbsp;
+			<input type="checkbox" name="adslMod" id="adslMod3">ADSL2&nbsp;&nbsp;
+			<input type="checkbox" name="adslMod" id="adslMod4">AnnexL&nbsp;&nbsp;
+			<input type="checkbox" name="adslMod" id="adslMod5">ADSL2+&nbsp;&nbsp;
+			<input type="checkbox" name="adslMod" id="adslMod6">AnnexM&nbsp;&nbsp;
+			<input type="checkbox" name="adslMod"  id="adslMod7" onClick='vdslCfgCbClick(this)'>VDSL2
+			</td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,PROFILE)%></td>
+			<td class="content"><input type="checkbox" name="vdslProfile" id="vdslProfile0"> 8a&nbsp;&nbsp;
+			<input type="checkbox" name="vdslProfile" id="vdslProfile1">8b&nbsp;&nbsp;
+			<input type="checkbox" name="vdslProfile" id="vdslProfile2">8c&nbsp;&nbsp;
+			<input type="checkbox" name="vdslProfile" id="vdslProfile3">8d&nbsp;&nbsp;
+			<input type="checkbox" name="vdslProfile" id="vdslProfile4">12a&nbsp;&nbsp;
+			<input type="checkbox" name="vdslProfile" id="vdslProfile5">12b&nbsp;&nbsp;
+			<input type="checkbox" name="vdslProfile" id="vdslProfile6">17a&nbsp;&nbsp;
+			<input type="checkbox" name="vdslProfile" id="vdslProfile7">30a
+			</td>
+		</tr>
+		<tr><td class="title">US0</td>
+			<td class="content"><input type="checkbox" name="us0Mask" id="us0Mask"><%WebStr(comm,ENABLE)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,LINE_PAIR)%></td>
+			<td class="content"><input type="radio" name="adslPair" id="adslPair0" checked><%WebStr(lan,INNER_PAIR)%>&nbsp;&nbsp;
+			<input type='radio' name='adslPair'  id="adslPair1"><%WebStr(lan,OUTER_PAIR)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,CAPABILITY)%></td>
+			<td class="content"><input type="checkbox" name="adslBitswap" id="adslBitswap">Bitswap&nbsp;&nbsp;
+			<input type="checkbox" name="adslSra" id="adslSra">SRA</td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="applyClick()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(lan,ADV_SET)%>" onClick='location.href="adslcfgadv.html"'></td></tr>
+	</table><!-- cfgframe -->
+</form>
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

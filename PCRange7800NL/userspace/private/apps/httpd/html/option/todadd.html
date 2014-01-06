@@ -1,0 +1,187 @@
+<%WebStr(cus.sr,_o)%>
+<%WebStr(menu.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(sec.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET,utf-8)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script type="text/javascript" src="util.js"></script>
+<script type="text/javascript">
+<!-- hide
+function btnApply(place) {
+
+	var loc = place + '?action=add&';
+	var errEmpty="<%WebStr(comm,ERR_EMPTY)%>", errInvalid="<%WebStr(comm,INVALID)%>";
+	
+	if ( place == "todmngr.tod" ) {
+		with ( document.forms[0] ) {
+		if (mac.value != '') mac.value = chgMACFormat (mac.value);
+		if ( username.value == '' ) {
+			alert("<%WebStr(sec,FN_TOD_USER)%>: "+errEmpty);
+			username.focus();
+		} else if ( isValidName(username.value) == false ) {
+			alert("<%WebStr(sec,FN_TOD_USER)%>: "+errInvalid);
+			username.focus();
+		} else if ( mac.value == '' ) {
+			alert("<%WebStr(comm,MAC_ADDR)%>: "+errEmpty);
+			mac.focus();
+		} else if ( isValidMacAddress( mac.value ) == false ) {
+			alert("<%WebStr(comm,MAC_ADDR)%>: "+errInvalid);
+			mac.focus();
+		} else {
+			loc += "username="+username.value+"&mac="+mac.value;
+	
+			days = 0;
+	
+			if( monday.checked )
+			days = 1;
+	
+			if( tuesday.checked )
+			days |= 2;
+	
+			if( wednesday.checked )
+			days |= 4;
+	
+			if( thursday.checked )
+			days |= 8;
+	
+			if( friday.checked )
+			days |= 16;
+	
+			if( saturday.checked )
+			days |= 32;
+	
+			if( sunday.checked )
+			days |= 64;
+	
+			if( days == 0 ) {
+			alert("<%WebStr(sec,FN_TOD_WEEK)%>: <%WebStr(sec,ERR_TOD_NO_DAY)%>");
+			return;
+			}
+	
+			loc += "&days=" + days;
+	
+			loc += '&start_time=';
+			if( startTime.value.length ) {
+			vals = startTime.value.split( ':' );
+			if ( vals.length == 2 ) {
+				hour = eval( vals[0] );
+				min = eval( vals[1] );
+				if( hour < 0 || hour > 23 ) {
+				alert("<%WebStr(sec,FN_TOD_TM_START)%>: "+errInvalid);
+				startTime.focus();
+				return;
+				}
+				if( min < 0 || min > 59 ) {
+				alert("<%WebStr(sec,FN_TOD_TM_START)%>: "+errInvalid);
+				startTime.focus();
+				}
+				st_time = hour * 60 + min;
+			} else {
+				alert("<%WebStr(sec,FN_TOD_TM_START)%>: "+errInvalid);
+				startTime.focus();
+				return;
+			}
+			} else {
+			st_time = 0; // 00:00
+			}
+			loc += st_time;
+	
+			loc += '&end_time=';
+			if(endTime.value.length ) {
+			vals = endTime.value.split( ':' );
+			if ( vals.length == 2 ) {
+				hour = eval( vals[0] );
+				min = eval( vals[1] );
+				if( hour < 0 || hour > 23 ) {
+				alert("<%WebStr(sec,FN_TOD_TM_END)%>: "+errInvalid);
+				endTime.focus();
+				return;
+				}
+				if( min < 0 || min > 59 ) {
+				alert("<%WebStr(sec,FN_TOD_TM_END)%>: "+errInvalid);
+				endTime.focus();
+				return;
+				}
+				en_time = hour* 60 + min;
+			} else {
+				alert("<%WebStr(sec,FN_TOD_TM_END)%>: "+errInvalid);
+				endTime.focus();
+				return;
+			}
+			} else {
+			en_time = 1439; // 23:59
+			}
+			loc += en_time;
+	
+			if( en_time < st_time ) {
+			alert("<%WebStr(sec,ERR_TOD_TM_BEFORE)%>");
+			endTime.focus();
+			return;
+			}
+			loc += '&sessionKey=<%ejGetOther(sessionKey)%>';
+			var code = 'location="' + loc + '"';
+			if("<%ejGet(ntp_enabled)%>" != "1")
+			alert("<%WebStr(sec,WARN_TOD_NO_NTP)%>");
+			eval(code);
+		}
+		}
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+
+<td class="titletbl1"></td>
+<td class="titletbl2 capstr"><%WebStr(menu,MENU_ADVANCED_SETUP)%></td>
+<td class="titletbl3"></td>
+</tr>
+</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><%WebStr(menu,MENU_TOD)%> -- <%WebStr(comm,ADD)%></td></tr>
+<tr><td class="sframe">
+<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+<tr><td colspan="2" class="header"><%WebStr(comm,PARM)%></td></tr>
+<tr><td class="title" width="35%"><%WebStr(sec,FN_TOD_USER)%></td>
+<td class="content"><input type='text' size="20" name="username" maxlength="39"></td></tr>
+<tr><td class="title"><%WebStr(comm,MAC_ADDR)%></td>
+<td class="content"><input type="text" name="mac" value="<%ejGetOther(memInfo, pcMacAddr)%>" maxlength="17"></td></tr>
+<tr><td class="title"><%WebStr(sec,FN_TOD_WEEK)%></td>
+<td class="content"><input type="checkbox" name="monday">Mon&nbsp;&nbsp;
+<input type="checkbox" name="tuesday">Tue&nbsp;&nbsp;
+<input type="checkbox" name="wednesday">Wed&nbsp;&nbsp;
+<input type="checkbox" name="thursday">Thu&nbsp;&nbsp;
+<input type="checkbox" name="friday">Fri&nbsp;&nbsp;
+<input type="checkbox" name="saturday">Sat&nbsp;&nbsp;
+<input type="checkbox" name="sunday">Sun</td></tr>
+<tr><td class="title"><%WebStr(sec,FN_TOD_TM_START)%></td>
+<td class="content"><input type='text' size='20' name='startTime' maxlength="5">&nbsp;(hh:mm)</td></tr>
+<tr><td class="title"><%WebStr(sec,FN_TOD_TM_END)%></td>
+<td class="content"><input type='text' size='20' name='endTime' maxlength="5">&nbsp;(hh:mm)</td></tr>
+<tr><td class="btnline" colspan="2"><input type="button" onClick='btnApply("todmngr.tod")' value="<%WebStr(comm,APPLY)%>">&nbsp;
+<input type="button" value="<%WebStr(comm,CANCEL)%>" onClick="reset();">
+</td></tr>
+</table> <!-- cfgframe -->
+</td></tr>
+</table> <!-- sframe -->
+</td></tr>
+</table> <!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(sec.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(cus.sr,_c)%>

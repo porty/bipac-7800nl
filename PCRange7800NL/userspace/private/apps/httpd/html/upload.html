@@ -1,0 +1,69 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(upg.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language='javascript'>
+<!-- hide
+var progress = 0;
+function isInProgress() {
+	if ( progress == 0 )  {
+		if( !checkFile())
+			return false;
+		else{
+			progress = 1;
+			return true;
+		}
+	}
+	alert("<%WebStr(upg,UPGRADING)%>");
+	return false;
+}
+function checkFile()
+{
+	if( document.forms[0].filename.value.length==0){
+		alert("<%WebStr(upg,UPGFILE)%>");
+		return false;
+	}else
+		return true;
+}
+// done hiding -->
+</script>
+</head>
+<body>
+<form method='post' ENCTYPE='multipart/form-data' action='upload.cgi' onSubmit='return isInProgress();'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><%WebStr(menu,MENU_MANAGEMENT)%></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(menu,MENU_TL_UPDATE_SOFTWARE)%></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">
+		<tr><td colspan=2 class="header"><% WebStr("upg","FWDESC1"); %></td></tr>
+		<tr><td colspan=2 class="header"><% WebStr("upg","FWDESC2"); %></td></tr>   
+		<tr><td class="title" width="35%"><% WebStr(upg,FWIMG)%></td>
+		<td class="content"><input type='file' name='filename' size='20'></td></tr>
+		<tr><td colspan=2 class="btnline"><input type="submit" value="<%WebStr(upg,UPGRADE)%>"></td></tr>
+	</table>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</form>
+</body>
+</html>
+<%WebStr(cus.sr,_c)%>
+<%WebStr(upg.sr,_c)%>
+<%WebStr(menu.sr,_c)%>

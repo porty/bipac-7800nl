@@ -1,0 +1,214 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(wlan.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var errMsg=["<% WebStr(comm,INVALID)%>", "<% WebStr(comm,ERREMPTYFLD)%>"];
+var setArr=["set0","set1","set2","set3","set4","set5","set6""set7"];
+var needRefresh = 0;
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var wlWapiAsPending='<%ejGetWl(wlWapiAsPending)%>';
+var wlWapiAsEnable='<%ejGetWl(wlWapiAsEnable)%>';
+var wlWapiCertListFull='<%ejGetWl(wlWapiCertListFull)%>';
+var wlWapiRevokeListFull='<%ejGetWl(wlWapiRevokeListFull)%>';
+
+function ButtonAsEnable_onclick() {
+	var loc = '';
+	needRefresh = 1;
+	loc += 'wlwapias.cmd?';
+	if (getSelect(document.forms[0].SelectAsEnable) == '1')
+	{
+		if (wlWapiAsEnable == 1)	return;
+		loc += 'action=start&';
+	}
+	else
+	{
+		if (wlWapiAsEnable == 0)	return;
+		loc += 'action=stop&';
+	}
+	loc += 'sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function ButtonRevoke_onclick(cert_sn) {
+	var loc = '';
+	if (needRefresh == 0)
+		needRefresh = 1;
+	else
+	{
+		alert("<% WebStr(wlan,REFRESH_REVOKE)%>");
+		return;
+	}
+	if (wlWapiRevokeListFull != 0)
+	{
+		alert("<% WebStr(wlan,REVOKE_FULL)%>");
+		return;
+	}
+	loc += 'wlwapias.cmd?';
+	loc += 'action=revoke&';
+	loc += 'cert_sn=' + cert_sn + '&';
+	loc += 'sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function ButtonDownloadAsCertificate_onclick() {
+	var loc = '';
+	if (wlWapiAsEnable != 1)
+	{
+		alert("<% WebStr(wlan,AS_DISABLED)%>");
+		return;
+	}
+	loc += 'wlwapias.cer?';
+	loc += 'need=ascert&';
+	loc += 'sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function ButtonDownloadUserCertificate_onclick() {
+	with( document.forms[0] )
+	{
+		var owner = TextOwnerName.value;
+		var period = TextPeriod.value
+		var period_unit = getSelect(document.forms[0].SelectPeriodUnit);
+		var loc = '';
+	
+		if (needRefresh == 0)
+			needRefresh = 1;
+		else
+		{
+			alert("<% WebStr(wlan,REFRESH_DOWNLOAD)%>");
+			return;
+		}
+		if (wlWapiAsEnable != 1)
+		{
+			alert("<% WebStr(wlan,AS_DISABLED)%>");
+			return;
+		}
+		if (wlWapiCertListFull != 0)
+		{
+			alert("<% WebStr(wlan,CERTLIST_FULL)%>");
+			return;
+		}
+		if (!isValidNameWSpace(owner) || (owner.length <= 0) )
+		{
+			alert("<%WebStr(wlan,OWNER_NAME)%> : "+errMsg[0]);
+			TextOwnerName.focus();
+			return;
+		}
+		if (!isValidName(period) || isNaN(period) || (period.length <= 0) )
+		{
+			alert("<%WebStr(wlan,VALID_PERIOD)%> : "+errMsg[0]);
+			TextPeriod.focus();
+			return;
+		}
+	}
+	loc = 'wlwapiusr.cer?';
+	loc += 'need=usrcert&';
+	loc += 'owner=' + owner + '&';
+	loc += 'period=' + period + '&';
+	loc += 'period_unit=' + period_unit + '&';
+	loc += 'sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function frmLoad() {
+	with(document.forms[0])
+	{
+		if (wlWapiAsPending != 0)
+		{
+			document.getElementById("wait").styel.display="";
+			for(var i=0; i<setArr.length; i++)
+				document.getElementById(setArr[i]).styel.display="none";
+			setTimeout("window.location='wlwapias.html'", 1000);
+			
+		}
+		else
+		{
+			document.getElementById("wait").styel.display="none";
+			for(var i=0; i<setArr.length; i++)
+				document.getElementById(setArr[i]).styel.display="";
+			SelectAsEnable.selectedIndex = (wlWapiAsEnable == 1)? 1: 0;
+		}
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_ADVANCED_SETUP); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(menu,MENU_WL_WAPI_AS) %></td></tr>
+<form>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr id="wait" style="display:none;"><td colspan=2 class="header"><%WebStr(wlan,PLZ_WAIT)%></td></tr>
+		<tr id="set0" style="display:none;"><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr id="set1" style="display:none;"><td class="title" width="35%"><% WebStr(wlan,AS_CONFIG); %></td>
+			<td class="content"><select name="SelectAsEnable" id="SelectAsEnable">
+                           <option value="0"><%WebStr(comm,DISABLE)%></option>
+                           <option value="1"><%WebStr(comm,ENABLE)%></option>
+                        </select>&nbsp;&nbsp; <input id="ButtonAsEnable" name="ButtonAsEnable" type="button" value="<%WebStr(comm,APPLY)%>" onclick="return ButtonAsEnable_onclick()"></td>
+		</tr>
+		<tr id="set2" style="display:none;"><td class="title"><%WebStr(wlan,EXPORT_CERT)%></td>
+			<td class="content"><input type='button' value="<%WebStr(wlan,EXPORT_ASCERT)%>" id="ButtonDownloadAsCertificate" name="ButtonDownloadAsCertificate" onclick="return ButtonDownloadAsCertificate_onclick()"></td>
+		</tr>
+		<tr id="set3" style="display:none;"><td colspan=2 class="header"><%WebStr(wlan,USER_CERT)%></td></tr>
+		<tr id="set4" style="display:none;"><td class="title"><%WebStr(wlan,OWNER_NAME)%></td>
+			<td class="content"><input id="TextOwnerName" type="text" name="TextOwnerName" size="20" maxlength="16"></td>
+		</tr>
+		<tr id="set5" style="display:none;"><td class="title"><%WebStr(wlan,VALID_PERIOD)%></td>
+			<td class="content"><input id="TextPeriod" type="text" name="TextPeriod" size="20" maxlength="8">&nbsp;<select id="SelectPeriodUnit" name="SelectPeriodUnit">
+                           <option value="1"><%WebStr(wlan,DAY)%></option>
+                           <option value="30"><%WebStr(wlan,MONTH)%></option>
+                           <option value="365"><%WebStr(wlan,YEAR)%></option>
+                        </select></td>
+		</tr>
+		<tr id="set6" style="display:none;"><td class="title"><%WebStr(wlan,ISSUE_USRXCERT)%></td>
+			<td class="content"><input id="ButtonDownloadUserCertificate" type="button" value="<%WebStr(wlan,ISSUE_USRCERT)%>" name="ButtonDownloadUserCertificate" onclick="return ButtonDownloadUserCertificate_onclick()"></td>
+		</tr>
+		<tr id="set7" style="display:none;"><td class="title"><%WebStr(wlan,USR_CERTLIST)%></td>
+			<td class="content"><table border='1' cellpadding='2' cellspacing='0' align="left" >
+						<tr>
+							<td class='listhead'><%WebStr(wlan,OWNER)%></td>
+							<td class='listhead'><%WebStr(wlan,SERIAL_NUMBER)%></td>
+							<td class='listhead'><%WebStr(wlan,DURATION_DAYS)%></td>
+							<td class='listhead'><%WebStr(wlan,REMAIN_DAYS)%> </td>
+							<td class='listhead'><%WebStr(wlan,TYPE)%></td>
+							<td class='listhead'><%WebStr(comm,STATUS)%></td>
+							<td class='listhead'><%WebStr(wlan,ACTION)%></td>
+						</tr>
+						<%ejGetWl(wlWapiCertList)%>
+					</table></td>
+		</tr>
+	</table><!-- cfgframe -->
+</form>
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(wlan.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
+

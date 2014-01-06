@@ -1,0 +1,128 @@
+<%WebStr(menu.sr,_o)%>
+<%WebStr(lan.sr,_o)%>
+<%WebStr(comm.sr,_o)%>
+<%WebStr(cus.sr,_o)%>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%WebStr(cus,CHARSET)%>">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="7800N.css">
+<script language="javascript" src="util.js"></script>
+<script language='javascript'>
+<!-- hide
+var errMsg=["<% WebStr(comm,INVALID)%>", "<% WebStr(comm,ERR_EMPTY)%>"];
+var SNMPArrs=["rocommunity","rwcommunity","sysName","sysLocation","sysContact","trapIp"];
+var sessionKey='<%ejGetOther(sessionKey)%>';
+var state = '<%ejGet(snmpRefresh)%>';
+if ( state == '1' ) {
+   var loc = 'snmpconfig.cgi?snmpRefresh=0&sessionKey='+ sessionKey;
+   var code = 'location="' + loc + '"';
+   eval(code);
+}
+function showSNMP()
+{
+	with ( document.forms[0] ) {
+		var fg=(status[0].checked)?0:1;
+		showEntriesDisable(SNMPArrs,fg);
+	}
+}
+function btnApply() {
+	var loc = 'snmpconfig.cgi?';
+	with ( document.forms[0] ) {
+		if (rocommunity.value == '') {
+			alert("<%WebStr(lan,READ_COMMUNITY)%> : "+errMsg[1]);
+			rocommunity.focus();
+			return;
+		}
+		if (rwcommunity.value == '') {
+			alert("<%WebStr(lan,READ_COMMUNITY)%> : "+errMsg[1]);
+			rwcommunity.focus();
+			return;
+		}
+		if ( status[0].checked == true )
+			loc += 'snmpStatus=1';
+		else
+			loc += 'snmpStatus=0';
+		loc += '&snmpRoCommunity=' + encodeUrl(rocommunity.value);
+		loc += '&snmpRwCommunity=' + encodeUrl(rwcommunity.value);
+		loc += '&snmpSysName=' + encodeUrl(sysName.value);
+		loc += '&snmpSysContact=' + encodeUrl(sysContact.value);
+		loc += '&snmpSysLocation=' + encodeUrl(sysLocation.value);
+		if ( isValidHostIp(trapIp.value) == false &&  trapIp.value != '0.0.0.0') {
+			alert("<%WebStr(lan,TRAP_MNGRIP)%> : "+errMsg[0]);
+			return;
+		}
+		loc += '&snmpTrapIp=' + trapIp.value;
+	}
+	loc += '&sessionKey=' + sessionKey;
+	var code = 'location="' + loc + '"';
+	eval(code);
+}
+function frmLoad() {
+with ( document.forms[0] ) {
+	var snmpStatus = "<%ejGet(snmpStatus)%>";
+	if (snmpStatus== 1)	status[0].checked = true;
+	else	status[1].checked = true;
+	showSNMP();
+	}
+}
+// done hiding -->
+</script>
+</head>
+<body onLoad='frmLoad()'>
+<form>
+<table class="mframe" border="1" cellpadding="0" cellspacing="3" scrolling="no" style="border-collapse: collapse" bordercolor="#CCCCCC" width="100%">
+<tr><td class="mframe">
+	<table class="titletbl" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+	<td class="titletbl1"></td>
+	<td class="titletbl2 capstr"><% WebStr(menu,MENU_ADVANCED_SETUP); %></td>
+	<td class="titletbl3"></td>
+	</tr>
+	</table>
+</td></tr>
+<tr><td class="mframe">
+<table class="sframe" cellspacing="0" cellpadding="0" width="98%" align="center">
+<tr><td class="sframe_title headline"><img src="dot5s.gif" width="11" height="11"><% WebStr(menu,MENU_TL_SNMP) %></td></tr>
+<tr><td class="sframe">
+	<table class="cfgframe" cellspacing="2" cellpadding="0" width="100%" align="center">	
+		<tr><td colspan=2 class="header"><%WebStr(comm,PARM)%></td></tr>
+		<tr><td class="title" width="35%"><% WebStr(menu,MENU_TL_SNMP); %></td>
+			<td class="content"><input type='radio' name='status' onClick='showSNMP()'><%WebStr(comm,ENABLE)%>&nbsp;&nbsp;
+			<input type='radio' name='status' onClick='showSNMP()'><%WebStr(comm,DISABLE)%></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,READ_COMMUNITY)%></td>
+			<td class="content"><input type='text' name='rocommunity' id='rocommunity' size="20" maxlength=32 value='<%ejGet(snmpRoCommunity)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,SET_COMMUNITY)%></td>
+			<td class="content"><input type='text' name='rwcommunity' id='rwcommunity' size="20"  maxlength=32 value='<%ejGet(snmpRwCommunity)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,SYSTEM_NAME)%></td>
+			<td class="content"><input type='text' name='sysName' id='sysName' size="20"  maxlength=32 value='<%ejGet(snmpSysName)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,SYSTEM_LOCATION)%></td>
+			<td class="content"><input type='text' name='sysLocation' id='sysLocation' size="20"  maxlength=32 value='<%ejGet(snmpSysContact)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,SYSTEM_CONTACT)%></td>
+			<td class="content"><input type='text' name='sysContact' id='sysContact' size="20"  maxlength=32 value='<%ejGet(snmpSysLocation)%>'></td>
+		</tr>
+		<tr><td class="title"><%WebStr(lan,TRAP_MNGRIP)%></td>
+			<td class="content"><input type='text' name='trapIp' id='trapIp' size="20" maxlength=15 value='<%ejGet(snmpTrapIp)%>'></td>
+		</tr>
+		<tr><td colspan="2" class="btnline">
+			<input type="button" name="bApply" value="<%WebStr(comm,APPLY)%>" onClick="btnApply()">&nbsp;
+			<input type="button" name="bCancel" value="<%WebStr(comm,CANCEL)%>" onclick="reset();frmLoad();"></td></tr>
+	</table><!-- cfgframe -->
+</td></tr>
+</table><!-- sframe -->
+</td></tr>
+</table><!-- mframe -->
+</form>
+</body>
+</html>
+<%WebStr(menu.sr,_c)%>
+<%WebStr(lan.sr,_c)%>
+<%WebStr(comm.sr,_c)%>
+<%WebStr(cus.sr,_c)%>
